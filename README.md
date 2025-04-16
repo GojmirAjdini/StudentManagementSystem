@@ -1,2 +1,2 @@
 # HotelManagementSystem
-Projekt per menaxhimin e sistemit te nje hoteli.
+Projekt per menaxhimin e sistemit te studenteve.
