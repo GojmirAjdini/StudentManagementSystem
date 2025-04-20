@@ -55,5 +55,20 @@ class Fakulteti{
             callback(err, results);
         });
     }
+
+    static perditesoFakultetin(fakulteti, callback){
+
+        const sql = "UPDATE Fakulteti SET Emri = ?, Niveli = ?, Lokacioni = ? WHERE FakultetiID = ?";
+        const values = [fakulteti.Emri, fakulteti.Niveli, fakulteti.Lokacioni, fakulteti.FakultetiID];
+
+        db.query(sql, values, (err, results) =>{
+
+            if(err){
+                return callback(err, null);
+            }
+
+            callback(null, results);
+        })
+    }
 }
 export default Fakulteti;

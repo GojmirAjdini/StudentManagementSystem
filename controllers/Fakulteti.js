@@ -1,3 +1,4 @@
+import { callbackPromise } from "nodemailer/lib/shared/index.js";
 import Fakulteti from "../models/Fakulteti.js";
 
 const lexojFakultetet = async (req, res)=>{
@@ -52,4 +53,33 @@ catch(err){
 }
 }
 
-export default {lexojFakultetet, shtoFakultet, fshijFakultetin};
+const updateFakultetin = async (req, res) =>{
+
+    try{
+
+        const id = req.params.FakultetiID;
+
+        const {Emri, Niveli, Lokacioni} = req.body;
+
+        const updatedFk = new Fakulteti(id, Emri, Niveli, Lokacioni);
+
+        Fakulteti.perditesoFakultetin(updatedFk,(err, results) =>{
+
+            if(err){
+                console.error(err);
+                return res.status(500).json("Gabim ne perditesim!");
+            }
+            if(results.affectedRows === 0){
+                return res.status(404).json({message:"Fakulteti nuk u gjet!"});
+            }
+            console.log(updatedFk);
+            return res.status(200).json({message: "Te dhenat u perditesuan", data: updatedFk});
+        })
+    } catch(err){
+        console.error(err);
+        return res.json({err: true, error: err});
+    }
+
+}
+
+export default {lexojFakultetet, shtoFakultet, fshijFakultetin, updateFakultetin};
