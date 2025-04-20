@@ -1,6 +1,6 @@
 import Lenda from "../models/Lenda.js";
 
-const lexoLendet = (req, res)=>{
+const lexoLendet = async (req, res)=>{
 
     Lenda.readAllLendet((lendet) =>{
 

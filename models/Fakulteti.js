@@ -45,7 +45,7 @@ class Fakulteti{
 
     static fshijFakultet(id, callback){
 
-        const sql = "DELETE FROM Fakulteti WHERE FakultetiID = ?"
+        const sql = "DELETE FROM Fakulteti WHERE FakultetiID = ?";
 
         db.query(sql,[id], (err, results)=>{
 
