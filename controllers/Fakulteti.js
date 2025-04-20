@@ -1,10 +1,11 @@
-import { callbackPromise } from "nodemailer/lib/shared/index.js";
 import Fakulteti from "../models/Fakulteti.js";
 
 const lexojFakultetet = async (req, res)=>{
 
     try{
-    Fakulteti.readFakultetet((fakultetet) =>{res.json(fakultetet);  });
+    Fakulteti.readFakultetet((fakultetet) =>{
+        
+        res.json(fakultetet);  });
     }
     catch(error){
         console.error(error);

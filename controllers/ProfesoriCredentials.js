@@ -6,7 +6,7 @@ function random(){
     let max = 10000;
     let min = 1000;
    
-    for(let i = 0;i < 5; i++){
+    for(let i = 0;i < 7; i++){
         return Math.floor(min + Math.random() * (max - min + 1));
     }
 }
@@ -15,7 +15,7 @@ function randomEmail(emri, mbiemri){
 
     let randoms = random();
 
-        let email = `${emri.toLowerCase()}${mbiemri.toLowerCase()}${randoms}@uni-edu.net`;
+        let email = `${emri.toLowerCase()}.${mbiemri.toLowerCase()}@uni-edu.net`;
         return email;
     }
 

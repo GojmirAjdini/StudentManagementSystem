@@ -1,16 +1,19 @@
 import Lenda from "../models/Lenda.js";
 
 const lexoLendet = async (req, res)=>{
+   
+    try{
+        Lenda.readAllLendet((lendet) =>{
 
-    Lenda.readAllLendet((lendet) =>{
-
-        try{
-            res.json(lendet);
+        if(lendet.length === 0){
+            return res.json({message: "Nuk ka lende te regjistruar!"});
         }
+            return res.json(lendet);
+        })
+    }
         catch(err){
             res.status(404).json({err: "Server error"});
-        }
-    })
+    }
 }
 
 const createLenden = async (req, res) => {

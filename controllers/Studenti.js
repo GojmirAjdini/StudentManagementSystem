@@ -1,12 +1,14 @@
 import Studenti from "../models/Studenti.js";
 import bcrypt from "bcrypt";
 import StudentCredentials from "./StudentCredentials.js";
+import db from "../database/Database.js";
 
 const lexoStudentet = async (req, res) =>{
 
         Studenti.readAll((err, studentet) =>{
 
         try{
+            console.log(studentet.length);
             res.json(studentet);
         }
         catch(err){
@@ -26,6 +28,18 @@ const regjistroStudent = async (req, res) =>{
         
         const {Emri, Mbiemri, Gjinia, EmailPrivat, Vendlindja, 
             Data_Lindjes, Adresa, Nr_Tel, FakultetiID, Statusi} = req.body;
+
+            const emailCheckQuery = `
+            SELECT EmailPrivat FROM profesori WHERE EmailPrivat = ? 
+            UNION 
+            SELECT EmailPrivat FROM studenti WHERE EmailPrivat = ? 
+        `;
+
+        const [checkResults] = await db.promise().query(emailCheckQuery, [EmailPrivat, EmailPrivat]);
+
+        if (checkResults.length > 0) {
+            return res.status(400).json({ message: "Ky email ekziston tashmë në sistem!" });
+        }
 
         const emailstudentor = StudentCredentials.randomEmail(Emri, Mbiemri);
         const password = StudentCredentials.randomPassword(Emri, Mbiemri);
