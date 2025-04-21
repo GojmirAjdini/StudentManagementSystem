@@ -16,9 +16,9 @@ const lexojFakultetet = async (req, res)=>{
 const shtoFakultet = async (req, res) => {
     
     try{
-        const {Emri, Niveli, Lokacioni} = req.body;
+        const {Emri, Niveli, Lokacioni, Kodi_Fakultetit} = req.body;
 
-        Fakulteti.regjistroFakultet(Emri, Niveli, Lokacioni,(err, newFakulteti) =>{
+        Fakulteti.regjistroFakultet(Emri, Niveli, Lokacioni,Kodi_Fakultetit, (err, newFakulteti) =>{
 
         if(err){
             return res.status(500).json({err: true, message: err.message});        
@@ -60,9 +60,9 @@ const updateFakultetin = async (req, res) =>{
 
         const id = req.params.FakultetiID;
 
-        const {Emri, Niveli, Lokacioni} = req.body;
+        const {Emri, Niveli, Lokacioni, Kodi_Fakultetit} = req.body;
 
-        const updatedFk = new Fakulteti(id, Emri, Niveli, Lokacioni);
+        const updatedFk = new Fakulteti(id, Emri, Niveli, Lokacioni, Kodi_Fakultetit);
 
         Fakulteti.perditesoFakultetin(updatedFk,(err, results) =>{
 

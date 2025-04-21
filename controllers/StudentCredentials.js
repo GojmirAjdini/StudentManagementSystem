@@ -1,17 +1,6 @@
 import nodemailer from "nodemailer";
 import 'dotenv/config';
 
-function random(){
-   
-    let max = 10000;
-    let min = 1000;
-   
-    for(let i = 0;i < 5; i++){
-        return Math.floor(min + Math.random() * (max - min + 1));
-    }
-}
-
-
 function vitiAkademik(){
 
     let current = new Date().getFullYear();
@@ -141,4 +130,4 @@ function sendEmail(emailprivat, emailstudentor, password){
 }
 
 
-export default {gjenerata, vitiAkademik,generateStudentID,random, randomEmail, randomPassword, sendEmail};
+export default {gjenerata, vitiAkademik,generateStudentID, randomEmail, randomPassword, sendEmail};

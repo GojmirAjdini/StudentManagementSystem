@@ -68,6 +68,19 @@ class Studenti{
             callback(null, results);
         })
     }
-}
 
+    static updatePassword(ID, Password,callback){
+
+        const sql = "UPDATE Studenti s SET s.Password = ? WHERE ID = ?";
+        const values = [Password, ID];
+
+        db.query(sql, values,(err, results) =>{
+            if(err){
+                return callback(err, null);
+            }
+            callback(null, results);
+        })
+
+    }
+}
 export default Studenti;

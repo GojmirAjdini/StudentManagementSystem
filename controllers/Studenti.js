@@ -40,7 +40,7 @@ const regjistroStudent = async (req, res) =>{
             UNION 
             SELECT EmailPrivat FROM studenti WHERE EmailPrivat = ? 
         `;
-
+            // KONTROLLO NESE EMAIL PRIVAT EKZISTON NE DATABAZE //
         const [checkResults] = await db.promise().query(emailCheckQuery, [EmailPrivat, EmailPrivat]);
 
         if (checkResults.length > 0) {
@@ -152,5 +152,46 @@ const fshijAllStudentet = async (req, res) => {
     }
 }
 
+const updatePassword = async (req, res) =>{
 
-export default {lexoStudentet, regjistroStudent, fshijStudent, fshijAllStudentet};
+    const salts = 10;
+    try{
+
+        const ID = req.params.ID;
+        const {oldPassword, newPassword } = req.body;
+
+        const sql = "SELECT Password from Studenti WHERE ID = ?";
+
+        const [oldPasswordCheck] = await db.promise().query(sql, [ID]);
+
+        const storedPassword = oldPasswordCheck[0].Password;
+
+        let check = await bcrypt.compare(oldPassword, storedPassword);
+        if(!check){
+            return res.status(400).json({message: "Ju lutem kontrolloni passwordin tuaj te vjeter!"});
+
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, salts);
+
+        Studenti.updatePassword(ID,hashedPassword,(err, results) =>{
+
+            if(err){
+                return res.status(500).json(err,{message:"Server error"});
+            }
+
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Passwordi nuk u perditesua!"});
+            }
+
+            return res.status(201).json({message: "Passwordi juaj u perditesua me sukses!"});
+        })
+    }
+catch(err){
+        console.error(err);
+        return res.status(500).json({message:err});
+
+}
+}
+
+
+export default {lexoStudentet, regjistroStudent, fshijStudent, fshijAllStudentet, updatePassword};
