@@ -16,7 +16,6 @@ const readProfesoret = async (req, res) =>{
                 return res.status(404).json({message: "Nuk ka te dhena!" });
             }
             
-            console.log(results);
             return res.status(200).json(results);
     
         })      
@@ -57,11 +56,13 @@ const registerProfesoret = async (req, res) =>{
             hashedPassword, EmailPrivat, Data_Punesimit, Statusi, (err, results) =>{
 
             if(err){
+                console.error(err);
                 return res.status(500).json({message: "Server error"});
             }
             if(results.affectedRows === 0){
                 return res.status(404).json({message: "Te dhenat nuk u regjistruan!"});
             }
+            console.log("Te dhenat u regjistruan!");
             return res.status(201).json({message: "Te dhenat u regjistruan me sukses"});
     });
     
@@ -72,4 +73,26 @@ const registerProfesoret = async (req, res) =>{
     }
 }
 
-export default {readProfesoret, registerProfesoret};
+const deleteProfesorSipasId = async (req, res) => {
+    
+    try{
+        const id = req.params.ProfesoriID;
+
+        Profesori.fshijProfesorinSipasId(id,(err, results) =>{
+
+            if(err){
+                return res.status(500).json("Server error");
+            }
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Te dhenat nuk u fshine!"});
+            }
+
+            return res.status(200).json({message:"Te dhenat u fshine me sukses!"});
+        })
+    } catch(err){
+        console.error(err);
+        return res.status(500).json({err: true, error: err});
+    }
+}
+
+export default {readProfesoret, registerProfesoret ,deleteProfesorSipasId};

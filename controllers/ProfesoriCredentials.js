@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import 'dotenv/config';
+import 'dotenv/config'; 
 
 function random(){
    
@@ -10,7 +10,6 @@ function random(){
         return Math.floor(min + Math.random() * (max - min + 1));
     }
 }
-
 function randomEmail(emri, mbiemri){
 
     let randoms = random();
