@@ -50,6 +50,36 @@ class Profesori {
             callback(null, results);
         })
     }
+
+    static loginProfessori(Email, callback){
+
+        const sql = `SELECT FakultetiID, Emri, Mbiemri, Gjinia, 
+        Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi
+        FROM Profesori
+        WHERE Email = ?`;
+
+        db.query(sql, Email, (err, results) =>{
+            if(err){
+                return callback(err);
+            }
+            console.log(results.length);
+
+            callback(null, results);
+        })
+    }
+    static updatePassword(ID, Password, callback){
+
+        const sql = "UPDATE Profesori p SET p.Password = ? WHERE ProfesoriID = ?";
+        const values = [Password, ID];
+
+        db.query(sql, values, (err, results) =>{
+            if(err){
+                return callback(err);
+            }
+
+            callback(null, results);
+        })
+    }
 }
 
 export default Profesori;

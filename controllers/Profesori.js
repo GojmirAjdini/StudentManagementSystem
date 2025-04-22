@@ -2,6 +2,7 @@ import Profesori from "../models/Profesori.js";
 import db from "../database/Database.js";
 import ProfesoriCredentials from "./ProfesoriCredentials.js";
 import bcrypt from "bcrypt";
+import { resolveContent } from "nodemailer/lib/shared/index.js";
 
 const readProfesoret = async (req, res) =>{
 
@@ -38,10 +39,12 @@ const registerProfesoret = async (req, res) =>{
             const emailCheckQuery = `
             SELECT EmailPrivat FROM profesori WHERE EmailPrivat = ? 
             UNION 
-            SELECT EmailPrivat FROM studenti WHERE EmailPrivat = ? 
+            SELECT EmailPrivat FROM studenti WHERE EmailPrivat = ?
+            UNION 
+            SELECT Email from stafiadministrativ WHERE Email = ? 
         `;
 
-        const [checkResults] = await db.promise().query(emailCheckQuery, [EmailPrivat, EmailPrivat]);
+        const [checkResults] = await db.promise().query(emailCheckQuery, [EmailPrivat, EmailPrivat, EmailPrivat]);
 
         if (checkResults.length > 0) {
             return res.status(400).json({ message: "Ky email ekziston tashmë në sistem!" });
@@ -63,7 +66,10 @@ const registerProfesoret = async (req, res) =>{
                 return res.status(404).json({message: "Te dhenat nuk u regjistruan!"});
             }
             console.log("Te dhenat u regjistruan!");
-            return res.status(201).json({message: "Te dhenat u regjistruan me sukses"});
+            return res.status(201).json({message: "Te dhenat u regjistruan me sukses", 
+                Email: `EmailAkademise: ${EmailAkademik}`,
+                Password: `Password: ${Password}`
+            });
     });
     
     }
@@ -95,4 +101,90 @@ const deleteProfesorSipasId = async (req, res) => {
     }
 }
 
-export default {readProfesoret, registerProfesoret ,deleteProfesorSipasId};
+const loginProfessor = async (req, res) =>{
+
+    try{
+
+        const {Email, Password} = req.body;
+
+        Profesori.loginProfessori(Email,(err, results) =>{
+
+            if(err){
+                return res.status(500).json(err);
+            }
+            if(results.length === 0){
+                return res.status(404).json({message: "Nuk ka llogari me emailin e shtypur!"});
+            }
+
+            const profesori = results[0];
+
+            bcrypt.compare(Password, profesori.Password,(err, passCheck) =>{
+
+                if(err){
+                    return res.status(500).json(err);
+                }
+                if(!passCheck){
+                    return res.status(404).json({loginMessage: "Kyçja deshtoi!", message:"Ju lutem kontrolloni passwordin tuaj!"});
+                }
+                
+                return res.status(200).json({loginMessage:"Kyçja e suksesshme", 
+                    message: `Pershendetje Profesor: ${Email}`,
+                    data: results
+            });
+        })
+    });
+}
+    catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+    }
+}
+
+const updatePassword = async (req, res) =>{
+
+    const salts = 10;
+
+    try{
+
+        const ID = req.params.ProfesoriID;
+        const {oldPassword, newPassword, confirmPassword} = req.body;
+
+        const sql = "SELECT Password FROM Profesori WHERE ProfesoriID = ?";
+
+        const [oldPasswordcheck] = await db.promise().query(sql, ID);
+
+        const storedPassword = oldPasswordcheck[0].Password;
+
+        let check = await bcrypt.compare(oldPassword, storedPassword)
+
+            if(!check){
+
+                return res.status(400).json({message: "Ju lutem kontrolloni passwordin tuaj te vjeter!"});
+        }
+
+        if(newPassword !== confirmPassword){
+            return res.status(400).json({message: "Ju lutem konfirmoni passwordin tuaj te ri!"});
+
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, salts);
+
+        Profesori.updatePassword(ID,hashedPassword,(err, results) =>{
+
+            if(err){
+                return res.status(500).json(err,{message:"Server error"});
+            }
+
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Passwordi nuk u perditesua!"});
+            }
+
+            return res.status(201).json({message: "Passwordi juaj u perditesua me sukses!"});
+        });
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message:err});
+    }
+}
+
+export default {readProfesoret, registerProfesoret ,deleteProfesorSipasId, loginProfessor, updatePassword};

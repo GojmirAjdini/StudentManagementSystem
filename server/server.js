@@ -3,6 +3,7 @@ import studentiRoutes from "../routes/RouteStudenti.js";
 import lendaRoutes from "../routes/routeLendet.js";
 import fakultetRoutes from "../routes/routeFakulteti.js";
 import profesoriRoutes from "../routes/routeProfesori.js";
+import adminRoutes from "../routes/routeStafiAdministrativ.js";
 
 const app = express();
 const port = 3000;
@@ -15,6 +16,7 @@ app.use("/studentet", studentiRoutes);
 app.use("/lendet", lendaRoutes);
 app.use("/fakultetet", fakultetRoutes);
 app.use("/profesoret", profesoriRoutes);
+app.use("/admin",adminRoutes);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}..`);

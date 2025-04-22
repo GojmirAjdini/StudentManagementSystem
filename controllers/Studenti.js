@@ -15,7 +15,7 @@ const lexoStudentet = async (req, res) =>{
             if(studentet.length === 0){
                 return res.status(404).json({message: "Nuk ka te dhena!"});
             }
-            console.log(studentet.length);
+            
             res.status(200).json(studentet);
         });
     }
@@ -38,10 +38,12 @@ const regjistroStudent = async (req, res) =>{
             const emailCheckQuery = `
             SELECT EmailPrivat FROM profesori WHERE EmailPrivat = ? 
             UNION 
-            SELECT EmailPrivat FROM studenti WHERE EmailPrivat = ? 
+            SELECT EmailPrivat FROM studenti WHERE EmailPrivat = ?
+            UNION 
+            SELECT Email from stafiadministrativ WHERE Email = ?
         `;
             // KONTROLLO NESE EMAIL PRIVAT EKZISTON NE DATABAZE //
-        const [checkResults] = await db.promise().query(emailCheckQuery, [EmailPrivat, EmailPrivat]);
+        const [checkResults] = await db.promise().query(emailCheckQuery, [EmailPrivat, EmailPrivat, EmailPrivat]);
 
         if (checkResults.length > 0) {
             return res.status(400).json({ message: "Ky email ekziston tashmë në sistem!" });
