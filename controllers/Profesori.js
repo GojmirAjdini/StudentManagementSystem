@@ -110,7 +110,7 @@ const loginProfessor = async (req, res) =>{
         Profesori.loginProfessori(Email,(err, results) =>{
 
             if(err){
-                return res.status(500).json(err);
+                return res.status(500).json({message: "Server error", error: err});
             }
             if(results.length === 0){
                 return res.status(404).json({message: "Nuk ka llogari me emailin e shtypur!"});
@@ -149,7 +149,15 @@ const updatePassword = async (req, res) =>{
         const ID = req.params.ProfesoriID;
         const {oldPassword, newPassword, confirmPassword} = req.body;
 
+        if(!oldPassword || !newPassword || !confirmPassword){
+            return res.status(400).json({message: "Fushat duhen plotësuar!"});
+
+        }
+
         const sql = "SELECT Password FROM Profesori WHERE ProfesoriID = ?";
+
+        if(oldPasswordCheck.length === 0){
+        return res.status(404).json({message: "Nuk ekziston ID e specifikuar!"});}
 
         const [oldPasswordcheck] = await db.promise().query(sql, ID);
 
@@ -161,18 +169,24 @@ const updatePassword = async (req, res) =>{
 
                 return res.status(400).json({message: "Ju lutem kontrolloni passwordin tuaj te vjeter!"});
         }
+        
+        if(newPassword === oldPassword){
+            return res.status(400).json({message: "Passwordi i ri nuk mund te jete i njejte me te vjetrin!"});
+
+        }
 
         if(newPassword !== confirmPassword){
             return res.status(400).json({message: "Ju lutem konfirmoni passwordin tuaj te ri!"});
 
         }
 
+        
         const hashedPassword = await bcrypt.hash(newPassword, salts);
 
         Profesori.updatePassword(ID,hashedPassword,(err, results) =>{
 
             if(err){
-                return res.status(500).json(err,{message:"Server error"});
+                return res.status(500).json({message: "Server error", error: err});
             }
 
             if(results.affectedRows === 0){

@@ -82,5 +82,22 @@ class Studenti{
         })
 
     }
+
+    static loginStudent (EmailStudentor, callback) {
+
+        const sql = `SELECT s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat, s.Password,
+    s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
+    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata
+    FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID 
+    WHERE s.EmailStudentor = ?`;
+
+        db.query(sql, EmailStudentor, (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+            callback(null, results);
+        })
+    }
 }
 export default Studenti;

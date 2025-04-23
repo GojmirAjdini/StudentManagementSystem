@@ -160,19 +160,37 @@ const updatePassword = async (req, res) =>{
     try{
 
         const ID = req.params.ID;
-        const {oldPassword, newPassword } = req.body;
+        const {oldPassword, newPassword, confirmPassword } = req.body;
 
+        if(!oldPassword || !newPassword || !confirmPassword){
+            return res.status(400).json({message: "Fushat duhen plotësuar!"});
+
+        }
+            
         const sql = "SELECT Password from Studenti WHERE ID = ?";
 
         const [oldPasswordCheck] = await db.promise().query(sql, [ID]);
 
+        if(oldPasswordCheck.length === 0){
+            return res.status(404).json({message: "Nuk ekziston ID e specifikuar!"});}
+
         const storedPassword = oldPasswordCheck[0].Password;
 
-        let check = await bcrypt.compare(oldPassword, storedPassword);
-        if(!check){
+        let checkPass = await bcrypt.compare(oldPassword, storedPassword);
+        if(!checkPass){
             return res.status(400).json({message: "Ju lutem kontrolloni passwordin tuaj te vjeter!"});
+        }
+        
+        if(newPassword === oldPassword){
+            return res.status(400).json({message: "Passwordi i ri nuk mund te jete i njejte me te vjetrin!"});
 
         }
+
+        if(newPassword !== confirmPassword){
+            return res.status(400).json({message: "Ju lutem konfirmoni passwordin tuaj te ri!"});
+
+        }
+
         const hashedPassword = await bcrypt.hash(newPassword, salts);
 
         Studenti.updatePassword(ID,hashedPassword,(err, results) =>{
@@ -195,5 +213,48 @@ catch(err){
 }
 }
 
+const loginStudenti = async(req, res) =>{
 
-export default {lexoStudentet, regjistroStudent, fshijStudent, fshijAllStudentet, updatePassword};
+    try{
+
+        const {EmailStudentor, Password} = req.body;
+    
+        Studenti.loginStudent(EmailStudentor,(err, results) =>{
+
+            if(err){
+                return res.status(500).json(err, { message: "Server error"});
+            }
+            
+            if(results.length === 0){
+                return res.status(404).json({message: "Ju lutem kontrolloni emailin tuaj!"});
+            }
+
+            const studenti = results[0];
+            
+            bcrypt.compare(Password, studenti.Password,(err, passCheck) =>{
+
+                if(err){
+                    return res.status(500).json(err, { message: "Server error"});
+                }
+
+                if(!passCheck){
+                    return res.status(400).json({loginMessage: "Kyçja deshtoi!" ,
+                        message: "Ju lutem kontrolloni passwordin tuaj!"});
+                }
+                
+                return res.status(200).json({loginMessage:"Kyçja e suksesshme", 
+                    message: `Pershendetje Student: ${EmailStudentor}`,
+                    data: results
+                });
+            })
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message:err});
+    }
+}
+
+
+
+export default {lexoStudentet, regjistroStudent, fshijStudent, 
+    fshijAllStudentet, updatePassword, loginStudenti};
