@@ -48,7 +48,7 @@ class StafiAdministrativ {
 
     static loginAdmin(Email, callback){
 
-        const sql = `SELECT FakultetiId, Email, Password, Emri_Adminit, Mbiemri_Adminit 
+        const sql = `SELECT FakultetiId, Email, Emri_Adminit, Mbiemri_Adminit 
         FROM stafiadministrativ
         WHERE Email = ?`;
 
@@ -63,6 +63,21 @@ class StafiAdministrativ {
             }
         
         callback(null, results);
+        })
+    }
+
+    static updatePasword(ID, Password, callback){
+
+        const sql = "UPDATE stafiadministrativ SET Password = ? WHERE AdminID = ?";
+        const values = [Password, ID];
+
+        db.query(sql, values,(err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+            
+            callback(null, results);
         })
     }
 }

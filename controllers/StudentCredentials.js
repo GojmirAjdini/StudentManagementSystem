@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
-import 'dotenv/config';
+import env from 'dotenv';
+
+env.config();
 
 function vitiAkademik(){
 
@@ -106,15 +108,15 @@ function sendEmail(emailprivat, emailstudentor, password){
 
         service:"gmail",
         auth: {
-            user: "gojmirajdini@gmail.com",
-            pass: "olzm gxdj jqdl miai"
+            user: process.env.GMAIL_EMAIL,
+            pass: process.env.GMAIL_PASS
         },
     
     });
     
     let mailOptions = {
         
-        from: "gojmirajdini@gmail.com",
+        from: process.env.GMAIL_EMAIL,
         to: `${emailprivat}`,
         subject: "Informatat per login ne sistem!",
         text: `Pershendetje, \n\nEmaili i juaj i studentit: ${emailstudentor} \nNdersa Passwordi juaj: ${password}\nJu lutem ndryshoni passwordin tuaj!`,

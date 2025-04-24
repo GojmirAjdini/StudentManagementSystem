@@ -218,7 +218,17 @@ const loginStudenti = async(req, res) =>{
     try{
 
         const {EmailStudentor, Password} = req.body;
-    
+        
+        if(!EmailStudentor || !Password){
+            return res.json({message: "Te gjitha fushat duhet plotesuar!"});
+        }
+
+        const sql = "SELECT Password FROM Studenti WHERE EmailStudentor = ?";
+
+        const [storedPassword] = await db.promise().query(sql, EmailStudentor);
+
+        const studenti = storedPassword[0];
+
         Studenti.loginStudent(EmailStudentor,(err, results) =>{
 
             if(err){
@@ -229,8 +239,6 @@ const loginStudenti = async(req, res) =>{
                 return res.status(404).json({message: "Ju lutem kontrolloni emailin tuaj!"});
             }
 
-            const studenti = results[0];
-            
             bcrypt.compare(Password, studenti.Password,(err, passCheck) =>{
 
                 if(err){
@@ -242,7 +250,7 @@ const loginStudenti = async(req, res) =>{
                         message: "Ju lutem kontrolloni passwordin tuaj!"});
                 }
                 
-                return res.status(200).json({loginMessage:"Kyçja e suksesshme", 
+                return res.status(200).json({loginMessage:"Kyçja e suksesshme!", 
                     message: `Pershendetje Student: ${EmailStudentor}`,
                     data: results
                 });

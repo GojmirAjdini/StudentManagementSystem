@@ -1,16 +1,18 @@
 import mysql from "mysql2";
 import express from "express";
+import env from "dotenv";
 
 const app = express();
 
+env.config();
 app.use(express.json());
 
 const db = mysql.createConnection({
 
-    host: "localhost",
-    database: "student_management_system",
-    user:"root",
-    password: ""
+    host: process.env.HOST,
+    database: process.env.DATABASE,
+    user:process.env.USER,
+    password: process.env.PASSWORD
 });
 
 db.connect((error) =>{

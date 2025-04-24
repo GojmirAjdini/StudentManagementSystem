@@ -163,7 +163,7 @@ const updatePassword = async (req, res) =>{
 
         const storedPassword = oldPasswordcheck[0].Password;
 
-        let check = await bcrypt.compare(oldPassword, storedPassword)
+        let check = await bcrypt.compare(oldPassword, storedPassword);
 
             if(!check){
 

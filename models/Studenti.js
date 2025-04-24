@@ -25,6 +25,7 @@ class Studenti{
         const sql = `INSERT INTO studenti(Emri, Mbiemri, Gjinia, EmailStudentor,EmailPrivat, Password, 
         Vendlindja,Data_Lindjes, Adresa, Nr_Tel, FakultetiID, Statusi, StudentiID, Gjenerata) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+       
         const values = [Emri, Mbiemri, Gjinia, EmailStudentor, EmailPrivat, Password, Vendlindja, 
             Data_Lindjes, Adresa, Nr_Tel, FakultetiID, Statusi, StudentiID, Gjenerata];
 
@@ -85,7 +86,7 @@ class Studenti{
 
     static loginStudent (EmailStudentor, callback) {
 
-        const sql = `SELECT s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat, s.Password,
+        const sql = `SELECT s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
     f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata
     FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID 

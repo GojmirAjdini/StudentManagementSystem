@@ -4,7 +4,8 @@
   "description": "Projekt per menaxhimin e sistemit te studenteve.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,8 @@
     "node-notifier": "^10.0.1",
     "nodemailer": "^6.10.1",
     "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
