@@ -4,6 +4,14 @@ import lendaRoutes from "../routes/routeLendet.js";
 import fakultetRoutes from "../routes/routeFakulteti.js";
 import profesoriRoutes from "../routes/routeProfesori.js";
 import adminRoutes from "../routes/routeStafiAdministrativ.js";
+import env from 'dotenv';
+import cors from "cors";
+
+env.config();
+const corsOptions = {
+
+    origin: ["http://localhost:5173"],
+};
 
 const app = express();
 const port = 3000;
@@ -12,11 +20,12 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cors(corsOptions));
 app.use("/studentet", studentiRoutes);  
 app.use("/lendet", lendaRoutes);
 app.use("/fakultetet", fakultetRoutes);
 app.use("/profesoret", profesoriRoutes);
-app.use("/admin",adminRoutes);
+app.use("/admin",adminRoutes); 
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}..`);

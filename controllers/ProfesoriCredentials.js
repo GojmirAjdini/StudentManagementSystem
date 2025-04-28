@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
-import 'dotenv/config'; 
+import env from "dotenv";
+
+env.config();
 
 function random(){
    
@@ -11,8 +13,6 @@ function random(){
     }
 }
 function randomEmail(emri, mbiemri){
-
-    let randoms = random();
 
         let email = `${emri.toLowerCase()}.${mbiemri.toLowerCase()}@uni-edu.net`;
         return email;
@@ -28,13 +28,15 @@ function randomPassword(emri, mbiemri){
 
 function sendEmail(emailprivat, emailstudentor, password){
 
+    const Email = process.env.GMAIL_EMAIL;
+    const Password = process.env.PASSWORD;
     
     let transporter = nodemailer.createTransport({
 
         service:"gmail",
         auth: {
-            user: "gojmirajdini@gmail.com",
-            pass: "olzm gxdj jqdl miai"
+            user: Email,
+            pass: Password
         },
     
     });

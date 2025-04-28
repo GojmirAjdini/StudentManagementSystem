@@ -18,7 +18,7 @@ const db = mysql.createConnection({
 db.connect((error) =>{
 
     if(error){
-        console.log("Lidhja me databaze deshtoi!", error.cause);
+        console.log("Lidhja me databaze deshtoi!", error);
         
     }
     else{

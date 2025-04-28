@@ -5,7 +5,10 @@ class Studenti{
 
     static readAll(callback){
 
-        const sql = "SELECT * FROM studenti";
+        const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
+    s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
+    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata
+    FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID`;
 
         db.query(sql,(err, results) =>{
          
@@ -100,5 +103,6 @@ class Studenti{
             callback(null, results);
         })
     }
+
 }
 export default Studenti;
