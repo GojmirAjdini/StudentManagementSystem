@@ -1,10 +1,26 @@
 *{
   font-family: "Montserrat";
+  
 }
+
 h1{
   color: black;
   margin-top: 40px;
 }
+
+
+@keyframes fadeIn {
+
+  from{
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 #container{
 
   display: flex;
@@ -16,9 +32,20 @@ h1{
 }
 table ,th ,td ,tr{
 
-  margin-top: 50px;
+  margin-top: 80px;
   padding: 7px;
 }
 th{
   background-color: rgb(248, 248, 248);
+}
+
+#successMessage{
+
+  position: absolute;
+  top: 180px;
+  text-align: center;
+}
+.popupDesign{
+
+  border-radius: 10px;
 }

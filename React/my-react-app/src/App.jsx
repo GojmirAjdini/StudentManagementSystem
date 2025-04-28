@@ -13,6 +13,7 @@ function App() {
           <ul>
             <li><Link className='customLink' to="/register">Regjistro Studentë</Link></li>
             <li><Link className='customLink' to="/studentet">Lista e Studentëve</Link></li>
+            <li><img className='logoImg' src="/src/assets/Img/student-management.png" alt="" /></li>
           </ul>
         </nav>
       </div>

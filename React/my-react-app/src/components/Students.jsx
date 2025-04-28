@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react"
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
 import "../assets/Students.css";
+import Swal from "sweetalert2";
 
 function Students() {
  
@@ -24,6 +25,29 @@ function Students() {
 
   const deleteStudent = async(ID) =>{
 
+    
+    const result = await Swal.fire({
+            
+      background:"#F5F5F5",
+      position: "center",
+      title: "Dëshironi t'i fshini të dhënat?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',  
+      cancelButtonColor: '#d33',      
+      confirmButtonText: 'Po, fshij!',
+      cancelButtonText: 'Jo, anulo',
+      timer:5000,
+      customClass: {
+        confirmButton:'swal-confirmBtn',
+        cancelButton: 'swal-confirmBtn',
+        popup:'popupDesign'
+      }
+    });
+
+    if(result.isConfirmed){
+
+
     try{
       
       const response = await axios.delete(`${API_URL}studentet/delete/${ID}`);
@@ -33,15 +57,21 @@ function Students() {
       setStudentet(prev => prev.filter(student => student.ID !==  ID));
       setSuccessMessage(message);
       console.log(message);
-      setTimeout(() => setSuccessMessage (''),1500);
+      setTimeout(() => setSuccessMessage (''),2000);
     } catch(err){
       console.error("Gabim gjate fshirjes!", err);
     }
   }
-
+  }
+  
   useEffect(() =>{
-
     fetchStudentet();
+
+    const interval = setInterval(() => {
+      fetchStudentet();
+    }, 5000);
+
+    return () => clearInterval(interval);
 
   },[]);
 
@@ -51,7 +81,7 @@ function Students() {
       <h1>LISTA E STUDENTËVE</h1>
 
       {successMessage && (
-        <div className="alert alert-success" role="alert">
+        <div id="successMessage" className="alert alert-success fade-in" role="alert">
           {successMessage}
         </div>
       )}
@@ -99,7 +129,7 @@ function Students() {
               <td>
 
               <button className="btn btn-danger" 
-                onClick={() => window.confirm("Dëshironi të fshini studentin?") && deleteStudent(student.ID)}>Delete</button>
+                onClick={ () => deleteStudent(student.ID)}>Delete</button>
 
               </td>
             </tr>

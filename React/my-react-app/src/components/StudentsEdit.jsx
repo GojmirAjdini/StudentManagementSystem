@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import "../assets/Register.css";
-import Studentet from "./Students";
+import Swal from "sweetalert2";
+import { FaArrowLeft } from "react-icons/fa";
 
 
 function StudentsEdit() {
   const { ID } = useParams();
-  const navigate = useNavigate();
   const API_URL = "http://localhost:3000/";
 
+  const [originalStudenti, setOriginalStudenti] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [fakultetet, setFakultetet] = useState([]);
   const [studenti, setStudenti] = useState({
@@ -37,9 +38,10 @@ function StudentsEdit() {
     try {
       const res = await axios.get(`${API_URL}studentet/${ID}`);
       console.log("Studenti data:", res.data);
-      setStudenti(res.data[0],{
-        Drejtimi: res.data[0].Drejtimi,
-      });
+      setStudenti(
+        res.data[0]
+      )
+      setOriginalStudenti(res.data[0]);
     } catch (err) {
       console.error("Error fetching studenti", err);
     }
@@ -64,20 +66,63 @@ const handleChange = (e) => {
     }));
   };
 
+  const isEqual = (obj1, obj2) => {
+    return JSON.stringify(obj1) === JSON.stringify(obj2);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isEqual(studenti, originalStudenti)) {
+      
+      await Swal.fire({
+        title: 'Nuk ka ndryshime!',
+        text: 'Asnjë e dhënë nuk është ndryshuar.',
+        icon: 'info',
+        confirmButtonText: 'OK',
+        confirmButtonColor:'#3085d6',
+        customClass: {
+          confirmButton: 'swal-confirmBtn',
+          popup: 'popupDesign',
+          htmlContainer: 'textSwal',
+        }
+      });
+      return; 
+    }
+   
+    const result = await Swal.fire({
+      
+      background:"rgb(245, 245, 245)",
+      position: "center",
+      title: "Dëshironi t'i ruani të dhënat?",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',  
+      cancelButtonColor: '#d33',      
+      confirmButtonText: 'Po, ruaj!',
+      cancelButtonText: 'Jo, anulo',
+      timer:5000,
+      customClass: {
+        confirmButton:'swal-confirmBtn',
+        cancelButton: 'swal-confirmBtn',
+        popup:"popupDesign"
+      }
+    });
+
+    if(result.isConfirmed){
+
     try {
-      const response  = await axios.patch(`${API_URL}studentet/edit/${ID}`,studenti);
+
+      const response  = await axios.patch(`${API_URL}studentet/edit/${ID}`, studenti);
 
       setSuccessMessage(response.data.message);
 
       setTimeout(() => setSuccessMessage(''), 3000);
-      setTimeout(() =>  navigate("/studentet"), 3000);
     } catch (err) {
       console.error("Error updating studenti", err);
     }
   };
-
+  }
   return (
 
     
@@ -85,7 +130,7 @@ const handleChange = (e) => {
       <h1>PËRDITËSO STUDENTIN</h1>
 
       {successMessage && (
-        <div id="successMsg" className="alert alert-success" role="alert">
+        <div id="successMsg" className="alert alert-success fade-in" role="alert">
           {successMessage}
         </div>
       )}
@@ -128,9 +173,10 @@ const handleChange = (e) => {
 
         <div className="input-label">
           <label>Data e Lindjes <span>*</span></label>
-          <input type="date" name="Data_Lindjes" value={studenti.Data_Lindjes?.slice(0,10) || ''} onChange={handleChange} required />
+          <input placeholder="YYYY-MM-DD" type="text" name="Data_Lindjes" value={studenti.Data_Lindjes.slice(0,10) || ''} 
+          onChange={handleChange} required />
+          
         </div>
-
         <div className="input-label">
           <label>Adresa <span>*</span></label>
           <input type="text" name="Adresa" value={studenti.Adresa || ''} onChange={handleChange} required />
@@ -138,19 +184,20 @@ const handleChange = (e) => {
 
         <div className="input-label">
           <label>Kontakt</label>
-          <input type="text" name="NrTel" value={studenti.Nr_Tel || ''} onChange={handleChange} />
+          <input type="text" name="Nr_Tel" value={studenti.Nr_Tel || ''} onChange={handleChange} />
         </div>
 
         <div className="input-label">
           <label>Fakulteti <span>*</span></label>
           <select name="FakultetiID" value={studenti.FakultetiID || ''} onChange={handleChange} required>
-            <option value="" disabled>Zgjedh Fakultetin</option>
+            <option value='' disabled >Zgjedh Fakultetin</option>
             {fakultetet.map((fk) => (
               <option key={fk.FakultetiID} value={fk.FakultetiID}>
                 {fk.Emri}
               </option>
             ))}
           </select>
+          {console.log(studenti.FakultetiID)}
         </div>
 
         <div className="input-label">
@@ -174,6 +221,12 @@ const handleChange = (e) => {
 
         <div className="input-label">
           <button id="updateBtn" className="btn btn-primary" type="submit">Ruaj Ndryshimet</button>
+        </div>
+
+        <div className="input-label">
+
+         <Link className="kthehuLink" to={`/studentet`}>  
+          <FaArrowLeft className="leftArrow"/>Kthehu</Link>
         </div>
 
       </form>

@@ -122,7 +122,7 @@ class Studenti{
     static readStudentById(ID, callback){
 
     const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
-s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
+s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, s.FakultetiID, 
 f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata
 FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID
 WHERE ID = ?`;

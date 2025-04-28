@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import axios from "axios";
 import App from "./Students";
 import "../assets/Register.css";
+import Swal from "sweetalert2";
 
 function Register(){
 
@@ -51,18 +52,40 @@ function Register(){
 
         e.preventDefault();
 
+        if(!emri && !mbiemri && !gjinia && !emailprivat && 
+          !vendlindja &&!data_lindjes && !adresa && !nr_tel && 
+          !fakultetiID && !statusi && !niveli ){
+
+        await Swal.fire({
+        title: 'Fushat e zbrazura!',
+        text: 'Ju lutem plotësoni të gjithë fushat. ',
+        icon: 'info',
+        confirmButtonText: 'OK',
+        confirmButtonColor:'#3085d6',
+        timer:5000,
+        customClass: {
+        confirmButton: 'swal-confirmBtn',
+        popup: 'popupDesign',
+        htmlContainer: 'textSwal',
+        
+    }
+    
+      });
+  return; 
+      }
+
     try{
 
         const response = await axios.post(`${API_URL}studentet/register/`,{
 
             Emri: emri, Mbiemri: mbiemri, Gjinia: gjinia, EmailPrivat: emailprivat,
-            Vendlindja: vendlindja, Data_Lindjes: data_lindjes, Adresa: adresa,
+            Vendlindja: vendlindja, Data_Lindjes: data_lindjes, Adresa: adresa, Nr_Tel: nr_tel,
             FakultetiID: fakultetiID, Statusi: statusi 
         });
 
         setSuccessMessage(response.data.message);
 
-        setTimeout(() => setSuccessMessage(''),1500);
+        setTimeout(() => setSuccessMessage(''),3000);
         console.log(response.data.message);
     } catch(err){
         console.error(err);
@@ -148,7 +171,7 @@ return (
         
         <div className="input-label">
         <label htmlFor="">Kontakt</label>
-        <input type="text" placeholder="Nr Tel" value={nr_tel} onChange={(e) => setNr_Tel(e.target.value)} />
+        <input type="text" placeholder="04X-XXX-XXX" name="Nr_Tel" value={nr_tel} onChange={(e) => setNr_Tel(e.target.value)} />
         </div>
 
         <div className="input-label">
@@ -167,7 +190,7 @@ return (
         <div className="input-label">
         <label htmlFor="">Niveli<span> *</span></label>
         <select required class="form-select" value={niveli} onChange={(e) => setNiveli(e.target.value)} aria-label="Default select example">
-        <option disabled selected>Niveli</option>
+        <option disabled value="">Niveli</option>
         <option value="Bachelor">Bachelor</option>
         <option value="Master">Master</option>
         <option value="PhD">PhD</option>
@@ -189,7 +212,7 @@ return (
         </div>
         </form>
         {successMessage && (
-        <div id="successMsg" className="alert alert-success" role="alert">
+        <div id="successMsg" className="alert alert-success fade-in" role="alert">
           {successMessage}
         </div>  
       )}  
