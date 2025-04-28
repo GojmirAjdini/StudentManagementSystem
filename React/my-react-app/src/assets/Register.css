@@ -1,0 +1,127 @@
+
+h1{
+
+    text-align: center;
+    margin-top: 60px;
+}
+span{
+
+    color: red;
+}
+.container{
+
+    width: 80%;
+    justify-content: center;
+}
+form{
+
+    display: grid;
+    grid-template-columns: auto auto auto;
+    margin-top: 40px;
+}
+
+input{
+  
+  padding: 10px;
+}
+#primaryBtn{
+
+  position: relative;
+  background-color: rgb(101, 64, 235);
+  left: 60px;
+  top: 25px;
+  height: 40px;
+  width: 120px;
+  border-radius: 10px;
+}
+#gjiniaDiv{
+
+  display: flex;
+  flex-direction: row;
+}
+.form-check{
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.form-check input{
+
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.form-check label{
+
+  cursor: pointer;
+  font-weight: normal;
+}
+.form-check label:hover{
+
+  font-weight: bold;
+}
+
+select{
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.form-select{
+
+  border-radius: 10px;
+  padding: 10px;
+
+}
+
+#primaryBtn:hover{
+  background-color: rgb(77, 51, 173);
+}
+
+.input-label{
+
+    display: flex;
+    flex-direction: column;
+    margin: 12px;
+}
+#resetBtn{
+
+  position: relative;
+  left: 200px;
+  bottom: 15px;
+  height: 40px;
+  width: 120px;
+  border-radius: 10px;
+  border: none;
+}
+#successMsg{
+  position: relative;
+  width: fit-content;
+  text-align: center;
+}
+
+#updateBtn{
+
+  border-radius: 10px;
+  margin-top: 28px;
+  text-align: center;
+  margin-left: 60px;
+  width: 70%;
+  background-color: rgb(101, 64, 235);
+}
+
+#updateBtn:hover{
+
+  background-color: rgb(77, 51, 173);
+ 
+
+}
+
+#resetBtn:hover{
+  background-color: rgb(214, 213, 213);
+}
+input{
+
+  border: 1px solid gray;
+  border-radius: 10px;
+  
+}

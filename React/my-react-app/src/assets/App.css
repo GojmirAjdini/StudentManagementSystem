@@ -1,0 +1,55 @@
+
+.navContainer{
+
+  display: flex;
+  height: 70px;
+  background-color: rgb(101, 64, 235);
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  color: black;
+}
+
+.customLink{
+
+  
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
+  transition: 0.2s ease-in-out;
+}
+
+.customLink:focus {
+  outline: none;
+  text-decoration: none;
+  color:rgb(255, 191, 0) ;
+}
+
+.customLink:hover{
+
+  color: rgb(255, 141, 1);
+  transition: 0.2s ease-in-out;
+  text-decoration:none;
+}
+
+.dropdown .dropdown-menu{
+
+  display: flex;
+  flex-direction: column;
+}
+.customLink:active{
+
+  color: rgb(255, 191, 0);;
+}
+
+.navContainer ul {
+
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  margin-right: 50px;
+}
+
+li{
+  list-style-type: none;
+}

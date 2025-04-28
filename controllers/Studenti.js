@@ -291,7 +291,7 @@ const patchStudentin = async (req, res) => {
             if (err) {
                 return res.status(500).json({ message: "Gabim gjatë përditësimit të studentit.", error: err });
             }
-            return res.status(200).json({ message: "Studenti u përditësua me sukses.", results });
+            return res.status(200).json({ message: "Studenti u përditësua me sukses!", results });
         });
            
         } catch(err){
