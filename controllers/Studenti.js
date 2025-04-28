@@ -301,5 +301,29 @@ const patchStudentin = async (req, res) => {
         }
     }
 
+    const lexoStudentetByID = async (req, res) =>{
+    
+        try{
+            
+            const id =  req.params.ID;
+
+            Studenti.readStudentById(id, (err, studentet) =>{
+    
+                if(err){
+                    return res.status(500).json("Server error");
+                }
+                if(studentet.length === 0){
+                    return res.status(404).json({message: "Nuk ka te dhena!"});
+                }
+                
+                res.status(200).json(studentet);
+            });
+        }
+            catch(err){
+                console.log("Error reading students!", err);
+                return res.status(500).json({error: "Server error"})
+            }  
+        } 
+
 export default {lexoStudentet, regjistroStudent, fshijStudent, 
-    fshijAllStudentet, updatePassword, loginStudenti, patchStudentin};
+    fshijAllStudentet, updatePassword, loginStudenti, patchStudentin, lexoStudentetByID};
