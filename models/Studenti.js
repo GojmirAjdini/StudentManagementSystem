@@ -104,5 +104,19 @@ class Studenti{
         })
     }
 
+    static patchStudenti (ID, fushat, values, callback){
+
+            const sql =`UPDATE Studenti SET ${fushat.join(', ')}  WHERE ID = ?`;
+
+            values.push(ID);
+
+            db.query(sql, values, (err, results) =>{
+
+                if(err){
+                    return callback(err, null);
+                }   
+            callback(null,results);    
+            })
+        }
 }
 export default Studenti;

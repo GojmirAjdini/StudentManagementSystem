@@ -2,6 +2,7 @@ import Studenti from "../models/Studenti.js";
 import bcrypt from "bcrypt";
 import StudentCredentials from "./StudentCredentials.js";
 import db from "../database/Database.js";
+import { fileLoader } from "ejs";
 
 const lexoStudentet = async (req, res) =>{
     
@@ -262,7 +263,43 @@ const loginStudenti = async(req, res) =>{
     }
 }
 
+const patchStudentin = async (req, res) => {
+    
+    try{
 
+        const id = req.params.ID;
+        const {Emri, Mbiemri, Gjinia, EmailPrivat, Vendlindja, Data_Lindjes, 
+            Adresa, Nr_Tel, FakultetiID, Statusi, Gjenerata} = req.body;
+
+        const fushat = [];
+        const values = [];
+        
+        if(Emri){ fushat.push('Emri = ?'); values.push(Emri);} if(Mbiemri){ fushat.push('Mbiemri = ?'); values.push(Mbiemri);} 
+        if(Gjinia){ fushat.push('Gjinia = ?'); values.push(Gjinia);} if(EmailPrivat){ fushat.push('EmailPrivat = ?'); values.push(EmailPrivat);} 
+        if(Vendlindja){ fushat.push('Vendlindja = ?'); values.push(Vendlindja);} if(Data_Lindjes){ fushat.push('Data_Lindjes = ?'); values.push(Data_Lindjes);} 
+        if(Adresa){ fushat.push('Adresa = ?'); values.push(Adresa);} if(Nr_Tel){ fushat.push('Nr_Tel = ?'); values.push(Nr_Tel);} 
+        if(FakultetiID){ fushat.push('FakultetiID = ?'); values.push(FakultetiID);} if(Statusi){ fushat.push('Statusi = ?'); values.push(Statusi);} 
+        if(Gjenerata){ fushat.push('Gjenerata = ?'); values.push(Gjenerata);} 
+
+        if(fushat.length === 0){
+
+            return res.status(400).json({message: "Nuk ka të dhëna për regjistrim!"});
+        }
+
+        Studenti.patchStudenti(id, fushat, values, (err, results) =>{
+
+            if (err) {
+                return res.status(500).json({ message: "Gabim gjatë përditësimit të studentit.", error: err });
+            }
+            return res.status(200).json({ message: "Studenti u përditësua me sukses.", results });
+        });
+           
+        } catch(err){
+            console.error(err);
+            return res.status(500).json({ message: "Server error", error: err });
+
+        }
+    }
 
 export default {lexoStudentet, regjistroStudent, fshijStudent, 
-    fshijAllStudentet, updatePassword, loginStudenti};
+    fshijAllStudentet, updatePassword, loginStudenti, patchStudentin};

@@ -9,5 +9,6 @@ router.patch("/update/:ID",studentKontroller.updatePassword);
 router.delete("/delete/:ID", studentKontroller.fshijStudent);
 router.delete("/deleteAll/",studentKontroller.fshijAllStudentet);
 router.post("/login",studentKontroller.loginStudenti);
+router.patch("/edit/:ID",studentKontroller.patchStudentin);
 
 export default router;
