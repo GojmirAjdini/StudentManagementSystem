@@ -7,7 +7,7 @@ class Studenti{
 
         const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata
+    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.uKrijua
     FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID`;
 
         db.query(sql,(err, results) =>{

@@ -17,8 +17,27 @@ form{
 
     display: grid;
     grid-template-columns: auto auto auto;
-    margin-top: 40px;
+    margin-top: 60px;
 }
+
+
+@keyframes fadeInPage {
+  from {
+      opacity: 0;
+      transform: translateY(10px); 
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+#fadeInPage{
+  opacity: 0;
+  animation: fadeInPage 0.5s ease-in-out forwards;
+
+}
+
 
 input{
   
@@ -28,7 +47,7 @@ input{
 
   position: relative;
   background-color: rgb(101, 64, 235);
-  left: 60px;
+  left: 80px;
   top: 25px;
   height: 40px;
   width: 120px;
@@ -94,7 +113,7 @@ select{
 #resetBtn{
 
   position: relative;
-  left: 200px;
+  left: 210px;
   bottom: 15px;
   height: 40px;
   width: 120px;
@@ -105,6 +124,15 @@ select{
   position: absolute;
   top: 150px;
   width: fit-content;
+  left:180px;
+  text-align: center;
+}
+
+#successEmail{
+  position: absolute;
+  bottom: 50px;
+  width: fit-content;
+  left:180px;
   text-align: center;
 }
 

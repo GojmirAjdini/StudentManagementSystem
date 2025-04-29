@@ -57,7 +57,7 @@ function Students() {
       setStudentet(prev => prev.filter(student => student.ID !==  ID));
       setSuccessMessage(message);
       console.log(message);
-      setTimeout(() => setSuccessMessage (''),2000);
+      setTimeout(() => setSuccessMessage (''),4000);
     } catch(err){
       console.error("Gabim gjate fshirjes!", err);
     }
@@ -77,7 +77,7 @@ function Students() {
 
   return (
 
-    <div id="container">
+    <div className="fadeInPage" id="container">
       <h1>LISTA E STUDENTËVE</h1>
 
       {successMessage && (
@@ -89,11 +89,11 @@ function Students() {
       <table border="1">
         <thead>
           <tr>
+            <th>#</th>
             <th>StudentiID</th>
             <th>Emri</th>
             <th>Mbiemri</th>
             <th>Email Studentor</th>
-            <th>Email Privat</th>
             <th>Gjinia</th>
             <th>Vendlindja</th>
             <th>Fakulteti</th>
@@ -101,18 +101,20 @@ function Students() {
             <th>Statusi</th>
             <th>Kontakt</th>
             <th>Gjenerata</th>
+            <th>Data e Regjistrimit</th>
             <th>Përditëso</th>
             <th>Fshij</th>
+            
           </tr>
         </thead>
         <tbody>
-          {studentet.map((student) => (
+          {studentet.map((student, index) => (
             <tr key={student.StudentiID}>
+              <td>{index + 1}</td>
               <td>{student.StudentiID}</td>
               <td>{student.Emri}</td>
               <td>{student.Mbiemri}</td>
               <td>{student.EmailStudentor}</td>
-              <td>{student.EmailPrivat}</td>
               <td>{student.Gjinia}</td>
               <td>{student.Vendlindja}</td>
               <td>{student.Drejtimi}</td>
@@ -120,6 +122,7 @@ function Students() {
               <td>{student.Statusi}</td>
               <td>{student.Nr_Tel}</td>
               <td>{student.Gjenerata}</td>
+              <td>{student.uKrijua ? new Date(student.uKrijua).toLocaleString()  : ''}</td>
               <td>
                 
               <Link to={`/edit/${student.ID}`}>

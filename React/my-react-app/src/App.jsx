@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Register from './components/StudentRegister';
 import StudentList from './components/Students';
 import "./assets/App.css";
-import Students from './components/Students';
+import HomeAdmin from './components/HomeAdmin';
 import StudentsEdit from './components/StudentsEdit';
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
         </nav>
       </div>
         <Routes>
+          <Route path='/' element={<HomeAdmin />} />
           <Route path="/register" element={<Register />} />
           <Route path="/studentet" element={<StudentList />} />
           <Route path='/edit/:ID' element={<StudentsEdit />} />

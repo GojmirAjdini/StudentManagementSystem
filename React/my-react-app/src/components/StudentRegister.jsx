@@ -11,6 +11,7 @@ function Register(){
 
     const [fakultetet, setFakultetet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
+    const [successEmail, setSuccessEmail] = useState('');
     const [emri, setEmri] = useState('');
     const [mbiemri, setMbiemri] = useState('');
     const [gjinia, setGjinia] = useState('');
@@ -36,6 +37,7 @@ function Register(){
         setStatusi('');
         setNiveli('');
     };
+    
 
     const fakultetetDisponueshme = async() =>{
 
@@ -52,27 +54,28 @@ function Register(){
 
         e.preventDefault();
 
-        if(!emri && !mbiemri && !gjinia && !emailprivat && 
-          !vendlindja &&!data_lindjes && !adresa && !nr_tel && 
-          !fakultetiID && !statusi && !niveli ){
+      if(!emri && !mbiemri && !gjinia && !emailprivat && 
+        !vendlindja &&!data_lindjes && !adresa && !nr_tel && 
+        !fakultetiID && !statusi && !niveli ){
 
-        await Swal.fire({
-        title: 'Fushat e zbrazura!',
-        text: 'Ju lutem plotësoni të gjithë fushat. ',
-        icon: 'info',
-        confirmButtonText: 'OK',
-        confirmButtonColor:'#3085d6',
-        timer:5000,
-        customClass: {
-        confirmButton: 'swal-confirmBtn',
-        popup: 'popupDesign',
-        htmlContainer: 'textSwal',
-        
+      await Swal.fire({
+      title: 'Fushat e zbrazura!',
+      text: 'Ju lutem plotësoni të gjithë fushat. ',
+      icon: 'info',
+      confirmButtonText: 'OK',
+      confirmButtonColor:'#3085d6',
+      timer:5000,
+      customClass: {
+      confirmButton: 'swal-confirmBtn',
+      popup: 'popupDesign',
+      htmlContainer: 'textSwal',
+      
+  }
+  
+    });
+
+    return; 
     }
-    
-      });
-  return; 
-      }
 
     try{
 
@@ -84,14 +87,36 @@ function Register(){
         });
 
         setSuccessMessage(response.data.message);
+        setSuccessEmail(response.data.emailNotification);
 
-        setTimeout(() => setSuccessMessage(''),3000);
-        console.log(response.data.message);
+        console.log(response.data.emailNotification);
+
+        setTimeout(() => setSuccessMessage(''),5000);
+        setTimeout(() => setSuccessEmail(''),5000);
+
     } catch(err){
         console.error(err);
-    }
+     
+    if (err.response && err.response.data && err.response.data.message) {
+      
+      console.log(err.response.data.message);
 
+      Swal.fire({
+          title: 'Gabim!',
+          text: err.response.data.message,
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#d33',
+          customClass: {
+              confirmButton: 'swal-confirmBtn',
+              popup: 'popupDesign',
+              htmlContainer: 'textSwal',
+          }
+      });
+  }
 }
+    }
+    
 
 useEffect(() =>{
 
@@ -101,7 +126,7 @@ useEffect(() =>{
 
 return (
 
-    <div className="container">
+    <div id="fadeInPage" className="container">
 
         <h1>REGJISTRO STUDENTË</h1>
 
@@ -177,7 +202,7 @@ return (
         <div className="input-label">
         <label htmlFor="">Fakulteti <span>*</span></label>
 
-        <select  value={fakultetiID} onChange={(e) => setFakultetiID(e.target.value)}>
+        <select value={fakultetiID} onChange={(e) => setFakultetiID(e.target.value)}>
           <option disabled value="">Zgjedh Fakultetin</option>
           {fakultetet.map((fk) => (
             <option key={fk.FakultetiID} value={fk.FakultetiID}>
@@ -189,7 +214,7 @@ return (
 
         <div className="input-label">
         <label htmlFor="">Niveli<span> *</span></label>
-        <select required class="form-select" value={niveli} onChange={(e) => setNiveli(e.target.value)} aria-label="Default select example">
+        <select required className="form-select" value={niveli} onChange={(e) => setNiveli(e.target.value)} aria-label="Default select example">
         <option disabled value="">Niveli</option>
         <option value="Bachelor">Bachelor</option>
         <option value="Master">Master</option>
@@ -199,7 +224,7 @@ return (
 
         <div className="input-label">
         <label htmlFor="">Statusi<span> *</span></label>
-        <select required onChange={(e) => setStatusi(e.target.value)} class="form-select" aria-label="Default select example">
+        <select required onChange={(e) => setStatusi(e.target.value)} className="form-select" aria-label="Default select example">
         <option disabled selected>Statusi</option>
         <option value="Aktiv">Aktiv</option>
         <option value="Deaktiv">Deaktiv</option>
@@ -215,7 +240,14 @@ return (
         <div id="successMsg" className="alert alert-success fade-in" role="alert">
           {successMessage}
         </div>  
+      )} 
+
+      {successEmail && (
+        <div id="successEmail" className="alert alert-success fade-in" role="alert">
+          {successEmail}
+        </div>  
       )}  
+
 </div>
 );
 }

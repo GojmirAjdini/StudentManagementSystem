@@ -126,7 +126,7 @@ const handleChange = (e) => {
   return (
 
     
-    <div className="container">
+    <div id="fadeInPage" className="container">
       <h1>PËRDITËSO STUDENTIN</h1>
 
       {successMessage && (

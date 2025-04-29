@@ -2,7 +2,6 @@ import Studenti from "../models/Studenti.js";
 import bcrypt from "bcrypt";
 import StudentCredentials from "./StudentCredentials.js";
 import db from "../database/Database.js";
-import { fileLoader } from "ejs";
 
 const lexoStudentet = async (req, res) =>{
     
@@ -71,7 +70,10 @@ const regjistroStudent = async (req, res) =>{
 
         const gjenerata = StudentCredentials.gjenerata();
 
-        Studenti.createStudent( Emri, Mbiemri, Gjinia, emailstudentor, EmailPrivat, 
+        const upCEmri = Emri.charAt(0).toUpperCase() + Emri.slice(1);
+        const upCMbiemri = Mbiemri.charAt(0).toUpperCase() + Mbiemri.slice(1);
+
+        Studenti.createStudent( upCEmri, upCMbiemri, Gjinia, emailstudentor, EmailPrivat, 
             hashedPassword, Vendlindja, Data_Lindjes, Adresa, Nr_Tel, FakultetiID, Statusi, studentiID, gjenerata, (err, results) =>{
 
             if(err){
@@ -88,6 +90,7 @@ const regjistroStudent = async (req, res) =>{
 
             return res.status(200).json({
             message: "Studenti u regjistrua me sukses!",
+            emailNotification: "Të dhënat iu dërguan studentit në email!",
             Student: Emri,
             Email: emailstudentor,
             Password: password
@@ -271,10 +274,13 @@ const patchStudentin = async (req, res) => {
         const {Emri, Mbiemri, Gjinia, EmailPrivat, Vendlindja, Data_Lindjes, 
             Adresa, Nr_Tel, FakultetiID, Statusi, Gjenerata} = req.body;
 
+        const upCEmri = Emri.charAt(0).toUpperCase() + Emri.slice(1);
+        const upCMbiemri = Mbiemri.charAt(0).toUpperCase() + Mbiemri.slice(1);
+
         const fushat = [];
         const values = [];
         
-        if(Emri){ fushat.push('Emri = ?'); values.push(Emri);} if(Mbiemri){ fushat.push('Mbiemri = ?'); values.push(Mbiemri);} 
+        if(upCEmri){ fushat.push('Emri = ?'); values.push(upCEmri);} if(upCMbiemri){ fushat.push('Mbiemri = ?'); values.push(upCMbiemri);} 
         if(Gjinia){ fushat.push('Gjinia = ?'); values.push(Gjinia);} if(EmailPrivat){ fushat.push('EmailPrivat = ?'); values.push(EmailPrivat);} 
         if(Vendlindja){ fushat.push('Vendlindja = ?'); values.push(Vendlindja);} if(Data_Lindjes){ fushat.push('Data_Lindjes = ?'); values.push(Data_Lindjes);} 
         if(Adresa){ fushat.push('Adresa = ?'); values.push(Adresa);} if(Nr_Tel){ fushat.push('Nr_Tel = ?'); values.push(Nr_Tel);} 
