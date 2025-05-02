@@ -1,14 +1,11 @@
 import React, {useEffect, useState} from "react"
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
-import "../assets/Home.css";
+import "../../assets/Home.css";
 import Swal from "sweetalert2";
 
 
 function Home(){
-
-
-
 
     return(
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react"
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
-import "../assets/Students.css";
+import "./assets/Students.css";
 import Swal from "sweetalert2";
 
 function Students() {
@@ -41,7 +41,8 @@ function Students() {
       customClass: {
         confirmButton:'swal-confirmBtn',
         cancelButton: 'swal-confirmBtn',
-        popup:'popupDesign'
+        popup:'popupDesign',
+        title:'titleSwal'
       }
     });
 
@@ -125,8 +126,8 @@ function Students() {
               <td>{student.uKrijua ? new Date(student.uKrijua).toLocaleString()  : ''}</td>
               <td>
                 
-              <Link to={`/edit/${student.ID}`}>
-          <button className="btn btn-success">Edit</button>
+              <Link to={`/edit/studenti/${student.ID}`}>
+          <button id="editBtn" className="btn btn-success">Edit</button>
               </Link>
               </td> 
               <td>

@@ -83,4 +83,57 @@ const updateFakultetin = async (req, res) =>{
 
 }
 
-export default {lexojFakultetet, shtoFakultet, fshijFakultetin, updateFakultetin};
+const lexoFakultetinId = async (req, res) =>{
+
+    const ID = req.params.FakultetiID;
+
+    try{
+
+        Fakulteti.getFakultetiById(ID, (err, fakulteti) =>{
+
+            if(err){
+                return res.status(500).json({err: true, message: err.message});
+            }
+            return res.status(200).json(fakulteti);
+        })  
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({err: true, message: err.message});
+    }
+}
+
+const patchFakulteti = async (req, res) =>{
+    
+    
+    try{
+    
+    const id = req.params.FakultetiID;
+    const {Emri, Niveli, Lokacioni, Kodi_Fakultetit} = req.body;
+
+    const fushat =[];
+    const values = [];
+
+    if(Emri){ fushat.push("Emri = ?"); values.push(Emri); } 
+    if(Niveli){ fushat.push("Niveli = ?"); values.push(Niveli); } 
+    if(Lokacioni){ fushat.push("Lokacioni = ?"); values.push(Lokacioni); } 
+    if(Kodi_Fakultetit){ fushat.push("Kodi_Fakultetit = ?"); values.push(Kodi_Fakultetit); }
+
+    if(fushat.length === 0){    
+        return res.status(400).json({message: "Nuk ka të dhëna për përditësim!"});
+    }
+    
+        Fakulteti.patchFakulteti(id, fushat, values, (err, result) =>{
+
+            if(err){
+                return res.status(500).json({err: true, message: err.message});
+            }
+            return res.status(200).json({message: "Fakulteti u përditësua me sukses!"});
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({err: true, message: err.message});
+    }
+}
+
+export default {lexojFakultetet, shtoFakultet, fshijFakultetin, 
+    updateFakultetin, lexoFakultetinId, patchFakulteti};

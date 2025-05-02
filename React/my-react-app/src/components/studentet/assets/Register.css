@@ -38,10 +38,11 @@ form{
 
 }
 
-
-input{
+.form-control{
   
-  padding: 10px;
+  border: 1px solid gray;
+  padding: 8px;
+  border-radius: 10px;
 }
 #primaryBtn{
 
@@ -53,10 +54,11 @@ input{
   width: 120px;
   border-radius: 10px;
 }
-#gjiniaDiv{
-
+#gjinia{
   display: flex;
   flex-direction: row;
+  justify-content: start;
+  gap: 70px;
 }
 .form-check{
   display: flex;
@@ -67,7 +69,7 @@ input{
 .leftArrow{
 
   position: relative;
-  top: 1px;
+  top: -2px;
   margin-right: 5px;
 
 }
@@ -88,16 +90,11 @@ input{
   font-weight: bold;
 }
 
-select{
-  border-radius: 10px;
-  padding: 10px;
-}
-
 .form-select{
 
+  border: 1px solid gray;
+  padding: 8px;
   border-radius: 10px;
-  padding: 10px;
-
 }
 
 #primaryBtn:hover{
@@ -122,18 +119,18 @@ select{
 }
 #successMsg{
   position: absolute;
-  top: 150px;
+  top: 40px;
   width: fit-content;
-  left:180px;
   text-align: center;
+  font-size: 15px;
 }
 
 #successEmail{
   position: absolute;
-  bottom: 50px;
+  bottom: -80px;
   width: fit-content;
-  left:180px;
   text-align: center;
+  font-size: 15px;
 }
 
 .swal-confirmBtn{
@@ -182,7 +179,7 @@ select{
   border-radius: 10px;
   background-color: rgb(239, 239, 239);
   text-decoration: none;
-  color: black;
+  color: rgb(0, 0, 0);
 }
 .textSwal{
   font-size: 15px;
@@ -199,11 +196,10 @@ select{
 
   background-color: rgb(77, 51, 173);
  
-
 }
 
 #resetBtn:hover{
-  background-color: rgb(214, 213, 213);
+  background-color: rgb(166, 166, 166);
 }
 input{
 

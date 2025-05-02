@@ -2,13 +2,14 @@ import db from "../database/Database.js";
 
 class Fakulteti{
 
-    constructor(FakultetiID, Emri, Niveli, Lokacioni, Kodi_Fakultetit){
+    constructor(FakultetiID, Emri, Niveli, Lokacioni, Kodi_Fakultetit, uKrijua){
         
         this.FakultetiID = FakultetiID;
         this.Emri = Emri;
         this.Niveli = Niveli;
         this.Lokacioni = Lokacioni;
         this.Kodi_Fakultetit = Kodi_Fakultetit;
+        this.uKrijua = uKrijua;
     }
 
     static readFakultetet(callback){
@@ -23,7 +24,7 @@ class Fakulteti{
             }
             console.log(results);
             
-            const fakultetet = results.map((row) => new Fakulteti(row.FakultetiID, row.Emri, row.Niveli, row.Lokacioni, row.Kodi_Fakultetit));
+            const fakultetet = results.map((row) => new Fakulteti(row.FakultetiID, row.Emri, row.Niveli, row.Lokacioni, row.Kodi_Fakultetit, row.uKrijua));
 
             callback(fakultetet);
         });
@@ -75,5 +76,41 @@ class Fakulteti{
             callback(null, results);
         })
     }
+
+    static getFakultetiById(id, callback){
+
+        const sql = `SELECT * FROM Fakulteti
+         WHERE FakultetiID = ?`;
+
+        db.query(sql, [id], (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+
+            if(results.length === 0){
+                return callback(new Error("Fakulteti nuk u gjet!"));
+            }
+
+            const fakulteti = new Fakulteti(results[0].FakultetiID, results[0].Emri, results[0].Niveli, results[0].Lokacioni, results[0].Kodi_Fakultetit);
+            callback(null, fakulteti);
+        })
+    }
+
+    static patchFakulteti(id, fushat, values,  callback){
+
+        const sql = `UPDATE Fakulteti SET ${fushat.join(', ')} WHERE FakultetiID = ?`;
+
+        values.push(id);
+        
+        db.query(sql, values, (err, results) =>{
+
+            if(err){
+                return callback(err, null);
+            }
+
+            callback(null, results);
+        })
+    }   
 }
 export default Fakulteti;

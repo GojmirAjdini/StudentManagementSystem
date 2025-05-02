@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import "../assets/Register.css";
+import "./assets/Register.css";
 import Swal from "sweetalert2";
 import { FaArrowLeft } from "react-icons/fa";
 
@@ -139,23 +139,25 @@ const handleChange = (e) => {
         
         <div className="input-label">
           <label>Emri <span>*</span></label>
-          <input type="text" name="Emri" value={studenti.Emri || ''} onChange={handleChange} />
+          <input className="form-control" type="text" name="Emri" value={studenti.Emri || ''} onChange={handleChange} />
         </div>
 
         <div className="input-label">
           <label>Mbiemri <span>*</span></label>
-          <input type="text" name="Mbiemri" value={studenti.Mbiemri || ''} onChange={handleChange} required />
+          <input className="form-control" type="text" name="Mbiemri" value={studenti.Mbiemri || ''} onChange={handleChange} required />
         </div>
 
         <div className="input-label">
           <label>Gjinia <span>*</span></label>
-          <div className="form-check">
-            <label>
-              <input type="radio" name="Gjinia" value="M" checked={studenti.Gjinia === "M" || ''} onChange={handleChange} />
+
+          <div id="gjinia" className="form-check">
+            <label form="flexRadioDefault1" className="form-check-label">
+              <input className="form-check-input" type="radio" name="Gjinia" value="M" checked={studenti.Gjinia === "M" || ''} onChange={handleChange} />
               Mashkull
             </label>
-            <label>
-              <input type="radio" name="Gjinia" value="F" checked={studenti.Gjinia === "F" || ''} onChange={handleChange} />
+            
+            <label className="form-check-label" htmlFor="flexRadioDefault2">
+              <input className="form-check-input" type="radio" name="Gjinia" value="F" checked={studenti.Gjinia === "F" || ''} onChange={handleChange} />
               Femër
             </label>
           </div>
@@ -163,33 +165,33 @@ const handleChange = (e) => {
 
         <div className="input-label">
           <label>Email Privat <span>*</span></label>
-          <input type="email" name="EmailPrivat" value={studenti.EmailPrivat || ''} onChange={handleChange} required />
+          <input className="form-control" type="email" name="EmailPrivat" value={studenti.EmailPrivat || ''} onChange={handleChange} required />
         </div>
 
         <div className="input-label">
           <label>Vendlindja <span>*</span></label>
-          <input type="text" name="Vendlindja" value={studenti.Vendlindja || ''} onChange={handleChange} required />
+          <input className="form-control" type="text" name="Vendlindja" value={studenti.Vendlindja || ''} onChange={handleChange} required />
         </div>
 
         <div className="input-label">
           <label>Data e Lindjes <span>*</span></label>
-          <input placeholder="YYYY-MM-DD" type="text" name="Data_Lindjes" value={studenti.Data_Lindjes.slice(0,10) || ''} 
+          <input className="form-control" placeholder="YYYY-MM-DD" type="text" name="Data_Lindjes" value={studenti.Data_Lindjes.slice(0,10) || ''} 
           onChange={handleChange} required />
           
         </div>
         <div className="input-label">
           <label>Adresa <span>*</span></label>
-          <input type="text" name="Adresa" value={studenti.Adresa || ''} onChange={handleChange} required />
+          <input className="form-control" type="text" name="Adresa" value={studenti.Adresa || ''} onChange={handleChange} required />
         </div>
 
         <div className="input-label">
           <label>Kontakt</label>
-          <input type="text" name="Nr_Tel" value={studenti.Nr_Tel || ''} onChange={handleChange} />
+          <input className="form-control" type="text" name="Nr_Tel" value={studenti.Nr_Tel || ''} onChange={handleChange} />
         </div>
 
         <div className="input-label">
           <label>Fakulteti <span>*</span></label>
-          <select name="FakultetiID" value={studenti.FakultetiID || ''} onChange={handleChange} required>
+          <select className="form-select" name="FakultetiID" value={studenti.FakultetiID || ''} onChange={handleChange} required>
             <option value='' disabled >Zgjedh Fakultetin</option>
             {fakultetet.map((fk) => (
               <option key={fk.FakultetiID} value={fk.FakultetiID}>
@@ -202,7 +204,7 @@ const handleChange = (e) => {
 
         <div className="input-label">
           <label>Niveli <span>*</span></label>
-          <select name="Niveli" value={studenti.Niveli || ''} onChange={handleChange} required>
+          <select className="form-select" name="Niveli" value={studenti.Niveli || ''} onChange={handleChange} required>
             <option disabled>Niveli</option>
             <option value="Bachelor">Bachelor</option>
             <option value="Master">Master</option>
@@ -212,7 +214,7 @@ const handleChange = (e) => {
 
         <div className="input-label">
           <label>Statusi <span>*</span></label>
-          <select name="Statusi" value={studenti.Statusi|| ''} onChange={handleChange} required>
+          <select className="form-select" name="Statusi" value={studenti.Statusi|| ''} onChange={handleChange} required>
             <option disabled>Statusi</option>
             <option value="Aktiv">Aktiv</option>
             <option value="Deaktiv">Deaktiv</option>
