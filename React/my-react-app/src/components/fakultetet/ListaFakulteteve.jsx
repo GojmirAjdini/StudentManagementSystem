@@ -71,7 +71,7 @@ useEffect (() => {
         fetchFakultetet();
     }, 5000);
 
-    return () => setInterval(interval)
+    return () => clearInterval(interval)
 }, []);
 
     return(

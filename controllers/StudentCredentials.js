@@ -80,7 +80,7 @@ function randomEmail(emri, mbiemri, studentID){
 
         let digits = array.join('');
 
-        let email = `${emri.charAt(0).toLowerCase()}${mbiemri.charAt(0).toLowerCase()}${digits}@uni-edu.net`;
+        let email = `${emri.trim().charAt(0).toLowerCase()}${mbiemri.trim().charAt(0).toLowerCase()}${digits}@uni-edu.net`;
         return email;
     }
 

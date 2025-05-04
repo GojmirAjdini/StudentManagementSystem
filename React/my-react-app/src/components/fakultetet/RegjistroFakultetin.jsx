@@ -17,6 +17,7 @@ function RegjistroFakultetin() {
         setEmri('');
         setNiveli('');
         setLokacioni('');
+        setKodi_Fakultetit('');
     };  
 
 
@@ -24,7 +25,7 @@ function RegjistroFakultetin() {
 
         e.preventDefault();
 
-        if(!Emri && !Niveli && !Lokacioni && !Kodi_Fakultetit){
+        if(!Emri || !Niveli || !Lokacioni || !Kodi_Fakultetit){
            await Swal.fire({
                 icon: 'error',
                 title: 'Fushat e zbrazura!',

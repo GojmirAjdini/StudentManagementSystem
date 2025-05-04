@@ -66,6 +66,14 @@ const handleChange = (e) => {
     }));
   };
 
+  const formatLocalDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (`0${date.getMonth() + 1}`).slice(-2);
+    const day = (`0${date.getDate()}`).slice(-2);
+    return `${year}-${month}-${day}`;
+  };
+
   const isEqual = (obj1, obj2) => {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
   };
@@ -175,8 +183,9 @@ const handleChange = (e) => {
 
         <div className="input-label">
           <label>Data e Lindjes <span>*</span></label>
-          <input className="form-control" placeholder="YYYY-MM-DD" type="text" name="Data_Lindjes" value={studenti.Data_Lindjes.slice(0,10) || ''} 
-          onChange={handleChange} required />
+          <input className="form-control" placeholder="YYYY-MM-DD" type="date" name="Data_Lindjes" 
+          value={studenti.Data_Lindjes ? formatLocalDate(studenti.Data_Lindjes) : ''} 
+          onChange = {handleChange}required />
           
         </div>
         <div className="input-label">
@@ -227,7 +236,7 @@ const handleChange = (e) => {
 
         <div className="input-label">
 
-         <Link className="kthehuLink" to={`/studentet`}>  
+         <Link className="kthehuLinkStd" to={`/studentet`}>  
           <FaArrowLeft className="leftArrow"/>Kthehu</Link>
         </div>
 

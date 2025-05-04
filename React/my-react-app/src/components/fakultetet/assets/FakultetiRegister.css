@@ -3,6 +3,7 @@ h1{
 
     text-align: center;
     margin-top: 60px;
+    font-size: 36px;
 }
 span{
 
@@ -57,7 +58,8 @@ span{
   width: 15%;
   height: 40px;
   border-radius: 10px;
-  margin: 10px;
+  margin: 15px;
+  margin-top: 30px;
   border: none;
 }
 
@@ -69,7 +71,8 @@ span{
     height: 40px;
     width: 15%;
     bottom: 20px;
-    margin: 10px; 
+    margin: 15px; 
+    margin-top: 30px;    
     border: none;
 }   
 
@@ -114,12 +117,6 @@ span{
   background-color: rgb(77, 51, 173);
 }
 
-.input-label{
-
-    display: flex;
-    flex-direction: column;
-    margin: 12px;
-}
 #successMsg{
   position: absolute;
   top: 40px;
@@ -140,13 +137,12 @@ span{
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-#updateBtn{
+#updateBtnFkt{
 
   border-radius: 10px;
   margin-top: 28px;
   text-align: center;
-  margin-left: 60px;
-  width: 70%;
+  width: 20%;
   background-color: rgb(101, 64, 235);
 }
 
@@ -208,14 +204,9 @@ input{
   width: 200%;
 }
 
-#updateBtnFkt{
+.input #updateBtnFkt{
 
-  justify-content: center;
-  margin-top: 10px;
-  width: 30%;
-  background-color: rgb(101, 64, 235);
-  border-radius: 10px;
-  transition: 0.2s ease-in-out;
+    margin-top: 25px;
 }
 
 #updateBtnFkt:hover{
@@ -230,6 +221,7 @@ input{
   left: 20px;
   width: fit-content;
   padding: 7px;
+  bottom: 0px;
   border-radius: 10px;
   background-color: rgb(239, 239, 239);
   text-decoration: none;

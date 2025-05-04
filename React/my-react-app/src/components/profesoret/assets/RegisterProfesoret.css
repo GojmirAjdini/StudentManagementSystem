@@ -12,13 +12,14 @@ span{
 
     width: 80%;
     justify-content: center;
+    
 }
 form{
 
     display: grid;
     grid-template-columns: auto auto auto;
     margin-top: 60px;
-    
+
 }
 
 
@@ -98,27 +99,42 @@ form{
   border-radius: 10px;
 }
 
-#primaryBtn:hover{
+#primaryBtnProf:hover{
   background-color: rgb(77, 51, 173);
 }
 
-.input-label{
+.input-labelProf{
 
-    display: flex;
-    flex-direction: column;
-    margin: 12px;
+  display: flex;
+  flex-direction: row;
+  width: 300%;
+  justify-content: center;
 }
-#resetBtn{
 
-  position: relative;
-  left: 210px;
-  bottom: 15px;
+#primaryBtnProf{
+  background-color: rgb(101, 64, 235);
+  width: 15%;
   height: 40px;
-  width: 120px;
   border-radius: 10px;
+  margin: 15px;
+  margin-top: 30px;
   border: none;
+}
+#resetBtnProf{
+
+  width: 15%;
+  height: 40px;
+  border-radius: 10px;
+  margin: 15px;
+  margin-top: 30px;
   color: black;
-  background-color: rgb(231, 231, 231);
+  border: none;
+  background-color: rgb(225, 225, 225);
+}
+
+#resetBtnProf:hover{
+
+  background-color: rgb(197, 197, 197);
 }
 #successMsg{
   position: absolute;
@@ -148,16 +164,6 @@ form{
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-#updateBtn{
-
-  border-radius: 10px;
-  margin-top: 28px;
-  text-align: center;
-  margin-left: 60px;
-  width: 70%;
-  background-color: rgb(101, 64, 235);
-}
-
 .fade-in{
 
   animation: fadeIn 0.5s ease-in-out forwards;
@@ -175,7 +181,7 @@ form{
     }
 }
 
-.kthehuLinkStd{
+.kthehuLink{
 
   width: fit-content;
   padding: 7px;
@@ -183,23 +189,45 @@ form{
   background-color: rgb(239, 239, 239);
   text-decoration: none;
   color: rgb(0, 0, 0);
-  transition: 0.2s ease-in-out;
 }
 .textSwal{
   font-size: 15px;
   
 }
 
-.kthehuLinkStd:hover{
+.kthehuLink:hover{
 
-  background-color: rgb(77, 51, 173);
-  transition: 0.2s ease-in-out;
-  color: white;
+  background-color: rgb(215, 215, 215);
+  text-decoration: none;
+  color: black;
 }
-#updateBtn:hover{
+.inputProf{
+
+  display: flex;
+  flex-direction: row;
+  width: 300%;
+  justify-content: center;
+  align-items: center;
+}
+
+#updateBtnProf{
+
+  border-radius: 10px;
+  margin-top: 30px;
+  text-align: center;
+  z-index: 1;
+  width: 25%;
+  background-color: rgb(101, 64, 235);
+}
+
+#updateBtnProf:hover{
 
   background-color: rgb(77, 51, 173);
  
+}
+
+#resetBtn:hover{
+  background-color: rgb(211, 211, 211);
 }
 input{
 

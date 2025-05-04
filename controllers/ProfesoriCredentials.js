@@ -14,7 +14,7 @@ function random(){
 }
 function randomEmail(emri, mbiemri){
 
-        let email = `${emri.toLowerCase()}.${mbiemri.toLowerCase()}@uni-edu.net`;
+        let email = `${emri.trim().toLowerCase()}.${mbiemri.trim().toLowerCase()}@uni-edu.net`;
         return email;
     }
 
@@ -26,10 +26,10 @@ function randomPassword(emri, mbiemri){
     return password;
 }
 
-function sendEmail(emailprivat, emailstudentor, password){
+function sendEmail(emailprivat, emailAkademik, password){
 
     const Email = process.env.GMAIL_EMAIL;
-    const Password = process.env.PASSWORD;
+    const Password = process.env.GMAIL_PASS;
     
     let transporter = nodemailer.createTransport({
 
@@ -46,7 +46,7 @@ function sendEmail(emailprivat, emailstudentor, password){
         from: Email,
         to: `${emailprivat}`,
         subject: "Informatat per login ne sistem!",
-        text: `Pershendetje, \n\nEmaili i juaj i studentit: ${emailstudentor} \nNdersa Passwordi juaj: ${password}\nJu lutem ndryshoni passwordin tuaj!`,
+        text: `Pershendetje, \n\nEmaili i juaj akademik: ${emailAkademik} \nNdersa Passwordi juaj: ${password}\nJu lutem ndryshoni passwordin tuaj!`,
         
     };
     transporter.sendMail(mailOptions, function(error, info){

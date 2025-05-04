@@ -6,5 +6,7 @@ const router = express.Router();
 router.get("/all", controllersLenda.lexoLendet);
 router.post("/submit",controllersLenda.createLenden);
 router.delete("/delete/:LendaID", controllersLenda.fshijLendenSipasId);
+router.patch("/edit/:LendaID", controllersLenda.patchLenden);
+router.get("/:LendaID", controllersLenda.lexoLendenSipasId);
 
 export default router;

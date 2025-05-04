@@ -19,9 +19,9 @@ const lexoLendet = async (req, res)=>{
 const createLenden = async (req, res) => {
 
     try{
-        const {FakultetiID, Emri_Lendes, ECTS, semestri} = req.body;
+        const {FakultetiID, Emri_Lendes, ECTS, Kodi_Lendes, SemestriID} = req.body;
 
-        Lenda.regjistroLenden(FakultetiID, Emri_Lendes, ECTS, semestri, (err, results) =>{
+        Lenda.regjistroLenden(FakultetiID, Emri_Lendes, ECTS, Kodi_Lendes, SemestriID, (err, results) =>{
 
             if(err){
                 return res.status(500).json("Gabim ne query!");
@@ -56,7 +56,7 @@ const fshijLendenSipasId = async (req, res) => {
             }
 
             console.log(results);
-            return res.status(200).json({message:"Lenda u fshi me sukse!"});
+            return res.status(200).json({message:"Lënda u fshi me sukses!"});
         })
     }catch(err){
         console.error(err);
@@ -64,4 +64,66 @@ const fshijLendenSipasId = async (req, res) => {
     }
 }
 
-export default {lexoLendet, createLenden, fshijLendenSipasId};
+const lexoLendenSipasId = async (req, res) => {
+
+    try{
+
+        const id = req.params.LendaID;
+
+        Lenda.readLendaById(id, (err, results) =>{
+
+            if(err){
+                return res.status(404).json(err);
+            }
+
+            if(results.length === 0){
+                return res.status(404).json({message:"Lenda nuk ekziston!"});
+            }
+
+            console.log(results);
+            return res.status(200).json(results);
+        })
+
+    }
+    catch(err){
+        console.error(err);
+        return res.status(404).json({err:true,message:err});
+    }
+}
+
+const patchLenden = async (req, res) =>{
+
+    try{
+    const id = req.params.LendaID;
+    const {FakultetiID, Emri_Lendes, ECTS, Kodi_Lendes, SemestriID} = req.body;
+    const fushat = [];
+    const values = [];
+
+    if(FakultetiID){ fushat.push("FakultetiID = ?"); values.push(FakultetiID);}
+    if(Emri_Lendes){ fushat.push("Emri_Lendes = ?"); values.push(Emri_Lendes);}
+    if(ECTS){ fushat.push("ECTS = ?"); values.push(ECTS);}
+    if(Kodi_Lendes){ fushat.push("Kodi_Lendes = ?"); values.push(Kodi_Lendes);}
+    if(SemestriID){ fushat.push("SemestriID = ?"); values.push(SemestriID);}
+
+    Lenda.patchLenda(id, fushat, values, (err, results) =>{
+
+        if(err){
+            return res.status(404).json(err);
+        }
+
+        if(results.affectedRows === 0){
+            return res.status(404).json({message:"Lenda nuk ekziston!"});
+        }
+
+        console.log(results);
+        return res.status(200).json({message:"Lenda u përditësua me sukses!"});
+    })
+
+
+}  catch(err){
+        console.error(err);
+        return res.status(404).json({err:true,message:err});
+    }
+}
+
+export default {lexoLendet, createLenden, fshijLendenSipasId, lexoLendenSipasId, patchLenden};

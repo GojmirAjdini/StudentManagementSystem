@@ -5,7 +5,7 @@ class Profesori {
     static lexoProfesoret(callback){
 
         const sql = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
-        p.Email, f.Emri Fakulteti, p.NrTel, p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi  
+        p.Email, f.Emri Fakulteti, p.NrTel, p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, p.Titulli_Akademik
         FROM Profesori p 
         INNER JOIN Fakulteti f on f.FakultetiID = p.FakultetiID`;
 
@@ -18,14 +18,14 @@ class Profesori {
         })
     }
 
-    static regjistroProfesorin(FakultetiID, Emri, Mbiemri, Gjinia, Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi, callback){
+    static regjistroProfesorin(FakultetiID, Emri, Mbiemri, Gjinia, Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi,Titulli_Akademik, callback){
 
         const sql = `INSERT INTO Profesori
-        (FakultetiID, Emri, Mbiemri, Gjinia, Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        (FakultetiID, Emri, Mbiemri, Gjinia, Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
         const values = [FakultetiID, Emri, Mbiemri, Gjinia, Email, 
-            NrTel, Password, EmailPrivat, Data_Punesimit, Statusi];
+            NrTel, Password, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik];
        
         db.query(sql, values,(err, results) =>{
 
@@ -54,7 +54,7 @@ class Profesori {
     static loginProfessori(Email, callback){
 
         const sql = `SELECT FakultetiID, Emri, Mbiemri, Gjinia, 
-        Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi
+        Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik
         FROM Profesori
         WHERE Email = ?`;
 
@@ -78,6 +78,42 @@ class Profesori {
             }
 
             callback(null, results);
+        })
+    }
+
+    static lexoProfesorinSipasId(ProfesoriID, callback){
+
+        const sql = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
+        p.Email, p.FakultetiID , p.NrTel, p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, p.Titulli_Akademik  
+        FROM Profesori p 
+        INNER JOIN Fakulteti f on f.FakultetiID = p.FakultetiID
+        WHERE p.ProfesoriID = ?`;
+
+        db.query(sql, [ProfesoriID], (err, results) =>{
+            if(err){
+                return callback(err);
+            }
+            console.log(results.length);
+
+            callback(null, results);
+        })
+    }
+
+    static patchProfesori(ProfesoriID, fushat, values, callback){
+
+        const sql = `UPDATE Profesori SET ${fushat.join(', ')} WHERE ProfesoriID = ?`;
+
+        values.push(ProfesoriID);
+
+        db.query(sql, values, (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+            console.log(results.affectedRows);
+            
+            callback(null, results);
+
         })
     }
 }

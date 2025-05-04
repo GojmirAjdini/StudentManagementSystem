@@ -34,7 +34,7 @@ const registerProfesoret = async (req, res) =>{
     try{
 
         const {FakultetiID, Emri, Mbiemri, Gjinia, NrTel, 
-            EmailPrivat, Data_Punesimit, Statusi} = req.body;
+            EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik} = req.body;
 
             const emailCheckQuery = `
             SELECT EmailPrivat FROM profesori WHERE EmailPrivat = ? 
@@ -53,10 +53,13 @@ const registerProfesoret = async (req, res) =>{
         const EmailAkademik = ProfesoriCredentials.randomEmail(Emri, Mbiemri);
         const Password = ProfesoriCredentials.randomPassword(Emri, Mbiemri);
 
+        const upCEmri = Emri.charAt(0).toUpperCase() + Emri.slice(1);
+        const upCMbiemri = Mbiemri.charAt(0).toUpperCase() + Mbiemri.slice(1);
+
         const hashedPassword = await bcrypt.hash(Password, salts);
 
-        Profesori.regjistroProfesorin(FakultetiID, Emri, Mbiemri, Gjinia, EmailAkademik, NrTel, 
-            hashedPassword, EmailPrivat, Data_Punesimit, Statusi, (err, results) =>{
+        Profesori.regjistroProfesorin(FakultetiID, upCEmri, upCMbiemri, Gjinia, EmailAkademik, NrTel, 
+            hashedPassword, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik, (err, results) =>{
 
             if(err){
                 console.error(err);
@@ -64,12 +67,17 @@ const registerProfesoret = async (req, res) =>{
             }
             if(results.affectedRows === 0){
                 return res.status(404).json({message: "Te dhenat nuk u regjistruan!"});
-            }
+            } else{
+
+        ProfesoriCredentials.sendEmail(EmailPrivat, EmailAkademik, Password);
             console.log("Te dhenat u regjistruan!");
-            return res.status(201).json({message: "Te dhenat u regjistruan me sukses", 
+            return res.status(201).json({
+                message: "Profesori u regjistrua me sukses", 
+                emailNotification: `Të dhënat iu dërguan profesorit në email!`,
                 Email: `EmailAkademise: ${EmailAkademik}`,
                 Password: `Password: ${Password}`
             });
+        }
     });
     
     }
@@ -93,7 +101,7 @@ const deleteProfesorSipasId = async (req, res) => {
                 return res.status(404).json({message: "Te dhenat nuk u fshine!"});
             }
 
-            return res.status(200).json({message:"Te dhenat u fshine me sukses!"});
+            return res.status(200).json({message:"Te dhënat u fshinë me sukses!"});
         })
     } catch(err){
         console.error(err);
@@ -201,4 +209,68 @@ const updatePassword = async (req, res) =>{
     }
 }
 
-export default {readProfesoret, registerProfesoret ,deleteProfesorSipasId, loginProfessor, updatePassword};
+const patchProfesorin = async (req, res) => {
+
+    try{
+
+        const {FakultetiID, Emri, Mbiemri, Gjinia, Email, NrTel, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik} = req.body;
+        const id = req.params.ProfesoriID;
+
+        const fushat = [];
+        const values = [];  
+        
+        if(FakultetiID){ fushat.push("FakultetiID = ?"); values.push(FakultetiID);}
+        if(Emri){ fushat.push("Emri = ?"); values.push(Emri);}
+        if(Mbiemri){ fushat.push("Mbiemri = ?"); values.push(Mbiemri);} 
+        if(Gjinia){ fushat.push("Gjinia = ?"); values.push(Gjinia);}
+        if(Email){ fushat.push("Email = ?"); values.push(Email);}   
+        if(NrTel){ fushat.push("NrTel = ?"); values.push(NrTel);}
+        if(EmailPrivat){ fushat.push("EmailPrivat = ?"); values.push(EmailPrivat);}
+        if(Data_Punesimit){ fushat.push("Data_Punesimit = ?"); values.push(Data_Punesimit);}
+        if(Statusi){ fushat.push("Statusi = ?"); values.push(Statusi);}
+        if(Titulli_Akademik){ fushat.push("Titulli_Akademik = ?"); values.push(Titulli_Akademik);}
+    
+    
+        Profesori.patchProfesori(id, fushat, values,  (err, results) =>{
+
+            if(err){
+                return res.status(500).json({message: "Server error", error: err});
+            }
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Te dhënat nuk u përditësuan!"});
+            }
+
+            return res.status(200).json({message: "Te dhënat u përditësuan me sukses!"});
+        })
+
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+}
+}
+
+const lexoProfesorinSipasId = async (req, res) =>{
+
+    try{
+        const id = req.params.ProfesoriID;
+
+        Profesori.lexoProfesorinSipasId(id, (err, results) =>{
+
+            if(err){
+                return res.status(500).json({message: "Server error", error: err});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message: "Nuk ka te dhena!"});
+            }
+
+            return res.status(200).json(results);
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+    }
+}
+
+
+export default {readProfesoret, registerProfesoret,deleteProfesorSipasId, 
+    loginProfessor, updatePassword, patchProfesorin, lexoProfesorinSipasId};

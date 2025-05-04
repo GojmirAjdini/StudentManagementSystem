@@ -4,6 +4,7 @@ import lendaRoutes from "../routes/routeLendet.js";
 import fakultetRoutes from "../routes/routeFakulteti.js";
 import profesoriRoutes from "../routes/routeProfesori.js";
 import adminRoutes from "../routes/routeStafiAdministrativ.js";
+import semestriRoutes from "../routes/routeSemestri.js";
 import env from 'dotenv';
 import cors from "cors";
 
@@ -26,6 +27,7 @@ app.use("/lendet", lendaRoutes);
 app.use("/fakultetet", fakultetRoutes);
 app.use("/profesoret", profesoriRoutes);
 app.use("/admin",adminRoutes); 
+app.use('/semestri', semestriRoutes)
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}..`);

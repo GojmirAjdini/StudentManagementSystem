@@ -1,13 +1,24 @@
-import { BrowserRouter as Router, Routes, Route, Link, useLocation, href } from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
+
 import Register from './components/studentet/StudentRegister';
 import StudentList from './components/studentet/Students';
-import "./assets/App.css";
-import HomeAdmin from './components/navigation/HomeAdmin';
 import StudentsEdit from './components/studentet/StudentsEdit';
+import "./assets/App.css";
+
+import HomeAdmin from './components/navigation/HomeAdmin';
 import DropDownMenu from './components/navigation/NavDropDown';
+
 import RegjistroFakultetin from './components/fakultetet/RegjistroFakultetin';
 import ListaFakulteteve from './components/fakultetet/ListaFakulteteve';
 import EditFakultetet from './components/fakultetet/EditFakultetet';
+
+import RegjistroLendet from './components/lendet/RegjistroLendet';
+import ListaLendeve from './components/lendet/Lendet';
+import EditLendet from './components/lendet/EditLendet';
+
+import RegjistroProfesoret from './components/profesoret/RegjistroProfesoret';
+import ListaProfesoreve from './components/profesoret/ListaProfesoreve';
+import EditProfesoret from './components/profesoret/EditProfesoret';
 
 function AppContent() {
 
@@ -38,6 +49,7 @@ function AppContent() {
            data={[
             { label: 'Regjistro Profesor', path: '/register/profesoret' },
             { label: 'Lista e Profesorëve', path: '/profesoret' },
+            { label: 'Cakto Lëndët & Profesorët', path: '/lendet/profesoret'}
            ]}
         />
 
@@ -59,6 +71,14 @@ function AppContent() {
           <Route path="/register/fakutetet" element={<RegjistroFakultetin />} />
           <Route path="/fakultetet" element={<ListaFakulteteve/>} />
           <Route path="/edit/fakulteti/:FakultetiID" element={<EditFakultetet />} />
+
+          <Route path="/register/lendet" element={<RegjistroLendet />} />
+          <Route path="/lendet" element={<ListaLendeve />} />
+          <Route path="/edit/lenda/:LendaID" element={<EditLendet />} />
+
+          <Route path="/register/profesoret" element={<RegjistroProfesoret />} />
+          <Route path="/profesoret" element={<ListaProfesoreve />} />
+          <Route path="/edit/profesori/:ProfesoriID" element={<EditProfesoret />} />
         </Routes>
         </>
   );
