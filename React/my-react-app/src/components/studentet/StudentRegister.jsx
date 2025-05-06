@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import axios from "axios";
-import App from "../../App";
 import './assets/Register.css';
 import Swal from "sweetalert2";
+import {Alert, Button} from '@mui/material';
 
 function Register(){
 
@@ -130,10 +129,10 @@ return (
 
         <h1>REGJISTRO STUDENTË</h1>
 
-        <form onSubmit={submitStudenti} action="">
+        <form onSubmit={submitStudenti} autoComplete='on' action="">
 
         <div className="input-label">
-        <label htmlFor="">Emri <span>*</span></label>
+        <label >Emri <span>*</span></label>
         <input className="form-control" required type="text" placeholder="Emri" value={emri} onChange={(e) => setEmri(e.target.value)} />
         </div> 
        
@@ -232,19 +231,19 @@ return (
         </div>
 
         <div className="input-label">
-        <button id="primaryBtn" className="btn btn-primary" type="submit">Regjistro</button>
-        <button id="resetBtn" className="btn btn-secondary" type="button" onClick={handleReset}>Reset</button>
+        <Button id="primaryBtn" variant="contained"  type="submit">Regjistro</Button>
+        <Button id="resetBtn" variant="contained" type="button" onClick={handleReset}>Reset</Button>
         </div>
         </form>
         {successMessage && (
-        <div id="successMsg" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMsg" className="fade-in" role="alert">
+          <Alert severity="success">{successMessage} </Alert>
         </div>  
       )} 
 
       {successEmail && (
-        <div id="successEmail" className="alert alert-success fade-in" role="alert">
-          {successEmail}
+        <div id="successEmailStd" className="fade-in" role="alert">
+          <Alert severity="success">{successEmail} </Alert>
         </div>  
       )}  
 

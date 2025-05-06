@@ -19,6 +19,7 @@ import EditLendet from './components/lendet/EditLendet';
 import RegjistroProfesoret from './components/profesoret/RegjistroProfesoret';
 import ListaProfesoreve from './components/profesoret/ListaProfesoreve';
 import EditProfesoret from './components/profesoret/EditProfesoret';
+import CaktoLendetProfesoret from './components/profesoret/CaktoLendetProfesoret';
 
 function AppContent() {
 
@@ -49,7 +50,7 @@ function AppContent() {
            data={[
             { label: 'Regjistro Profesor', path: '/register/profesoret' },
             { label: 'Lista e Profesorëve', path: '/profesoret' },
-            { label: 'Cakto Lëndët & Profesorët', path: '/lendet/profesoret'}
+            { label: 'Cakto Lëndët & Profesorët', path: '/lendet/profesoret/assign'}
            ]}
         />
 
@@ -79,6 +80,7 @@ function AppContent() {
           <Route path="/register/profesoret" element={<RegjistroProfesoret />} />
           <Route path="/profesoret" element={<ListaProfesoreve />} />
           <Route path="/edit/profesori/:ProfesoriID" element={<EditProfesoret />} />
+          <Route path='/lendet/profesoret/assign' element={<CaktoLendetProfesoret />} />
         </Routes>
         </>
   );

@@ -1,9 +1,12 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import { FaArrowLeft } from "react-icons/fa";
+import FaArrowLeft  from "@mui/icons-material/ArrowBack";
 import Swal from 'sweetalert2';
 import './assets/RegisterProfesoret.css';
+import Alert from '@mui/material/Alert';
+import Button from "@mui/material/Button";
+
 
 function EditProfesoret() {
 
@@ -151,8 +154,8 @@ function EditProfesoret() {
     <h1>PËRDITËSO PROFESORIN</h1>
 
     {successMessage && (
-        <div id="successMsgFakulteti" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMsgFakulteti" className="fade-in" role="alert">
+          <Alert severity='success'>{successMessage} </Alert>
         </div>  
       )} 
 
@@ -243,20 +246,20 @@ function EditProfesoret() {
       <option disabled value="">Zgjedh Titullin</option>
       <option value="BSc">Bachelor</option>
       <option value="cand.MSc">cand.Master</option>
-      <option value="Msc">Master</option>
+      <option value="MSc">Master</option>
       <option value="cand.PhD">cand.PhD</option>
       <option value="PhD">PhD</option>
     </select>
     </div>
 
     <div className="inputProf">
-        <button id="updateBtnProf" className="btn btn-primary" type="submit">Ruaj Ndryshimet</button>
+        <Button variant='contained' id="updateBtnProf" type="submit">Ruaj Ndryshimet</Button>
     
     </div>
     <div className="input-label">
 
         <Link className="kthehuLinkFkt" to={`/profesoret`}>  
-          <FaArrowLeft className="leftArrow"/>Kthehu</Link>            
+          <Button variant='contained' color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>          
         </div>
         </form>
     </div>

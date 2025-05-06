@@ -10,5 +10,7 @@ router.post("/login",controllerProfesori.loginProfessor);
 router.patch("/update/:ProfesoriID", controllerProfesori.updatePassword);
 router.patch("/edit/:ProfesoriID", controllerProfesori.patchProfesorin);
 router.get("/:ProfesoriID", controllerProfesori.lexoProfesorinSipasId);
+router.post("/assign",controllerProfesori.caktoProfiLenda);
+router.get("/profesori/search", controllerProfesori.lexoProfesorinSipasEmrit);
 
 export default router;

@@ -128,9 +128,9 @@ form{
   font-size: 15px;
 }
 
-#successEmail{
+#successEmailStd{
   position: absolute;
-  bottom: -80px;
+  bottom: -50px;
   width: fit-content;
   text-align: center;
   font-size: 15px;
@@ -180,7 +180,6 @@ form{
   width: fit-content;
   padding: 7px;
   border-radius: 10px;
-  background-color: rgb(239, 239, 239);
   text-decoration: none;
   color: rgb(0, 0, 0);
   transition: 0.2s ease-in-out;
@@ -192,9 +191,8 @@ form{
 
 .kthehuLinkStd:hover{
 
-  background-color: rgb(77, 51, 173);
+
   transition: 0.2s ease-in-out;
-  color: white;
 }
 #updateBtn:hover{
 

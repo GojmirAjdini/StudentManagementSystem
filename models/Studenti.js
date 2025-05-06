@@ -136,7 +136,25 @@ WHERE ID = ?`;
         
         callback(null, results);
     })
+}
 
+static readStudentByName(Emri, callback){
+
+    const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
+    s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
+    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.uKrijua
+    FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID
+WHERE s.Emri LIKE CONCAT("%", ? , "%")`;
+
+    db.query(sql, [Emri], (err, results) =>{
+     
+        if(err){
+           return callback(err, null);
+        }
+        console.log(results);
+        
+        callback(null, results);
+    })
 }
 }
 export default Studenti;

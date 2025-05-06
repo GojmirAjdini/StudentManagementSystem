@@ -50,7 +50,7 @@ span{
 
   display: flex;
   width: 200%;
-  justify-content: center;
+  justify-content: center
 }
 #primaryBtnFkt{
 
@@ -70,7 +70,6 @@ span{
     border-radius: 10px;
     height: 40px;
     width: 15%;
-    bottom: 20px;
     margin: 15px; 
     margin-top: 30px;    
     border: none;
@@ -144,6 +143,7 @@ span{
   text-align: center;
   width: 20%;
   background-color: rgb(101, 64, 235);
+  z-index: 1;
 }
 
 .fade-in{
@@ -223,15 +223,11 @@ input{
   padding: 7px;
   bottom: 0px;
   border-radius: 10px;
-  background-color: rgb(239, 239, 239);
   text-decoration: none;
-  color: rgb(0, 0, 0);
-  transition: 0.2s ease-in-out;
+  color: black;
 }
 
 .kthehuLinkFkt:hover{
-
-  background-color: rgb(77, 51, 173);
-  color: white;
+  
   transition: 0.2s ease-in-out;
 }

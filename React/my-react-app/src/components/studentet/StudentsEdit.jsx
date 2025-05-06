@@ -4,7 +4,7 @@ import axios from "axios";
 import "./assets/Register.css";
 import Swal from "sweetalert2";
 import { FaArrowLeft } from "react-icons/fa";
-
+import {Alert, Button} from '@mui/material';
 
 function StudentsEdit() {
   const { ID } = useParams();
@@ -138,8 +138,8 @@ const handleChange = (e) => {
       <h1>PËRDITËSO STUDENTIN</h1>
 
       {successMessage && (
-        <div id="successMsg" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMsg" className="fade-in" role="alert">
+         <Alert severity="success"> {successMessage}</Alert>
         </div>
       )}
 
@@ -231,13 +231,13 @@ const handleChange = (e) => {
         </div>
 
         <div className="input-label">
-          <button id="updateBtn" className="btn btn-primary" type="submit">Ruaj Ndryshimet</button>
+          <Button variant="contained" id="updateBtn" type="submit">Ruaj Ndryshimet</Button>
         </div>
 
         <div className="input-label">
 
          <Link className="kthehuLinkStd" to={`/studentet`}>  
-          <FaArrowLeft className="leftArrow"/>Kthehu</Link>
+        <Button variant="contained" color="inherit"> <FaArrowLeft className="leftArrow"/>Kthehu</Button> </Link>
         </div>
 
       </form>

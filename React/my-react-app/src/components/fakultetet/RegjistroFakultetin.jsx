@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import './assets/FakultetiRegister.css';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 
 function RegjistroFakultetin() {
 
@@ -94,14 +96,14 @@ function RegjistroFakultetin() {
                 </div>
 
                 <div className="input-labelBtn">
-                <button id="primaryBtnFkt" className="btn btn-success" type="submit">Regjistro</button>
-                <button id="resetBtnFkt" className="btn btn-secondary" type="button" onClick={handleReset}>Reset</button>
+                <Button variant="contained" id="primaryBtnFkt" type="submit">Regjistro</Button>
+                <Button variant="contained" id="resetBtnFkt" type='button' onClick={handleReset}>Reset</Button>
                 </div>
 
             </form>
             {successMessage && (
-        <div id="successMsgFakulteti" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMsgFakulteti" className="fade-in" role="alert">
+          <Alert severity="success">{successMessage}</Alert>
         </div>  
       )} 
         </div>

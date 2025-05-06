@@ -2,11 +2,13 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2";
 import './assets/RegisterProfesoret.css';
+import {Alert, Button} from '@mui/material';
+
 
 function RegjistroProfesoret() {
 
     const API_URL = "http://localhost:3000/";
-
+  
     const [fakultetet, setFakultetet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const [successEmail, setSuccessEmail] = useState('');
@@ -209,27 +211,27 @@ function RegjistroProfesoret() {
       <option disabled value="">Zgjedh Titullin</option>
       <option value="BSc">Bachelor</option>
       <option value="cand.MSc">cand.Master</option>
-      <option value="Msc">Master</option>
+      <option value="MSc">Master</option>
       <option value="cand.PhD">cand.PhD</option>
       <option value="PhD">PhD</option>
     </select>
     </div>
 
     <div className="input-labelProf">
-        <button id="primaryBtnProf" className="btn btn-primary" type="submit">Regjistro</button>
-        <button id="resetBtnProf" className="btn btn-secondary" type='button' onClick={handleReset}>Reset</button>
+        <Button variant='contained' id="primaryBtnProf" type="submit">Regjistro</Button>
+        <Button variant='contained' id="resetBtnProf" type='button' onClick={handleReset}>Reset</Button>
         </div>
         </form>
 
         {successMessage && (
-        <div id="successMsg" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMsg" className="fade-in" role="alert">
+         <Alert  severity="success">  {successMessage}</Alert>
         </div>  
       )} 
 
       {successEmail && (
-        <div id="successEmail" className="alert alert-success fade-in" role="alert">
-          {successEmail}
+        <div id="successEmail" className="fade-in" role="alert">
+         <Alert  severity="success">  {successEmail}</Alert>
         </div>  
       )}  
 

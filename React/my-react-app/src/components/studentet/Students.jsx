@@ -1,13 +1,17 @@
 import React, {useEffect, useState} from "react"
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import axios from "axios";
 import "./assets/Students.css";
 import Swal from "sweetalert2";
+import {Alert, Button} from '@mui/material';
+import {Delete, Edit, Search} from '@mui/icons-material';
 
 function Students() {
  
   const [studentet , setStudentet] = useState([]);
   const [successMessage, setSuccessMessage ] = useState('');
+  const [searchStudenti, setSearchStudenti ] = useState('');
+  const [dataMessage, setDataMessage ] = useState('');
 
   const API_URL = "http://localhost:3000/";
 
@@ -22,6 +26,37 @@ function Students() {
     console.error("Error fetching studentet:", err);
   }
 };
+
+  const handleReset = () =>{
+
+    setSearchStudenti('');
+  }
+
+  const handleSearch = async () =>{
+
+    if(!searchStudenti){
+
+      setDataMessage('Ju lutem shënoni Studentin!');
+
+      setTimeout(() => { setDataMessage('')},3000);
+
+      return;
+    }
+
+    try{
+
+      const response = await axios.get(`${API_URL}studentet/studenti/search?Emri=${searchStudenti}`);
+
+      console.log(response.data);
+      setStudentet(response.data);
+    
+    }catch(err){
+      console.error(err);
+        setDataMessage(err.response.data.message);
+
+        setTimeout(() => { setDataMessage('')},3000);
+    }
+  }  
 
   const deleteStudent = async(ID) =>{
 
@@ -66,6 +101,11 @@ function Students() {
   }
   
   useEffect(() =>{
+
+    if(searchStudenti){
+      return;
+    }
+
     fetchStudentet();
 
     const interval = setInterval(() => {
@@ -74,7 +114,7 @@ function Students() {
 
     return () => clearInterval(interval);
 
-  },[]);
+  },[searchStudenti]);
 
   return (
 
@@ -82,11 +122,35 @@ function Students() {
       <h1>LISTA E STUDENTËVE</h1>
 
       {successMessage && (
-        <div id="successMessage" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMessage" className="fade-in" role="alert">
+          <Alert severity="success">{successMessage} </Alert>
         </div>
       )}
-      
+
+      {dataMessage && (
+                <div id="dataMsgLendet" className="fade-in" role="alert">
+                  <Alert severity="info">  {dataMessage}</Alert>
+                </div>
+            )}   
+
+        <div id="searchBtnHolder">
+            
+            <input id="searchLendaInput"
+              type="text"
+              placeholder="Kërko studentin..."
+              value={searchStudenti}
+              onChange={(e) => setSearchStudenti(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
+              className="form-control mb-3"
+            />
+
+            <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
+                <Search></Search> Kërko</Button>
+            <Button onClick={handleReset} variant="contained" id="resetSearchLnd" className="mb-3">Reset</Button> 
+      </div>
+
       <table border="1">
         <thead>
           <tr>
@@ -126,14 +190,15 @@ function Students() {
               <td>{student.uKrijua ? new Date(student.uKrijua).toLocaleString()  : ''}</td>
               <td>
                 
-              <Link to={`/edit/studenti/${student.ID}`}>
-          <button id="editBtn" className="btn btn-success">Edit</button>
+              <Link to={`/edit/studenti/${student.ID}`}> 
+          <Button id="editBtn" color="success" variant="contained"
+          startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
               </Link>
               </td> 
               <td>
 
-              <button className="btn btn-danger" 
-                onClick={ () => deleteStudent(student.ID)}>Delete</button>
+              <Button color='error' variant='contained' startIcon={<Delete sx={{color:"white"}}/>}
+                onClick={ () => deleteStudent(student.ID)}>Delete</Button>
 
               </td>
             </tr>

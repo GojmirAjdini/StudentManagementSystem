@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './assets/ListoProfesoret.css';
+import {Alert, Button} from '@mui/material';
+import {Delete, Edit, Search} from '@mui/icons-material';
 
 function ListaProfesoreve() {
 
@@ -10,6 +12,8 @@ function ListaProfesoreve() {
 
     const [profesoret, setProfesoret] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
+    const [searchProfesori, setSearchProfesori] = useState('');
+    const [dataMessage, setDataMessage] = useState('');
 
 
     const fetchProfesoret = async () =>{
@@ -24,6 +28,37 @@ function ListaProfesoreve() {
             console.error(err);
         }
     }
+
+    const handleReset = () =>{
+
+      setSearchProfesori('');
+    }
+    
+  const handleSearch = async () =>{
+
+    if(!searchProfesori){
+
+      setDataMessage('Ju lutem shënoni Profesorin!');
+
+      setTimeout(() => { setDataMessage('')},3000);
+
+      return;
+    }
+
+    try{
+
+      const response = await axios.get(`${API_URL}profesoret/profesori/search?Emri=${searchProfesori}`);
+
+      console.log(response.data);
+      setProfesoret(response.data);
+    
+    }catch(err){
+      console.error(err);
+        setDataMessage(err.response.data.message);
+
+        setTimeout(() => { setDataMessage('')},3000);
+    }
+  }  
 
     const deleteProfesorById = async (ID) => {
         
@@ -91,6 +126,31 @@ function ListaProfesoreve() {
         </div>
       )}
       
+      {dataMessage && (
+          <div id="dataMsgLendet" className="fade-in" role="alert">
+            <Alert severity="info">  {dataMessage}</Alert>
+          </div>
+      )}   
+     
+     <div id="searchBtnHolder">
+      
+      <input id="searchLendaInput"
+        type="text"
+        placeholder="Kërko profesorin..."
+        value={searchProfesori}
+        onChange={(e) => setSearchProfesori(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') handleSearch();
+        }}
+        className="form-control mb-3"
+      />
+     
+      <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
+          <Search></Search> Kërko</Button>
+      <Button onClick={handleReset} variant="contained" id="resetSearchLnd" className="mb-3">Reset</Button> 
+            </div>
+
+
       <table border="1">
         <thead>
           <tr>
@@ -126,13 +186,14 @@ function ListaProfesoreve() {
               <td>
                 
               <Link to={`/edit/profesori/${prof.ProfesoriID}`}>
-          <button id="editBtn" className="btn btn-success">Edit</button>
+              <Button id="editBtn" color="success" variant="contained"
+              startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
               </Link>
               </td> 
               <td>
 
-              <button className="btn btn-danger" 
-                onClick={ () => deleteProfesorById(prof.ProfesoriID)}>Delete</button>
+              <Button color='error' variant='contained' startIcon={<Delete sx={{color:"white"}}/>}
+                onClick={ () => deleteProfesorById(prof.ProfesoriID)}>Delete</Button>
 
               </td>
             </tr>

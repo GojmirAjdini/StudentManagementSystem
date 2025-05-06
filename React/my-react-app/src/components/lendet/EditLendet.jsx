@@ -4,6 +4,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import './assets/LendaRegister.css'; 
 import { FaArrowLeft } from "react-icons/fa";
+import Alert from '@mui/material/Alert';
+import Button from "@mui/material/Button";
 
 function EditLendet() {
   const { LendaID } = useParams();
@@ -128,8 +130,8 @@ function EditLendet() {
       <h1>PËRDITËSO LËNDËN</h1>
 
       {successMessage && (
-        <div id="successMsgLenda" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMsgLenda" className="fade-in" role="alert">
+        <Alert severity="success">{successMessage}</Alert> 
         </div>
       )}
 
@@ -176,12 +178,13 @@ function EditLendet() {
         </div>
 
         <div className="inputLenda">
-          <button id="updateBtnLenda" className="btn btn-primary" type="submit">Ruaj Ndryshimet</button>
+          <Button variant="contained" id="updateBtnLenda" type="submit">Ruaj Ndryshimet</Button>
         </div>
 
         <div className="input-label">
           <Link className="kthehuLinkLenda" to={`/lendet`}>
-            <FaArrowLeft className="leftArrow" /> Kthehu
+          <Button variant='contained' color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>           
+
           </Link>
         </div>
       </form>

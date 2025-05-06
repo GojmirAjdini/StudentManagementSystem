@@ -18,7 +18,10 @@ const shtoFakultet = async (req, res) => {
     try{
         const {Emri, Niveli, Lokacioni, Kodi_Fakultetit} = req.body;
 
-        Fakulteti.regjistroFakultet(Emri, Niveli, Lokacioni,Kodi_Fakultetit, (err, newFakulteti) =>{
+        const upCEmri = Emri.charAt(0).toUpperCase() + Emri.slice(1);
+        const upCLokacioni = Lokacioni.charAt(0).toUpperCase() + Lokacioni.slice(1);
+
+        Fakulteti.regjistroFakultet(upCEmri.trim(), Niveli, upCLokacioni.trim(),Kodi_Fakultetit, (err, newFakulteti) =>{
 
         if(err){
             return res.status(500).json({err: true, message: err.message});        
@@ -62,7 +65,10 @@ const updateFakultetin = async (req, res) =>{
 
         const {Emri, Niveli, Lokacioni, Kodi_Fakultetit} = req.body;
 
-        const updatedFk = new Fakulteti(id, Emri, Niveli, Lokacioni, Kodi_Fakultetit);
+        const upCEmri = Emri.charAt(0).toUpperCase() + Emri.slice(1);
+        const upCLokacioni = Lokacioni.charAt(0).toUpperCase() + Lokacioni.slice(1);
+
+        const updatedFk = new Fakulteti(id, upCEmri.trim(), Niveli, upCLokacioni.trim(), Kodi_Fakultetit);
 
         Fakulteti.perditesoFakultetin(updatedFk,(err, results) =>{
 
@@ -113,9 +119,9 @@ const patchFakulteti = async (req, res) =>{
     const fushat =[];
     const values = [];
 
-    if(Emri){ fushat.push("Emri = ?"); values.push(Emri); } 
+    if(Emri.charAt(0).toUpperCase() + Emri.slice(1)){ fushat.push("Emri = ?"); values.push(Emri.trim()); } 
     if(Niveli){ fushat.push("Niveli = ?"); values.push(Niveli); } 
-    if(Lokacioni){ fushat.push("Lokacioni = ?"); values.push(Lokacioni); } 
+    if(Lokacioni.charAt(0).toUpperCase() + Lokacioni.slice(1)){ fushat.push("Lokacioni = ?"); values.push(Lokacioni.trim()); } 
     if(Kodi_Fakultetit){ fushat.push("Kodi_Fakultetit = ?"); values.push(Kodi_Fakultetit); }
 
     if(fushat.length === 0){    
@@ -135,5 +141,29 @@ const patchFakulteti = async (req, res) =>{
     }
 }
 
+
+const lexoFakultetinByName = async (req, res) =>{
+
+    const Emri = req.query.Emri;
+
+    try{
+
+        Fakulteti.getFakultetiByName([Emri.trim()], (err, fakulteti) =>{
+
+            if(err){
+                return res.status(500).json({err: true, message: err.message});
+            }
+            if(fakulteti.length === 0){
+                return res.status(404).json({message:"Fakulteti nuk ekziston!"});
+            }
+            return res.status(200).json(fakulteti);
+        })  
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({err: true, message: err.message});
+    }
+}
+
 export default {lexojFakultetet, shtoFakultet, fshijFakultetin, 
-    updateFakultetin, lexoFakultetinId, patchFakulteti};
+    updateFakultetin, lexoFakultetinId, patchFakulteti,
+    lexoFakultetinByName};

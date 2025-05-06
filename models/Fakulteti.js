@@ -111,6 +111,27 @@ class Fakulteti{
 
             callback(null, results);
         })
-    }   
+    }
+    
+    
+    static getFakultetiByName(Emri, callback){
+
+        const sql = `SELECT * FROM Fakulteti
+         WHERE Emri LIKE CONCAT("%", ?, "%")`;
+
+        db.query(sql, [Emri], (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+
+            if(results.length === 0){
+                return callback(new Error("Fakulteti nuk u gjet!"));
+            }
+
+            const fakultetet = results.map((row) => new Fakulteti(row.FakultetiID, row.Emri, row.Niveli, row.Lokacioni, row.Kodi_Fakultetit, row.uKrijua));
+            callback(null, fakultetet);
+        })
+    }
 }
 export default Fakulteti;

@@ -9,5 +9,6 @@ router.delete("/delete/:FakultetiID", controllerFakulteti.fshijFakultetin);
 router.put("/update/:FakultetiID", controllerFakulteti.updateFakultetin);
 router.get("/:FakultetiID", controllerFakulteti.lexoFakultetinId);
 router.patch("/edit/:FakultetiID", controllerFakulteti.patchFakulteti);
+router.get("/fakulteti/search",controllerFakulteti.lexoFakultetinByName);
 
 export default router; 

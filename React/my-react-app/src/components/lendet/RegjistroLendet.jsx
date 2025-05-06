@@ -3,6 +3,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import './assets/LendaRegister.css';
 import { useParams } from "react-router-dom";
+import Alert from '@mui/material/Alert';
+import { Button } from "@mui/material";
 
 function RegjistroLendet() {
 
@@ -114,7 +116,7 @@ function RegjistroLendet() {
        
         <div className="input-label">
         <label htmlFor="">Kodi i Lëndës <span>*</span></label>
-        <input className="form-control" required type="text" placeholder="Kodi i Lendes" value={KodiLendes} onChange={(e) => setKodiLendes(e.target.value)} />
+        <input className="form-control" required type="text" placeholder="Kodi i Lëndës" value={KodiLendes} onChange={(e) => setKodiLendes(e.target.value)} />
         </div>
         
         <div className="input-label">
@@ -149,15 +151,15 @@ function RegjistroLendet() {
         </div>
 
         <div className="input-labelLnt">
-        <button id="primaryBtnLnt" className="btn btn-primary" type="submit">Regjistro</button>
-        <button id="resetBtnLnt" className="btn btn-secondary" type="button" onClick={handleReset}>Reset</button>
+        <Button variant="contained" id="primaryBtnLnt" className="btn btn-primary" type="submit">Regjistro</Button>
+        <Button variant="contained" id="resetBtnLnt" className="btn btn-secondary" type="button" onClick={handleReset}>Reset</Button>
         </div>
 
         </form>
 
         {successMessage && (
-        <div id="successMsgLenda" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMsgLenda" className="fade-in" role="alert">
+         <Alert severity="success">{successMessage}</Alert> 
             </div>
         )}
         </div>

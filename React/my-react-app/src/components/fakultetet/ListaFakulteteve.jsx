@@ -1,13 +1,18 @@
 import {useState, useEffect} from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "./assets/Fakultetet.css";
 import Swal from "sweetalert2";
+import {Alert, Button} from '@mui/material';
+import {Delete, Edit, Search} from '@mui/icons-material';
 
 function ListaFakulteteve() {
 
     const [fakultetet, setFakultetet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
+    const [searchFakulteti, setSearchFakulteti] = useState('');
+    const [dataMessage, setDataMessage] = useState('');
+
     const API_URL = "http://localhost:3000/";
 
     const fetchFakultetet = async () => {
@@ -64,7 +69,41 @@ function ListaFakulteteve() {
         }
     }
 
+    const handleReset = () =>{
+        setSearchFakulteti('');
+    }
+
+    const handleSearch = async() =>{
+
+        if(!searchFakulteti){
+
+            setDataMessage('Ju lutem shënoni Fakultetin!');
+
+            setTimeout(() =>{ setDataMessage('')},3000);
+
+            return;
+        }
+        try{
+
+            const response = await axios.get(`${API_URL}fakultetet/fakulteti/search?Emri=${searchFakulteti}`);
+
+            console.log(response.data);
+            setFakultetet(response.data);
+        } 
+        catch(err){
+            console.error(err);
+            setDataMessage(err.response.data.message);
+
+            setTimeout(() => { setDataMessage('')},3000);
+        }
+    }
+
 useEffect (() => {
+
+    if(searchFakulteti){
+
+        return;
+    }
     fetchFakultetet();
 
     const interval = setInterval(() => {
@@ -72,7 +111,7 @@ useEffect (() => {
     }, 5000);
 
     return () => clearInterval(interval)
-}, []);
+}, [searchFakulteti]);
 
     return(
 
@@ -81,11 +120,35 @@ useEffect (() => {
             <h1>LISTA E FAKULTETEVE</h1>
 
             {successMessage && (
-        <div id="successMessageFkt" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMessageFkt" className="fade-in" role="alert">
+          <Alert severity="success">{successMessage}</Alert>
         </div>
       )}
 
+            {dataMessage && (
+                <div id="dataMsgLendet" className="fade-in" role="alert">
+                  <Alert severity="info">  {dataMessage}</Alert>
+                </div>
+            )}   
+
+        <div id="searchBtnHolder">
+            
+            <input id="searchLendaInput"
+              type="text"
+              placeholder="Kërko fakultetin..."
+              value={searchFakulteti}
+              onChange={(e) => setSearchFakulteti(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
+              className="form-control mb-3"
+            />
+
+            <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
+                <Search></Search> Kërko</Button>
+            <Button onClick={handleReset} variant="contained" id="resetSearchLnd" className="mb-3">Reset</Button> 
+      
+        </div>
             <table border="1">
                 <thead>
                 <tr>
@@ -114,13 +177,14 @@ useEffect (() => {
                         {console.log(fakulteti.uKrijua)}
                     <td>
                         <Link to={`/edit/fakulteti/${fakulteti.FakultetiID}`}>
-                    <button id="editBtn" className="btn btn-success">Edit</button>
+                        <Button id="editBtn" color="success" variant="contained"
+                        startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
                         </Link>
                     </td> 
                      <td>
                         
-              <button className="btn btn-danger" 
-               onClick={ () => deleteFakultet(fakulteti.FakultetiID)}>Delete</button>
+              <Button color='error' variant='contained' startIcon={<Delete sx={{color:"white"}}/>}
+               onClick={ () => deleteFakultet(fakulteti.FakultetiID)}>Delete</Button>
               </td>
                     </tr>
                     ))}

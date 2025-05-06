@@ -116,6 +116,40 @@ class Profesori {
 
         })
     }
+
+    static caktoProfiLenda (LendaID, ProfesoriID, callback){
+
+        const sql = "INSERT INTO lenda_profesori(LendaID, ProfesoriID) VALUES (?, ?)";
+
+        const values = [LendaID, ProfesoriID];
+
+        db.query(sql, values, (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+            
+            callback(null, results);
+        })
+    }
+
+    static searchProfesoriByName (Emri, callback){
+
+        const sql = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
+        p.Email, f.Emri Fakulteti, p.NrTel, p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, p.Titulli_Akademik
+        FROM Profesori p 
+        INNER JOIN Fakulteti f on f.FakultetiID = p.FakultetiID
+        WHERE p.Emri LIKE CONCAT("%", ? ,"%")`;
+
+        db.query(sql, [Emri], (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+            
+            callback(null, results);
+        })
+    }
 }
 
 export default Profesori;

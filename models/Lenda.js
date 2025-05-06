@@ -83,5 +83,22 @@ class Lenda{
         })
 
     }
+
+    static lexoLendenByName(Emri_Lendes, callback){
+
+        const sql = `SELECT l.LendaID, f.Emri Fakulteti, l.Emri_Lendes, 
+        l.ECTS, l.Kodi_Lendes, l.uKrijua, s.NrSemestrit Semestri FROM Lenda l 
+        INNER JOIN Fakulteti f ON l.FakultetiID = f.FakultetiID
+        INNER JOIN Semestri s ON l.SemestriID = s.Semestri_ID WHERE Emri_Lendes LIKE CONCAT("%", ? , "%")`;
+
+        db.query(sql, [Emri_Lendes], (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+        
+            callback(null, results);
+        })
+    }
 }
 export default Lenda;

@@ -73,8 +73,10 @@ const regjistroStudent = async (req, res) =>{
         const upCEmri = Emri.charAt(0).toUpperCase() + Emri.slice(1);
         const upCMbiemri = Mbiemri.charAt(0).toUpperCase() + Mbiemri.slice(1);
 
-        Studenti.createStudent( upCEmri, upCMbiemri, Gjinia, emailstudentor, EmailPrivat, 
-            hashedPassword, Vendlindja, Data_Lindjes, Adresa, Nr_Tel, FakultetiID, Statusi, studentiID, gjenerata, (err, results) =>{
+        Studenti.createStudent( upCEmri.trim(), upCMbiemri.trim(), Gjinia, emailstudentor.trim(), EmailPrivat.trim(), 
+            hashedPassword, Vendlindja.charAt(0).toUpperCase() + Vendlindja.slice(1), 
+            Data_Lindjes, Adresa.charAt(0).toUpperCase() + Vendlindja.slice(1), Nr_Tel, 
+            FakultetiID, Statusi, studentiID, gjenerata, (err, results) =>{
 
             if(err){
                 console.log("Gabim gjate regjistrimit", err);
@@ -233,7 +235,7 @@ const loginStudenti = async(req, res) =>{
 
         const studenti = storedPassword[0];
 
-        Studenti.loginStudent(EmailStudentor,(err, results) =>{
+        Studenti.loginStudent(EmailStudentor.trim(),(err, results) =>{
 
             if(err){
                 return res.status(500).json(err, { message: "Server error"});
@@ -280,10 +282,10 @@ const patchStudentin = async (req, res) => {
         const fushat = [];
         const values = [];
         
-        if(upCEmri){ fushat.push('Emri = ?'); values.push(upCEmri);} if(upCMbiemri){ fushat.push('Mbiemri = ?'); values.push(upCMbiemri);} 
-        if(Gjinia){ fushat.push('Gjinia = ?'); values.push(Gjinia);} if(EmailPrivat){ fushat.push('EmailPrivat = ?'); values.push(EmailPrivat);} 
-        if(Vendlindja){ fushat.push('Vendlindja = ?'); values.push(Vendlindja);} if(Data_Lindjes){ fushat.push('Data_Lindjes = ?'); values.push(Data_Lindjes);} 
-        if(Adresa){ fushat.push('Adresa = ?'); values.push(Adresa);} if(Nr_Tel){ fushat.push('Nr_Tel = ?'); values.push(Nr_Tel);} 
+        if(upCEmri){ fushat.push('Emri = ?'); values.push(upCEmri.trim());} if(upCMbiemri){ fushat.push('Mbiemri = ?'); values.push(upCMbiemri.trim());} 
+        if(Gjinia){ fushat.push('Gjinia = ?'); values.push(Gjinia);} if(EmailPrivat){ fushat.push('EmailPrivat = ?'); values.push(EmailPrivat.trim());} 
+        if(Vendlindja.charAt(0).toUpperCase() + Vendlindja.slice(1)){ fushat.push('Vendlindja = ?'); values.push(Vendlindja.trim());} if(Data_Lindjes){ fushat.push('Data_Lindjes = ?'); values.push(Data_Lindjes);} 
+        if(Adresa.charAt(0).toUpperCase() + Adresa.slice(1)){ fushat.push('Adresa = ?'); values.push(Adresa.trim());} if(Nr_Tel){ fushat.push('Nr_Tel = ?'); values.push(Nr_Tel.trim());} 
         if(FakultetiID){ fushat.push('FakultetiID = ?'); values.push(FakultetiID);} if(Statusi){ fushat.push('Statusi = ?'); values.push(Statusi);} 
         if(Gjenerata){ fushat.push('Gjenerata = ?'); values.push(Gjenerata);} 
 
@@ -329,7 +331,34 @@ const patchStudentin = async (req, res) => {
                 console.log("Error reading students!", err);
                 return res.status(500).json({error: "Server error"})
             }  
-        } 
+    }
+
+    const lexoStudentetByName = async (req, res) =>{
+    
+        try{
+            
+            const Emri =  req.query.Emri;
+
+            Studenti.readStudentByName([Emri.trim()], (err, studentet) =>{
+    
+                if(err){
+                    return res.status(500).json("Server error");
+                }
+                if(studentet.length === 0){
+                    return res.status(404).json({message: "Studenti nuk ekziston!"});
+                }
+                
+                res.status(200).json(studentet);
+            });
+        }
+            catch(err){
+                console.log("Error reading students!", err);
+                return res.status(500).json({error: "Server error"})
+            }  
+        }
+        
+    
 
 export default {lexoStudentet, regjistroStudent, fshijStudent, 
-    fshijAllStudentet, updatePassword, loginStudenti, patchStudentin, lexoStudentetByID};
+    fshijAllStudentet, updatePassword, loginStudenti, 
+    patchStudentin, lexoStudentetByID, lexoStudentetByName};

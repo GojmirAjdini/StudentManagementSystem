@@ -1,10 +1,10 @@
 import {useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import ListaFakulteteve from "./ListaFakulteteve";
 import { FaArrowLeft } from "react-icons/fa";
 import Swal from "sweetalert2";
 import './assets/FakultetiRegister.css';
+import { Button, Alert } from "@mui/material";
 
 function EditFakultetet() {
 
@@ -120,8 +120,8 @@ function EditFakultetet() {
             <h1>PËRDITËSO FAKULTETIN</h1>
 
             {successMessage && (
-        <div id="successMsgFakulteti" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMsgFakulteti" className="fade-in" role="alert">
+          <Alert severity="success">{successMessage} </Alert>
         </div>  
       )} 
              
@@ -155,13 +155,13 @@ function EditFakultetet() {
                 </div>
 
                 <div className="input">
-                <button id="updateBtnFkt" className="btn btn-primary" type="submit">Ruaj Ndryshimet</button>
+                <Button id="updateBtnFkt" variant="contained" type="submit">Ruaj Ndryshimet</Button>
     
                 </div>
                 <div className="input-label">
 
                 <Link className="kthehuLinkFkt" to={`/fakultetet`}>  
-          <FaArrowLeft className="leftArrow"/>Kthehu</Link>            
+                <Button variant='contained' color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>                    
                     </div>
             </form>
         </div>

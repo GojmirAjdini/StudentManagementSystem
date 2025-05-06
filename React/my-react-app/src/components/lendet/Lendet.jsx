@@ -2,7 +2,10 @@ import {useState, useEffect} from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import './assets/Lendet.css';
-import { useParams, Link } from "react-router-dom";
+import {Link} from "react-router-dom";
+import {Alert, Button} from '@mui/material';
+import {Delete, Edit, Search} from '@mui/icons-material';
+
 
 function Lendet() {
 
@@ -10,6 +13,8 @@ function Lendet() {
     const [lendet, setLendet] = useState([]);
     const [orgLendet, setOrgLendet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
+    const [dataMessage, setDataMessage] = useState('');
+    const [searchLenda, setSearchLenda] = useState('');
 
     
     const fetchLendet = async () =>{
@@ -24,6 +29,33 @@ function Lendet() {
         } catch(err){
             console.error("Error fetching lendet", err); 
         }
+    }
+
+    const handleReset = () =>{
+        setSearchLenda('');
+    }
+
+    const handleSearch = async () =>{
+
+        if(!searchLenda){
+            setDataMessage('Ju lutem shënoni lëndën!');
+
+            setTimeout(() => {setDataMessage('')},3000);
+            return;
+        }
+        try{
+
+            const response = await axios.get(`${API_URL}lendet/lenda/search?Emri_Lendes=${searchLenda}`);
+            
+            console.log(response.data);
+            setLendet(response.data);
+        }catch(err){
+            console.error(err);
+            setDataMessage(err.response.data.message);
+
+            setTimeout(() => { setDataMessage('')},3000);
+        }
+
     }
 
     const deleteLenda = async (LendaID) => {
@@ -66,6 +98,12 @@ function Lendet() {
     }
 
     useEffect(() => {
+
+        if(searchLenda){
+
+            return; 
+        }
+
         fetchLendet();
 
         const interval = setInterval (() =>{
@@ -73,27 +111,52 @@ function Lendet() {
 
         return () => clearInterval(interval);
 
-    },[]);
+    },[searchLenda]);
 
     return(
         <div className="fadeInPage" id="container">
 
             <h1>LISTA E LËNDËVE</h1>
 
-            {successMessage && (
-                <div id="successMessageLendet" className="alert alert-success fade-in" role="alert">
-                    {successMessage}
+            {successMessage && (    
+                <div id="successMessageLendet" className="fade-in" role="alert">
+                    <Alert severity="success">  {successMessage}</Alert>
                 </div>
             )}
+
+        {dataMessage && (
+                <div id="dataMsgLendet" className="fade-in" role="alert">
+                  <Alert severity="info">  {dataMessage}</Alert>
+                </div>
+            )}   
+        
+        <div id="searchBtnHolder">
+            
+            <input id="searchLendaInput"
+              type="text"
+              placeholder="Kërko lëndën..."
+              value={searchLenda}
+              onChange={(e) => setSearchLenda(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
+              className="form-control mb-3"
+            />
+
+            <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
+                <Search></Search> Kërko</Button>
+            <Button onClick={handleReset} variant="contained" id="resetSearchLnd" className="mb-3">Reset</Button>
+
+            </div>
             <table id="tableLendet" border="1">
 
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Lenda</th>
+                    <th>Lënda</th>
                     <th>Fakulteti</th>
                     <th>ECTS</th>
-                    <th>Kodi i Lendes</th>
+                    <th>Kodi i Lëndës</th>
                     <th>Semestri</th>
                     <th>Data e Regjistrimit</th>
                     <th>Përditëso</th>
@@ -102,22 +165,23 @@ function Lendet() {
                 </thead>
                     <tbody>
                     {lendet.map((lenda, index) => (
-                        <tr key={lenda.LendaID}>
-                            <td>{index + 1}</td>
-                            <td>{lenda.Emri_Lendes}</td>
-                            <td>{lenda.Fakulteti}</td>
-                            <td>{lenda.ECTS}</td>
-                            <td>{lenda.Kodi_Lendes}</td>
-                            <td>{lenda.Semestri}</td>
-                            <td>{lenda.uKrijua ? new Date(lenda.uKrijua).toLocaleString() : ''}</td>
+                    <tr key={lenda.LendaID}>
+                    <td>{index + 1}</td>
+                    <td>{lenda.Emri_Lendes}</td>
+                    <td>{lenda.Fakulteti}</td>
+                    <td>{lenda.ECTS}</td>
+                    <td>{lenda.Kodi_Lendes}</td>
+                    <td>{lenda.Semestri}</td>
+                    <td>{lenda.uKrijua ? new Date(lenda.uKrijua).toLocaleString() : ''}</td>
                         
-                            <td><Link to={`/edit/lenda/${lenda.LendaID}`}> 
-                            <button className="btn btn-success" id="btnEditLenda">
-                            Edit </button></Link></td>
+                        <td><Link to={`/edit/lenda/${lenda.LendaID}`}> 
+                        <Button id="editBtn" color="success" variant="contained"
+                        startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button></Link></td>
                         
-                        <td> <button onClick={() => deleteLenda(lenda.LendaID)} className="btn btn-danger">Delete
+                        <td> <Button color="error" variant="contained" startIcon={<Delete sx={{color:"white"}}/>}
+                        onClick={() => deleteLenda(lenda.LendaID)} className="btn btn-danger">Delete
                             
-                            </button></td>
+                            </Button></td>
                         </tr>
                     ))}
 

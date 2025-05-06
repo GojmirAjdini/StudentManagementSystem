@@ -13,7 +13,7 @@ const readAdminet = async (req, res) => {
                 return res.status(500).json(err);
             }   
             if(adminet.length === 0){
-                return res.status(404).json({message: "Nuk ka te dhena per adminet!"});
+                return res.status(404).json({message: "Nuk ka të dhëna për adminët!"});
             }
             console.log(adminet.length);
             res.status(200).json(adminet);
@@ -49,7 +49,11 @@ const registerAdmin = async (req, res) =>{
         
         const hashedPassword = await bcrypt.hash(Password, salts);
 
-        Admin.regjistroAdmin(FakultetiID, Email, hashedPassword, Emri, Mbiemri,(err, results) =>{
+        const upCEmri = Emri.charAt(0).toUpperCase() + Emri.slice(1);
+        const upCMbiemri = Mbiemri.charAt(0).toUpperCase() + Mbiemri.slice(1);
+
+
+        Admin.regjistroAdmin(FakultetiID, Email.trim(), hashedPassword, upCEmri.trim(), upCMbiemri.trim(),(err, results) =>{
 
             if(err){
                 return res.status(500).json(err);
@@ -78,7 +82,7 @@ const loginAdmin = async (req,res) =>{
 
         const admin = storedPassword[0];
         
-        StafiAdministrativ.loginAdmin(Email,(err, results) =>{
+        StafiAdministrativ.loginAdmin(Email.trim(),(err, results) =>{
 
             if(err){
                 return res.status(500).json(err);
@@ -117,7 +121,7 @@ const updatePassword = async (req, res) =>{
         const {oldPassword, newPassword, confirmPassword} = req.body;
 
         if(!oldPassword || !newPassword || !confirmPassword){
-            return res.status(400).json({message: "Te gjitha fushat duhen plotesuar!"})
+            return res.status(400).json({message: "Të gjitha fushat duhen plotësuar!"})
         }
 
         const sql = "SELECT Password from stafiAdministrativ WHERE AdminID = ?";

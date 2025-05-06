@@ -11,5 +11,6 @@ router.delete("/deleteAll/",studentKontroller.fshijAllStudentet);
 router.post("/login",studentKontroller.loginStudenti);
 router.patch("/edit/:ID",studentKontroller.patchStudentin);
 router.get("/:ID", studentKontroller.lexoStudentetByID);
+router.get("/studenti/search",studentKontroller.lexoStudentetByName);
 
 export default router;
