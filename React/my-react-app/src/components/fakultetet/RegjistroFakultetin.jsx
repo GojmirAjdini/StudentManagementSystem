@@ -92,7 +92,7 @@ function RegjistroFakultetin() {
 
                 <div className="input-label">
                     <label htmlFor="kodi">Kodi i Fakultetit <span> *</span></label>
-                    <input type="text" id="kodi" className="form-control" value={Kodi_Fakultetit} onChange={(e) => setKodi_Fakultetit(e.target.value)} required />
+                    <input type="text" id="kodi" className="form-control" placeholder="Kodi i Fakultetit" value={Kodi_Fakultetit} onChange={(e) => setKodi_Fakultetit(e.target.value)} required />
                 </div>
 
                 <div className="input-labelBtn">

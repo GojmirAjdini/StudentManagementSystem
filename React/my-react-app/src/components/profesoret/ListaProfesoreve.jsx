@@ -121,8 +121,8 @@ function ListaProfesoreve() {
             <h1>LISTA E PROFESORËVE</h1>
         
       {successMessage && (
-        <div id="successMessageProf" className="alert alert-success fade-in" role="alert">
-          {successMessage}
+        <div id="successMessageProf" className="fade-in" role="alert">
+          <Alert severity="success">  {successMessage}</Alert>
         </div>
       )}
       

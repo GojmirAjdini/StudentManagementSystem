@@ -150,7 +150,7 @@ function EditFakultetet() {
 
                 <div className="input-label">
                     <label htmlFor="kodi">Kodi i Fakultetit <span> *</span></label>
-                    <input type="text" id="kodi" className="form-control" name="Kodi_Fakultetit" 
+                    <input type="text" id="kodi" className="form-control" placeholder="Kodi i Fakultetit" name="Kodi_Fakultetit" 
                     value={fakulteti.Kodi_Fakultetit || ''} onChange={handleChange} required />
                 </div>
 
