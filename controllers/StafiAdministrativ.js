@@ -170,4 +170,57 @@ const updatePassword = async (req, res) =>{
     }
 }
 
-export default {readAdminet, registerAdmin, loginAdmin, updatePassword};
+const readAdminById  = async (req, res) =>{
+
+    try{
+
+        const AdminID = req.params.AdminId;
+
+        StafiAdministrativ.searchAdminById([AdminID],(err, adminet) =>{
+
+            
+            if(err){
+                return res.status(500).json(err);
+            }   
+            if(adminet.length === 0){
+                return res.status(404).json({message: "Nuk ka të dhëna për adminët!"});
+            }
+            console.log(adminet.length);
+            res.status(200).json(adminet);
+        })
+    }
+    catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+
+    }
+}
+
+const readAdminByName  = async (req, res) =>{
+
+    try{
+
+        const Emri = req.query.Emri_Adminit;
+
+        StafiAdministrativ.searchAdminById([Emri],(err, adminet) =>{
+
+            
+            if(err){
+                return res.status(500).json(err);
+            }   
+            if(adminet.length === 0){
+                return res.status(404).json({message: "Nuk ka të dhëna për adminët!"});
+            }
+            console.log(adminet.length);
+            res.status(200).json(adminet);
+        })
+    }
+    catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+
+    }
+}
+
+export default {readAdminet, registerAdmin, loginAdmin, 
+    updatePassword, readAdminById, readAdminByName};

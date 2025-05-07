@@ -80,6 +80,46 @@ class StafiAdministrativ {
             callback(null, results);
         })
     }
+
+    static searchAdminById(id, callback){
+
+        const sql = `SELECT * FROM StafiAdministrativ
+         WHERE AdminID = ?`;
+
+        db.query(sql, [id], (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+
+            if(results.length === 0){
+                return callback(new Error("Admin nuk u gjet!"));
+            }
+
+            const admini = new StafiAdministrativ(results[0].AdminID, results[0].FakultetiID, results[0].Email, results[0].Password, results[0].Emri_Adminit, results[0].Mbiemri_Adminit);
+            callback(null, admini);
+        })
+    }
+
+    static searchAdminByName(Emri, callback){
+
+        const sql = `SELECT * FROM StafiAdministrativ
+         WHERE Emri_Adminit = ?`;
+
+        db.query(sql, [Emri], (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+
+            if(results.length === 0){
+                return callback(new Error("Admin nuk u gjet!"));
+            }
+
+            const admini = new StafiAdministrativ(results[0].AdminID, results[0].FakultetiID, results[0].Email, results[0].Password, results[0].Emri_Adminit, results[0].Mbiemri_Adminit);
+            callback(null, admini);
+        })
+    }
 }
 
 
