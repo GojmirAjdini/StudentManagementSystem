@@ -1,0 +1,17 @@
+#loginAdminData{
+
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+#loginAdminData input{
+
+    cursor:not-allowed;
+}
+
+#h3Info{
+
+    margin-top: 50px;
+    margin-bottom: 0px;
+    
+}

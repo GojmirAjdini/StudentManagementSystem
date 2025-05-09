@@ -6,10 +6,12 @@
   background-color: rgb(101, 64, 235);
   flex-direction: row;
   justify-content: start;
+  gap: 20px;
   align-items: center;
   width: 100%;
   color: black;
 }
+
 #homeLink{
 
   color: white;
@@ -17,7 +19,7 @@
 }
 #homeLink:hover{
 
-  color: rgb(255, 153, 0);
+  color: rgb(79, 49, 184);
 }
 
 .navContainer .dropdown{
@@ -65,6 +67,11 @@
   background-color: rgb(101, 64, 235)
 }
 
+.logoutDropDownA{
+
+  cursor: pointer;
+}
+
 #dropDownBtn{
 
   background-color: #f7f6f6;
@@ -106,4 +113,19 @@ li{
 #dropDownBtn:hover{
 
   background-color: rgb(79, 49, 184);
+}
+
+.rightAlign {
+  
+  right: 20px;
+  left: auto;
+  position: absolute;
+}
+
+.rightAlign .dropdown-menu {
+
+  right: 0;
+  left: auto;
+  position: absolute;
+  z-index: 1000;
 }

@@ -41,7 +41,7 @@ function Register(){
     const fakultetetDisponueshme = async() =>{
 
         try{
-        const response = await axios.get(`${API_URL}fakultetet/all`);
+        const response = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
 
         setFakultetet(response.data);
     }catch(err){
@@ -78,12 +78,12 @@ function Register(){
 
     try{
 
-        const response = await axios.post(`${API_URL}studentet/register/`,{
+        const response = await axios.post(`${API_URL}admin/studentet/register/`,{
 
             Emri: emri, Mbiemri: mbiemri, Gjinia: gjinia, EmailPrivat: emailprivat,
             Vendlindja: vendlindja, Data_Lindjes: data_lindjes, Adresa: adresa, Nr_Tel: nr_tel,
             FakultetiID: fakultetiID, Statusi: statusi 
-        });
+        }, {withCredentials:true});
 
         setSuccessMessage(response.data.message);
         setSuccessEmail(response.data.emailNotification);

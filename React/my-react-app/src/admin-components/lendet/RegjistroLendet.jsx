@@ -29,7 +29,7 @@ function RegjistroLendet() {
     const fakultetetDisponueshme = async() =>{
 
         try{
-            const response = await axios.get(`${API_URL}fakultetet/all`);
+            const response = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
             setFakultetet(response.data);
             console.log(response.data);
 
@@ -40,7 +40,7 @@ function RegjistroLendet() {
 
     const semestratDisponueshme = async() =>{
         try{
-            const response = await axios.get(`${API_URL}semestri/all`);
+            const response = await axios.get(`${API_URL}admin/semestri/all`, {withCredentials:true});
             setSemestrat(response.data); 
             console.log(response.data);
         }
@@ -72,14 +72,16 @@ function RegjistroLendet() {
         }
 
         try{
-            const response = await axios.post(`${API_URL}lendet/submit`,{
+            const response = await axios.post(`${API_URL}admin/lendet/submit`,{
                 
                 FakultetiID: FakultetiID,
                 Emri_Lendes: EmriLendes,
                 ECTS: ECTS,
                 Kodi_Lendes: KodiLendes,
                 SemestriID: SemestriID
-            });
+            }, 
+            {withCredentials:true});
+            
             console.log(response.data);
             setSuccessMessage(response.data.message);
 

@@ -29,7 +29,7 @@ function EditFakultetet() {
     const fetchFakulteti = async () => {
 
         try{
-            const response = await axios.get(`${API_URL}fakultetet/${FakultetiID}`);
+            const response = await axios.get(`${API_URL}admin/fakultetet/${FakultetiID}`,{withCredentials:true});
             console.log("Fakulteti data:", response.data);  
 
             setFakulteti(response.data);
@@ -97,7 +97,7 @@ function EditFakultetet() {
             
         try{
 
-            const response = await axios.patch(`${API_URL}fakultetet/edit/${FakultetiID}`, fakulteti);
+            const response = await axios.patch(`${API_URL}admin/fakultetet/edit/${FakultetiID}`, fakulteti, {withCredentials:true});
             
             console.log("Fakulteti updated:", response.data);
             console.log(response.data.message);

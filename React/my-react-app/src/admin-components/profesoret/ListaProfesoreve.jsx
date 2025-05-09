@@ -20,10 +20,11 @@ function ListaProfesoreve() {
 
         try{
 
-            const response = await axios.get(`${API_URL}profesoret/all`);
-
-            setProfesoret(response.data);
+            const response = await axios.get(`${API_URL}admin/profesoret/all`, { withCredentials:true});
+            
             console.log(response.data);
+            setProfesoret(response.data);
+            
         }catch(err){
             console.error(err);
         }
@@ -47,7 +48,7 @@ function ListaProfesoreve() {
 
     try{
 
-      const response = await axios.get(`${API_URL}profesoret/profesori/search?Emri=${searchProfesori}`);
+      const response = await axios.get(`${API_URL}admin/profesoret/profesori/search?Emri=${searchProfesori}`, { withCredentials:true});
 
       console.log(response.data);
       setProfesoret(response.data);
@@ -86,7 +87,7 @@ function ListaProfesoreve() {
 
         try{
 
-            const response = await axios.delete(`${API_URL}profesoret/delete/${ID}`);
+            const response = await axios.delete(`${API_URL}admin/profesoret/delete/${ID}`, { withCredentials:true});
 
             setProfesoret(prev => prev.filter(prof => prof.ProfesoriID !== ID));
 
@@ -107,7 +108,7 @@ function ListaProfesoreve() {
 
         const interval = setInterval(() => {
 
-            fetchProfesoret
+            fetchProfesoret()
         },5000);
 
         return () => clearInterval(interval);

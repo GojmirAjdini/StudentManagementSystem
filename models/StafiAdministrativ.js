@@ -1,4 +1,5 @@
 import db from "../database/Database.js";
+import jwt from "jsonwebtoken";
 
 class StafiAdministrativ {
    
@@ -118,6 +119,22 @@ class StafiAdministrativ {
 
             const admini = new StafiAdministrativ(results[0].AdminID, results[0].FakultetiID, results[0].Email, results[0].Password, results[0].Emri_Adminit, results[0].Mbiemri_Adminit);
             callback(null, admini);
+        })
+    }
+
+    static getAdminByEmail(Email, callback){
+
+        const sql = `SELECT sa.Email, f.Emri Fakulteti, sa.Emri_Adminit, sa.Mbiemri_Adminit  
+        FROM StafiAdministrativ sa
+        INNER JOIN Fakulteti f on f.FakultetiID = sa.FakultetiID
+        WHERE Email = ?`;
+
+        db.query(sql, [Email], (err, results) =>{
+            if(err){
+                return callback(err);
+            }
+        
+            callback(null ,results);
         })
     }
 }

@@ -32,7 +32,7 @@ function EditLendet() {
 
   const fetchLenda = async () => {
     try {
-      const response = await axios.get(`${API_URL}lendet/${LendaID}`);
+      const response = await axios.get(`${API_URL}admin/lendet/${LendaID}`, { withCredentials:true});
       setLenda(response.data[0]);
       setOrgLenda(response.data[0]);
     } catch (err) {
@@ -44,7 +44,7 @@ function EditLendet() {
   const fakultetetDisponueshme = async() =>{
 
     try{
-        const response = await axios.get(`${API_URL}fakultetet/all`);
+        const response = await axios.get(`${API_URL}admin/fakultetet/all`, { withCredentials:true});
         setFakultetet(response.data);
         console.log(response.data);
 
@@ -55,7 +55,7 @@ function EditLendet() {
 
   const fetchSemestrat = async() =>{
     try{
-        const response = await axios.get(`${API_URL}semestri/all`);
+        const response = await axios.get(`${API_URL}admin/semestri/all`, { withCredentials:true});
         setSemestrat(response.data); 
         console.log(response.data);
     }
@@ -115,7 +115,7 @@ function EditLendet() {
 
     if (result.isConfirmed) {
       try {
-        const response = await axios.patch(`${API_URL}lendet/edit/${LendaID}`, lenda);
+        const response = await axios.patch(`${API_URL}admin/lendet/edit/${LendaID}`, lenda, {withCredentials:true});
         setSuccessMessage(response.data.message);
         setTimeout(() => setSuccessMessage(''), 3000);
       } catch (err) {

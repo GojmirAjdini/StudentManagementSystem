@@ -33,7 +33,7 @@ function CaktoLendetProf() {
 
         try{
 
-            const response = await axios.get(`${API_URL}lendet/all`);
+            const response = await axios.get(`${API_URL}admin/lendet/all`, {withCredentials:true});
 
            console.log(response.data);
            setLendet(response.data);
@@ -47,7 +47,7 @@ function CaktoLendetProf() {
 
         try{
 
-            const response = await axios.get(`${API_URL}profesoret/all`);
+            const response = await axios.get(`${API_URL}admin/profesoret/all`, { withCredentials:true});
 
             console.log(response.data);
             setProfesoret(response.data);
@@ -80,11 +80,11 @@ function CaktoLendetProf() {
     return;
 }
         try{
-                const response = await axios.post(`${API_URL}profesoret/assign`,{
+                const response = await axios.post(`${API_URL}admin/profesoret/assign`,{
                     LendaID: LendaID,
                     ProfesoriID: ProfesoriID,
 
-                })
+                }, { withCredentials:true})
 
         console.log(response.data.message);
 

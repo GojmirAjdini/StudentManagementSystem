@@ -2,6 +2,10 @@ import Profesori from "../models/Profesori.js";
 import db from "../database/Database.js";
 import ProfesoriCredentials from "./ProfesoriCredentials.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import env from "dotenv";
+
+env.config();
 
 const readProfesoret = async (req, res) =>{
 
@@ -133,9 +137,17 @@ const loginProfessor = async (req, res) =>{
                 if(!passCheck){
                     return res.status(404).json({loginMessage: "Kyçja deshtoi!", message:"Ju lutem kontrolloni passwordin tuaj!"});
                 }
+
+                const tokenPayLoad = {
+                    Email: Email,
+                    role: "profesor"
+                }
+
+                const token = jwt.sign(tokenPayLoad,process.env.SECRET_TOKEN, {expiresIn:"1h" });
                 
                 return res.status(200).json({loginMessage:"Kyçja e suksesshme", 
                     message: `Pershendetje Profesor: ${Email}`,
+                    token,
                     data: results
             });
         })

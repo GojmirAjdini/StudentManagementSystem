@@ -20,7 +20,7 @@ function Lendet() {
     const fetchLendet = async () =>{
 
         try{
-            const response = await axios.get(`${API_URL}lendet/all`);
+            const response = await axios.get(`${API_URL}admin/lendet/all`, {withCredentials:true});
             console.log(response.data);
 
             setLendet(response.data);
@@ -45,7 +45,8 @@ function Lendet() {
         }
         try{
 
-            const response = await axios.get(`${API_URL}lendet/lenda/search?Emri_Lendes=${searchLenda}`);
+            const response = await axios.get(`${API_URL}admin/lendet/lenda/search?Emri_Lendes=${searchLenda}`, 
+                {withCredentials:true});
             
             console.log(response.data);
             setLendet(response.data);
@@ -82,7 +83,7 @@ function Lendet() {
         if(result.isConfirmed){
 
             try{
-                const response = await axios.delete(`${API_URL}lendet/delete/${LendaID}`);
+                const response = await axios.delete(`${API_URL}admin/lendet/delete/${LendaID}`,{withCredentials:true});
                 const message = response.data.message;
                 setLendet(prev => prev.filter(lenda => lenda.LendaID !==  LendaID));
                 setSuccessMessage(message);

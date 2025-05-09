@@ -7,15 +7,20 @@ import adminRoutes from "../routes/routeStafiAdministrativ.js";
 import semestriRoutes from "../routes/routeSemestri.js";
 import env from 'dotenv';
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 env.config();
 const corsOptions = {
 
     origin: ["http://localhost:5173"],
+    credentials: true
 };
+
 
 const app = express();
 const port = 3000;
+
+app.use(cookieParser());
 
 app.use(express.json());  
 

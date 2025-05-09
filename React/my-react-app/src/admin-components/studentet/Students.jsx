@@ -18,7 +18,7 @@ function Students() {
   const fetchStudentet = async () =>{
     try{
 
-    const response = await axios.get(`${API_URL}studentet/all`);
+    const response = await axios.get(`${API_URL}admin/studentet/all`, {withCredentials:true});
     console.log(response.data);
     
     setStudentet(response.data);
@@ -45,7 +45,7 @@ function Students() {
 
     try{
 
-      const response = await axios.get(`${API_URL}studentet/studenti/search?Emri=${searchStudenti}`);
+      const response = await axios.get(`${API_URL}admin/studentet/studenti/search?Emri=${searchStudenti}`, {withCredentials:true});
 
       console.log(response.data);
       setStudentet(response.data);

@@ -36,7 +36,7 @@ function StudentsEdit() {
 
   const fetchStudenti = async () => {
     try {
-      const res = await axios.get(`${API_URL}studentet/${ID}`);
+      const res = await axios.get(`${API_URL}admin/studentet/${ID}`, {withCredentials:true});
       console.log("Studenti data:", res.data);
       setStudenti(
         res.data[0]
@@ -49,7 +49,7 @@ function StudentsEdit() {
 
   const fetchFakultetet = async () => {
     try {
-      const res = await axios.get(`${API_URL}fakultetet/all`);
+      const res = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
       console.log(res.data);
       setFakultetet(res.data);
     } catch (err) {
@@ -121,7 +121,7 @@ const handleChange = (e) => {
 
     try {
 
-      const response  = await axios.patch(`${API_URL}studentet/edit/${ID}`, studenti);
+      const response  = await axios.patch(`${API_URL}admin/studentet/edit/${ID}`, studenti, {withCredentials:true});
 
       setSuccessMessage(response.data.message);
 

@@ -40,7 +40,7 @@ function EditProfesoret() {
 
         try{
 
-            const response = await axios.get(`${API_URL}profesoret/${ProfesoriID}`);
+            const response = await axios.get(`${API_URL}admin/profesoret/${ProfesoriID}`, { withCredentials:true});
 
             console.log(response.data);
 
@@ -56,7 +56,7 @@ function EditProfesoret() {
 
         try{
 
-            const response = await axios.get(`${API_URL}fakultetet/all`);
+            const response = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
 
             console.log(response.data);
 
@@ -133,7 +133,7 @@ function EditProfesoret() {
 
             try{
 
-                const response = await axios.patch(`${API_URL}profesoret/edit/${ProfesoriID}`, profesori);
+                const response = await axios.patch(`${API_URL}admin/profesoret/edit/${ProfesoriID}`,profesori, { withCredentials:true});
             
                 setSuccessMessage(response.data.message);
 

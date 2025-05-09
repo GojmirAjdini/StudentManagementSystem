@@ -38,12 +38,12 @@ function RegjistroFakultetin() {
         }
         
             try{
-                const response = await axios.post(`${API_URL}fakultetet/submit`,{
+                const response = await axios.post(`${API_URL}admin/fakultetet/submit`,{
                     Emri: Emri,
                     Niveli: Niveli,
                     Lokacioni: Lokacioni,
                     Kodi_Fakultetit: Kodi_Fakultetit
-            });
+            }, { withCredentials:true});
                 console.log(response.data);
                 setSuccessMessage(response.data.message);
                 

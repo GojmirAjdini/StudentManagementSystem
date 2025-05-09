@@ -2,6 +2,10 @@ import db from "../database/Database.js";
 import StafiAdministrativ from "../models/StafiAdministrativ.js";
 import Admin from "../models/StafiAdministrativ.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import env from "dotenv";
+
+env.config();
 
 const readAdminet = async (req, res) => {
     
@@ -76,13 +80,25 @@ const loginAdmin = async (req,res) =>{
 
         const {Email, Password} = req.body;
 
+        const trimEmail = Email.trim();
+
         const sql = "SELECT Password FROM stafiadministrativ WHERE Email = ?";
 
         const [storedPassword] = await db.promise().query(sql, Email);
 
         const admin = storedPassword[0];
         
-        StafiAdministrativ.loginAdmin(Email.trim(),(err, results) =>{
+        if(!Email && !Password){
+            return res.status(404).json({message: "Plotësoni fushat!"});
+        }
+        
+        if(!admin){
+            return res.status(404).json({message: "Email nuk ekziston!"});
+        }
+
+        
+        
+        StafiAdministrativ.loginAdmin(trimEmail,(err, results) =>{
 
             if(err){
                 return res.status(500).json(err);
@@ -95,11 +111,27 @@ const loginAdmin = async (req,res) =>{
                 }
 
                 if(!passCheck){
-                    return res.status(404).json({loginMessage: "Kyçja deshtoi!", message:"Ju lutem kontrolloni passwordin tuaj!"});
+                    return res.status(404).json({loginMessage: "Kyçja dështoi!", message:"Ju lutem kontrolloni passwordin tuaj!"});
                 }
 
+                const tokenPayLoad = {
+                    email: Email,
+                    role: 'admin'
+                }
+                
+                const token = jwt.sign(tokenPayLoad,process.env.SECRET_TOKEN,{expiresIn:"1h"});
+
+                res.cookie('jwt', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    maxAge: 3600000,
+                    sameSite: 'Strict'
+                })
+
+
                 return res.status(200).json({loginMessage:"Kyçja e suksesshme", 
-                    message: `Pershendetje Admin: ${Email}`,
+                    message: `Përshëndetje Admin: ${Email}`,
+                    token,
                     data: results
                 });
             });
@@ -222,5 +254,31 @@ const readAdminByName  = async (req, res) =>{
     }
 }
 
+const getAdminByEmail = async (req, res) =>{
+
+    try{
+
+        const email = req.user.email;
+
+        StafiAdministrativ.getAdminByEmail([email], (err, results) =>{
+            
+            if(err){
+                return res.status(500).json({message:"Error",err});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message:"Admini nuk ekziston!"});
+            }
+
+            return res.status(200).json(results);
+        })
+        
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message:"Error",err});
+
+    }
+}
+
 export default {readAdminet, registerAdmin, loginAdmin, 
-    updatePassword, readAdminById, readAdminByName};
+    updatePassword, readAdminById, readAdminByName,
+    getAdminByEmail};

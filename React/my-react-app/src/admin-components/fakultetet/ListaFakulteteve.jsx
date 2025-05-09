@@ -19,7 +19,7 @@ function ListaFakulteteve() {
 
         try{
 
-            const response = await axios.get(`${API_URL}fakultetet/all`);
+            const response = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
             console.log(response.data);
             setFakultetet(response.data);
         }catch(err){
@@ -53,7 +53,8 @@ function ListaFakulteteve() {
 
             try{
 
-                const response = await axios.delete(`${API_URL}fakultetet/delete/${FakultetiID}`);
+                const response = await axios.delete(`${API_URL}admin/fakultetet/delete/${FakultetiID}`,
+                     {withCredentials:true});
                 
                 const message = response.data.message;
                 setFakultetet(prev => prev.filter(fakultet => fakultet.FakultetiID !==  FakultetiID));
@@ -85,7 +86,8 @@ function ListaFakulteteve() {
         }
         try{
 
-            const response = await axios.get(`${API_URL}fakultetet/fakulteti/search?Emri=${searchFakulteti}`);
+            const response = await axios.get(`${API_URL}admin/fakultetet/fakulteti/search?Emri=${searchFakulteti}`,
+                 {withCredentials:true});
 
             console.log(response.data);
             setFakultetet(response.data);

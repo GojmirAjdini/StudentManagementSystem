@@ -2,6 +2,10 @@ import Studenti from "../models/Studenti.js";
 import bcrypt from "bcrypt";
 import StudentCredentials from "./StudentCredentials.js";
 import db from "../database/Database.js";
+import jwt from "jsonwebtoken";
+import env from "dotenv";
+
+env.config();
 
 const lexoStudentet = async (req, res) =>{
     
@@ -231,7 +235,7 @@ const loginStudenti = async(req, res) =>{
 
         const sql = "SELECT Password FROM Studenti WHERE EmailStudentor = ?";
 
-        const [storedPassword] = await db.promise().query(sql, EmailStudentor);
+        const [storedPassword] = await db.promise().query(sql, [EmailStudentor]);
 
         const studenti = storedPassword[0];
 
@@ -255,13 +259,23 @@ const loginStudenti = async(req, res) =>{
                     return res.status(400).json({loginMessage: "Kyçja deshtoi!" ,
                         message: "Ju lutem kontrolloni passwordin tuaj!"});
                 }
-                
+
+                const tokenPayLoad = {
+                    Email: EmailStudentor,
+                    role: "student"
+                } 
+
+                const token = jwt.sign(tokenPayLoad,process.env.SECRET_TOKEN, {expiresIn: "1h"})
+
                 return res.status(200).json({loginMessage:"Kyçja e suksesshme!", 
                     message: `Pershendetje Student: ${EmailStudentor}`,
-                    data: results
+                    token,
+                    data: results,
+                   
                 });
             })
         })
+
     }catch(err){
         console.error(err);
         return res.status(500).json({message:err});
