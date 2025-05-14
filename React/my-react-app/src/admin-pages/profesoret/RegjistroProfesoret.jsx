@@ -37,7 +37,7 @@ function RegjistroProfesoret() {
 
     const fetchFakultetet = async() =>{
         try{
-            const response = await axios.get(`${API_URL}fakultetet/all`);
+            const response = await axios.get(`${API_URL}admin/fakultetet/all`);
             console.log(response.data);
             setFakultetet(response.data);
         }catch(err){
