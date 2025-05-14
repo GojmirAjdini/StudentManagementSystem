@@ -10,19 +10,19 @@ MySQL
 dotenv..
 
 ## Installation (Instalimi)
-On your terminal (CMD, Bash, Powershell)
-Type " git clone https://projectsname.. ", then
-cd the project..
-" npm install " in root folder for (Backend Dependencies), whereas for 
-(Frontend Dependencies) ->" cd .\React\ " ->" cd .\my-react-app\ " -> " npm install "
+On your terminal (CMD, Bash, Powershell) <br>
+Type " git clone https://projectsname.. ", then <br>
+cd the project.. <br>
+" npm install " in root folder for (Backend Dependencies), whereas for  <br>
+(Frontend Dependencies) ->" cd .\React\ " ->" cd .\my-react-app\ " -> " npm install " <br>
 
-## Starting Application (Startimi i aplikacionit)
+## Starting Application (Startimi i aplikacionit) 
 To start app, you would need two terminals,
 1. For Backend (Server),
 2. For Frontend (React).
 
-Type in root folder " npm start " or " npm run dev " to start server,
-Type = " cd .\React\ " -> " cd .\my-react-app\ " -> " npm start " or " npm run dev " to start frontend, and then the url for application will appear on terminal, that would typically usually be "http://localhost:5173/"
+Type in root folder " npm start " or " npm run dev " to start server, <br>
+Type = " cd .\React\ " -> " cd .\my-react-app\ " -> " npm start " or " npm run dev " to start frontend, <br> the URL for application will appear on terminal, that would usually be like "http://localhost:5173/"
 
 
 
