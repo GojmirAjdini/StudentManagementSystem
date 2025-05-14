@@ -5,6 +5,7 @@ import "./assets/Students.css";
 import Swal from "sweetalert2";
 import {Alert, Button} from '@mui/material';
 import {Delete, Edit, Search} from '@mui/icons-material';
+import { DataGrid } from "@mui/x-data-grid";
 
 function Students() {
  
@@ -116,6 +117,54 @@ function Students() {
 
   },[searchStudenti]);
 
+
+   const columns = [
+
+        {field: 'id', headerName:'#', width:20},
+        {field: 'StudentiID', headerName:'Student ID', width:120},
+        {field: 'Emri', headerName:'Emri', width:100},
+        {field: 'Mbiemri', headerName:'Mbiemri', width:100},
+        {field: 'EmailStudentor', headerName:'Email Studentor', width:190},
+        {field: 'Gjinia', headerName:'Gjinia', width:70},
+        {field: 'Vendlindja', headerName:'Vendlindja', width:120},
+        {field: 'Drejtimi', headerName:'Fakulteti', width:200},
+        {field: 'Niveli', headerName:'Niveli', width:100},
+        {field: 'Gjenerata', headerName:'Gjenerata', width:100},
+     
+      {
+
+        field: 'Edit',
+        headerName:'Përditëso',
+        width:120,
+        renderCell: (params) =>(
+          <Link to={`/edit/studenti/${params.row.ID}`}>
+          <Button id="editBtn" color="success" variant="contained"
+          startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
+          </Link>
+        )
+      },
+
+      {
+
+        field: 'Delete',
+        headerName:'Fshij',
+        width:120,
+        renderCell: (params) =>(
+          <Button color='error' sx={{width:'100%'}} 
+          variant='contained' startIcon={<Delete sx={{color:"white"}}/>}
+          onClick={ () => deleteStudent(params.row.ID)}>Delete</Button>
+
+        )
+      }
+      ,]
+
+    const rows = studentet.map((student, index) =>({
+
+      id: index + 1,
+      ...student,
+      uKrijua: new Date(student.uKrijua).toLocaleString(),
+    }))
+
   return (
 
     <div className="fadeInPage" id="container">
@@ -128,12 +177,12 @@ function Students() {
       )}
 
       {dataMessage && (
-                <div id="dataMsgLendet" className="fade-in" role="alert">
+                <div id="dataMsgStd" className="fade-in" role="alert">
                   <Alert severity="info">  {dataMessage}</Alert>
                 </div>
             )}   
 
-        <div id="searchBtnHolder">
+        <div id="searchBtnHolderStd">
             
             <input id="searchLendaInput"
               type="text"
@@ -148,63 +197,51 @@ function Students() {
 
             <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
                 <Search></Search> Kërko</Button>
-            <Button onClick={handleReset} variant="contained" id="resetSearchLnd" className="mb-3">Reset</Button> 
+            <Button onClick={handleReset} variant="contained" id="resetSearchStd" className="mb-3">Reset</Button> 
       </div>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>StudentiID</th>
-            <th>Emri</th>
-            <th>Mbiemri</th>
-            <th>Email Studentor</th>
-            <th>Gjinia</th>
-            <th>Vendlindja</th>
-            <th>Fakulteti</th>
-            <th>Niveli</th>
-            <th>Statusi</th>
-            <th>Kontakt</th>
-            <th>Gjenerata</th>
-            <th>Data e Regjistrimit</th>
-            <th>Përditëso</th>
-            <th>Fshij</th>
+        <div className="dataGridStd" >
+       <DataGrid
+       disableColumnResize
+       showCellVerticalBorder
+       showColumnVerticalBorder
+       
+       rows={rows}
+       columns={columns}
+       scrollbarSize={{}}
+       initialState={{
+       pagination: {
+       paginationModel: {
+              pageSize:100,
+            },
+          },
+        }}
+      
+      sx={{
             
-          </tr>
-        </thead>
-        <tbody>
-          {studentet.map((student, index) => (
-            <tr key={student.StudentiID}>
-              <td>{index + 1}</td>
-              <td>{student.StudentiID}</td>
-              <td>{student.Emri}</td>
-              <td>{student.Mbiemri}</td>
-              <td>{student.EmailStudentor}</td>
-              <td>{student.Gjinia}</td>
-              <td>{student.Vendlindja}</td>
-              <td>{student.Drejtimi}</td>
-              <td>{student.Niveli}</td>
-              <td>{student.Statusi}</td>
-              <td>{student.Nr_Tel}</td>
-              <td>{student.Gjenerata}</td>
-              <td>{student.uKrijua ? new Date(student.uKrijua).toLocaleString()  : ''}</td>
-              <td>
+      "& .MuiDataGrid-cell:focus": {
+           outline: "none",
+                },
+       "& .MuiDataGrid-cell:focus-within": {
+           outline: "none",
+       },
+      
+        "& .MuiDataGrid-columnHeader":{
+            backgroundColor:'#f5f5f5',
+         },
+    
+       "& .MuiDataGrid-columnHeader:focus": {
+           outline: "none",
+        },
+        "& .MuiDataGrid-columnHeader:focus-within": {
+           outline: "none",
+       },
+         }}
+      checkboxSelection
+      disableRowSelectionOnClick
                 
-              <Link to={`/edit/studenti/${student.ID}`}> 
-          <Button id="editBtn" color="success" variant="contained"
-          startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
-              </Link>
-              </td> 
-              <td>
-
-              <Button color='error' variant='contained' startIcon={<Delete sx={{color:"white"}}/>}
-                onClick={ () => deleteStudent(student.ID)}>Delete</Button>
-
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> 
+        />
+      </div>
       </div>
   );
 }

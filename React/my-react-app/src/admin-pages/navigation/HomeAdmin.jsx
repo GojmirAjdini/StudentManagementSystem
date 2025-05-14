@@ -2,8 +2,9 @@ import React, {useEffect, useState} from "react"
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
 import "../../assets/Home.css";
-import Swal from "sweetalert2";
+import axiosInstance from "../../services/axiosInstance";
 import "./assets/HomeAdmin.css";
+import {CircularProgress} from "@mui/material"
 
 
 function Home(){    
@@ -24,7 +25,7 @@ function Home(){
 
         try{
 
-            const response = await axios.get(`${API_URL}admin/admin`,{withCredentials: true});
+            const response = await axiosInstance.get(`${API_URL}admin/admin`, {withCredentials: true},);
 
             setAdmin(response.data);
             console.log(response.data);
@@ -36,14 +37,16 @@ function Home(){
 
     return(
            
-        <div id="fadeInPage" className="container">
+        <div id="fadeInPage" className="homePagecontainer">
             
-            <h1>PËRSHËNDETJE Admin - {admin ? admin[0].Emri_Adminit : 'Loading..' }</h1> 
-            <h3 id="h3Info">INFORMATAT PERSONALE</h3>
+            <h1>PËRSHËNDETJE ADMIN - {admin ? admin[0].Emri_Adminit : 'Loading..' }</h1> 
+            <h3 id="h3Info">Informatat Personale</h3>
+
 
         { admin ? (
         <form id="loginAdminData">
-            
+        
+        
         <div className="input-label">
         <label htmlFor="">Emri</label>
         <input className="form-control" disabled type="text" placeholder="Emri" value={admin[0].Emri_Adminit} />
@@ -66,7 +69,7 @@ function Home(){
         
         </form>
     ): (
-        <p>Loading admin data..</p>
+        <CircularProgress></CircularProgress>
     )}
         </div>
     )

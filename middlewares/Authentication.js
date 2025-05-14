@@ -5,11 +5,7 @@ env.config();
 
 const verifyToken = (req, res, next) =>{
 
-    const cookieToken = req.cookies.jwt;
-    const authHeader = req.headers['authorization'];
-    const headerToken = authHeader && authHeader.split(" ")[1];
-
-    const token = cookieToken || headerToken;
+   const token = req.cookies.accessToken;
     
     if(!token){
         return res.status(401).json({message: "Token mungon!"});
@@ -25,6 +21,25 @@ const verifyToken = (req, res, next) =>{
     })
 }
 
+const verifyRefreshToken = (req, res, next) =>{
+
+    const token = req.cookies.refreshToken;
+
+    if(!token){
+        return res.status(401).json({message: 'Refresh token mungon'});
+    }
+
+    jwt.verify(token, process.env.REFRESH_TOKEN, (err, user) =>{
+
+        if(err){
+            return res.status(403).json({message: 'Refresh token i pavlefshëm'})
+        }
+
+        req.user = user;
+        next();
+    })
+}
+
 const eshteAdmin = (req, res, next) =>{
 
     if(req.user.role !== 'admin'){
@@ -33,4 +48,4 @@ const eshteAdmin = (req, res, next) =>{
     next();
 }
 
-export default {verifyToken, eshteAdmin};
+export default {verifyToken, verifyRefreshToken, eshteAdmin};

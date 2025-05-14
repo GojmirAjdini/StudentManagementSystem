@@ -5,6 +5,7 @@ import './assets/Lendet.css';
 import {Link} from "react-router-dom";
 import {Alert, Button} from '@mui/material';
 import {Delete, Edit, Search} from '@mui/icons-material';
+import { DataGrid, } from '@mui/x-data-grid';
 
 
 function Lendet() {
@@ -114,6 +115,53 @@ function Lendet() {
 
     },[searchLenda]);
 
+    const columns =  [
+        
+        {field: 'id', headerName:'#', width:20},
+        {field: 'Emri_Lendes', headerName:'Lënda', width:200},
+        {field: 'Fakulteti', headerName:'Fakulteti', width:180},
+        {field: 'ECTS', headerName:'ECTS', width:80},
+        {field: 'Kodi_Lendes', headerName:'Kodi i Lëndës', width:120},
+        {field: 'Semestri', headerName:'Semestri', width:100},
+        {field: 'uKrijua',headerName:'Data e Regjistrimit', width:180},
+        {
+
+            field:'Edit',
+            headerName:'Përditëso',
+            width:120,
+            renderCell : (params) => (
+                <Link to={`/edit/lenda/${params.row.LendaID}`}>
+                <Button id="editBtnLenda" color="success" variant="contained"
+                startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
+                </Link>
+            )
+        },
+
+        {
+
+            field:'Delete',
+            headerName:'Fshij',
+            width:120,
+            renderCell : (params) => (
+                <Button 
+                color="error"
+                variant="contained" sx={{width:'100%'}}
+                startIcon={<Delete sx={{color:'white'}}/>}
+                onClick={() => deleteLenda(params.row.LendaID)}>
+                Delete
+                </Button>
+            )
+        }
+    ]
+
+    const rows = lendet.map((lenda, index) => ({
+
+        id:index + 1,
+        ...lenda,   
+        uKrijua: new Date(lenda.uKrijua).toLocaleString()
+        
+    }))
+
     return(
         <div className="fadeInPage" id="container">
 
@@ -149,46 +197,48 @@ function Lendet() {
             <Button onClick={handleReset} variant="contained" id="resetSearchLnd" className="mb-3">Reset</Button>
 
             </div>
-            <table id="tableLendet" border="1">
+            <div id="dataGridLendet">
+              <DataGrid
+                disableColumnResize
+                showCellVerticalBorder
+                showColumnVerticalBorder
+                rows={rows}
+                columns={columns}
+                scrollbarSize={{}}
+                initialState={{
+                pagination: {
+                paginationModel: {
+                  pageSize:20,
+                },
+              },
+            }}
 
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Lënda</th>
-                    <th>Fakulteti</th>
-                    <th>ECTS</th>
-                    <th>Kodi i Lëndës</th>
-                    <th>Semestri</th>
-                    <th>Data e Regjistrimit</th>
-                    <th>Përditëso</th>
-                    <th>Fshij</th>
-                </tr>
-                </thead>
-                    <tbody>
-                    {lendet.map((lenda, index) => (
-                    <tr key={lenda.LendaID}>
-                    <td>{index + 1}</td>
-                    <td>{lenda.Emri_Lendes}</td>
-                    <td>{lenda.Fakulteti}</td>
-                    <td>{lenda.ECTS}</td>
-                    <td>{lenda.Kodi_Lendes}</td>
-                    <td>{lenda.Semestri}</td>
-                    <td>{lenda.uKrijua ? new Date(lenda.uKrijua).toLocaleString() : ''}</td>
-                        
-                        <td><Link to={`/edit/lenda/${lenda.LendaID}`}> 
-                        <Button id="editBtn" color="success" variant="contained"
-                        startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button></Link></td>
-                        
-                        <td> <Button color="error" variant="contained" startIcon={<Delete sx={{color:"white"}}/>}
-                        onClick={() => deleteLenda(lenda.LendaID)} className="btn btn-danger">Delete
-                            
-                            </Button></td>
-                        </tr>
-                    ))}
+             sx={{
+                
+            "& .MuiDataGrid-cell:focus": {
+               outline: "none",
+                    },
+             "& .MuiDataGrid-cell:focus-within": {
+               outline: "none",
+             },
 
-                    </tbody>
+             "& .MuiDataGrid-columnHeader":{
+                backgroundColor:'#f5f5f5',
+             },
 
-            </table>
+             "& .MuiDataGrid-columnHeader:focus": {
+               outline: "none",
+                    },
+             "& .MuiDataGrid-columnHeader:focus-within": {
+               outline: "none",
+             },
+             }}
+                checkboxSelection
+                disableRowSelectionOnClick
+                    
+                />
+                
+            </div>
         </div>
     )
 }

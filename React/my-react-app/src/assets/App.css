@@ -1,15 +1,22 @@
+*{
 
+  font-family: "Montserrat";
+}
 .navContainer nav{
 
   display: flex;
   height: 70px;
-  background-color: rgb(101, 64, 235);
+  background-color:  rgb(101, 64, 235) ;
   flex-direction: row;
   justify-content: start;
   gap: 20px;
   align-items: center;
   width: 100%;
   color: black;
+  position:fixed;
+  top: 0;
+  z-index: 1000;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 #homeLink{

@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import './assets/ListoProfesoret.css';
 import {Alert, Button} from '@mui/material';
 import {Delete, Edit, Search} from '@mui/icons-material';
+import { DataGrid } from '@mui/x-data-grid';
 
 function ListaProfesoreve() {
 
@@ -115,6 +116,54 @@ function ListaProfesoreve() {
 
     },[])
 
+     const columns = [
+
+        {field:'id', headerName:'#', width:20},
+        {field: 'Emri', headerName:'Emri', width:100},
+        {field: 'Mbiemri', headerName:'Mbiemri', width:100},
+        {field: 'Gjinia', headerName:'Gjinia', width:70},
+        {field: 'Fakulteti', headerName:'Fakulteti', width:200},
+        {field: 'NrTel', headerName:'Kontakt', width:100},
+        {field: 'Email', headerName:'Email Akademik', width:220},
+        {field: 'Titulli_Akademik', headerName:'Titulli Akademik', width:140},
+        {field: 'uKrijua', headerName:'Data e Regjistrimit', width:170},
+     
+      {
+
+        field: 'Edit',
+        headerName:'Përditëso',
+        width:120,
+        renderCell: (params) =>(
+          <Link to={`/edit/profesori/${params.row.ProfesoriID}`}>
+          <Button id="editBtn" color="success" variant="contained"
+          startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
+          </Link>
+        )
+      },
+
+      {
+
+        field: 'Delete',
+        headerName:'Fshij',
+        width:120,
+        renderCell: (params) =>(
+          <Button color='error' sx={{width:'100%'}} 
+          variant='contained' startIcon={<Delete sx={{color:"white"}}/>}
+          onClick={ () => deleteProfesorById(params.row.ProfesoriID)}>Delete</Button>
+
+        )
+      }
+      ]
+
+    const rows = profesoret.map((prof, index) => ({
+
+      id:index + 1,
+      ...prof,
+      Data_Punesimit: new Date(prof.Data_Punesimit).toLocaleDateString(),
+      uKrijua: new Date(prof.uKrijua).toLocaleString()
+
+    }))
+
 
     return (
         <div id='container' className='fadeInPage'>
@@ -128,12 +177,12 @@ function ListaProfesoreve() {
       )}
       
       {dataMessage && (
-          <div id="dataMsgLendet" className="fade-in" role="alert">
+          <div id="dataMsgProf" className="fade-in" role="alert">
             <Alert severity="info">  {dataMessage}</Alert>
           </div>
       )}   
      
-     <div id="searchBtnHolder">
+     <div id="searchBtnHolderProf">
       
       <input id="searchLendaInput"
         type="text"
@@ -148,59 +197,51 @@ function ListaProfesoreve() {
      
       <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
           <Search></Search> Kërko</Button>
-      <Button onClick={handleReset} variant="contained" id="resetSearchLnd" className="mb-3">Reset</Button> 
+      <Button onClick={handleReset} variant="contained" id="resetSearchProf" className="mb-3">Reset</Button> 
             </div>
 
-
-      <table border="1">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Emri</th>
-            <th>Mbiemri</th>
-            <th>Gjinia</th>
-            <th>Email</th>
-            <th>Fakulteti</th>
-            <th>Kontakt</th>
-            <th>Data e Punësimit</th>
-            <th>Statusi</th>
-            <th>Titulli Akademik</th>
-            <th>Data e Regjistrimit</th>
-            <th>Përditëso</th>
-            <th>Fshij</th>
-          </tr>
-        </thead>
-        <tbody>
-          {profesoret.map((prof, index) => (
-            <tr key={prof.ProfesoriID}>
-              <td>{index + 1}</td>
-              <td>{prof.Emri}</td>
-              <td>{prof.Mbiemri}</td>
-              <td>{prof.Gjinia}</td>
-              <td>{prof.Email}</td>
-              <td>{prof.Fakulteti}</td>
-              <td>{prof.NrTel}</td>
-              <td>{prof.Data_Punesimit ? new Date(prof.Data_Punesimit).toLocaleDateString() : ''}</td>
-              <td>{prof.Statusi}</td>
-              <td>{prof.Titulli_Akademik}</td>
-              <td>{prof.uKrijua ? new Date(prof.uKrijua).toLocaleString()  : ''}</td>
-              <td>
-                
-              <Link to={`/edit/profesori/${prof.ProfesoriID}`}>
-              <Button id="editBtn" color="success" variant="contained"
-              startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
-              </Link>
-              </td> 
-              <td>
-
-              <Button color='error' variant='contained' startIcon={<Delete sx={{color:"white"}}/>}
-                onClick={ () => deleteProfesorById(prof.ProfesoriID)}>Delete</Button>
-
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> 
+           <div className="dataGridProf" >
+         <DataGrid
+         disableColumnResize
+         showCellVerticalBorder
+         showColumnVerticalBorder
+         
+         rows={rows}
+         columns={columns}
+         scrollbarSize={{}}
+         initialState={{
+         pagination: {
+         paginationModel: {
+                pageSize:100,
+              },
+            },
+          }}
+      
+           sx={{
+              
+          "& .MuiDataGrid-cell:focus": {
+             outline: "none",
+                  },
+           "& .MuiDataGrid-cell:focus-within": {
+             outline: "none",
+           },
+      
+           "& .MuiDataGrid-columnHeader":{
+              backgroundColor:'#f5f5f5',
+           },
+      
+           "& .MuiDataGrid-columnHeader:focus": {
+             outline: "none",
+           },
+           "& .MuiDataGrid-columnHeader:focus-within": {
+             outline: "none",
+           },
+           }}
+        checkboxSelection
+        disableRowSelectionOnClick
+                  
+          />
+        </div>
       </div>
     )
 }

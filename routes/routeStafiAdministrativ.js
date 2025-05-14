@@ -4,9 +4,11 @@ import studentKontroller from "../controllers/Studenti.js";
 import controllersLenda from "../controllers/Lenda.js";
 import controllerFakulteti from "../controllers/Fakulteti.js";
 import kontrollerSemestri from '../controllers/Semestri.js';
-import "../middlewares/Authentication.js";
+
 import express from "express";
+
 import auth from "../middlewares/Authentication.js";
+import refreshAccessToken from "../middlewares/RefreshToken.js";
 
 const router = express.Router();
 
@@ -24,11 +26,24 @@ router.get('/admin/check-auth', auth.verifyToken, (req, res) => {
     res.status(200).json({ message: "Authenticated", user: req.user });
   });
 
+router.post('/admin/refresh-token', refreshAccessToken );
+
 //logout
 
 router.post("/logout", auth.verifyToken, (req, res) => {
     
-    res.clearCookie('jwt', { path: '/' });
+    res.clearCookie('accessToken', {
+      httpOnly:true,
+      secure:process.env.NODE_ENV === 'production',
+      sameSite: 'Strict', 
+      path: '/' });
+
+    res.clearCookie('refreshToken', {
+      httpOnly:true,
+      secure:process.env.NODE_ENV === 'production',
+      sameSite: 'Strict', 
+      path: '/' });
+
     res.status(200).json({ message: "Ç'kyçja e suksesshme!" });
 });
 
@@ -75,5 +90,5 @@ router.get("/fakultetet/fakulteti/search",auth.verifyToken, auth.eshteAdmin,cont
 
 //SEMESTRI //
 
-router.get('semestri/all', auth.verifyToken, auth.eshteAdmin, kontrollerSemestri.readAllSemestrat);
-export default router;
+router.get('/semestri/all', auth.verifyToken, auth.eshteAdmin, kontrollerSemestri.readAllSemestrat);
+export default router;  

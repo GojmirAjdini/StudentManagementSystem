@@ -95,8 +95,6 @@ const loginAdmin = async (req,res) =>{
         if(!admin){
             return res.status(404).json({message: "Email nuk ekziston!"});
         }
-
-        
         
         StafiAdministrativ.loginAdmin(trimEmail,(err, results) =>{
 
@@ -119,19 +117,27 @@ const loginAdmin = async (req,res) =>{
                     role: 'admin'
                 }
                 
-                const token = jwt.sign(tokenPayLoad,process.env.SECRET_TOKEN,{expiresIn:"1h"});
+                const accessToken = jwt.sign(tokenPayLoad,process.env.SECRET_TOKEN,{expiresIn:"1h"});
 
-                res.cookie('jwt', token, {
+                const refreshToken = jwt.sign(tokenPayLoad, process.env.REFRESH_TOKEN, {expiresIn:"7d"})
+
+                res.cookie('accessToken', accessToken, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === 'production',
-                    maxAge: 3600000,
+                    maxAge: 60 * 60 * 1000,
+                    sameSite: 'Strict'
+                })
+
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    maxAge: 7 * 24 * 60 * 60 * 1000,
                     sameSite: 'Strict'
                 })
 
 
                 return res.status(200).json({loginMessage:"Kyçja e suksesshme", 
                     message: `Përshëndetje Admin: ${Email}`,
-                    token,
                     data: results
                 });
             });

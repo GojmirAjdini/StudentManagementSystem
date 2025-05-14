@@ -1,7 +1,7 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { chipClasses } from "@mui/material";
+import Loading from "./Loading";
 
 const RequireAuth = ({children}) => {
 
@@ -26,7 +26,7 @@ const RequireAuth = ({children}) => {
   }, [navigate]);
 
   if (isAuthenticated === null) {
-    return <p>Loading...</p>;
+    return <Loading/>;
   }
 
   return isAuthenticated ? children : null;

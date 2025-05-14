@@ -5,6 +5,8 @@ import "./assets/Fakultetet.css";
 import Swal from "sweetalert2";
 import {Alert, Button} from '@mui/material';
 import {Delete, Edit, Search} from '@mui/icons-material';
+import { render } from "ejs";
+import { DataGrid } from "@mui/x-data-grid";
 
 function ListaFakulteteve() {
 
@@ -115,6 +117,49 @@ useEffect (() => {
     return () => clearInterval(interval)
 }, [searchFakulteti]);
 
+    const columns = [
+
+        {field:'id', headerName:'#', width:70},
+        {field: 'Emri', headerName:'Fakulteti', width:200},
+        {field: 'Niveli', headerName:'Niveli', width:120},
+        {field: 'Lokacioni', headerName:'Lokacioni', width:120},
+        {field: 'Kodi_Fakultetit', headerName:'Kodi i Fakultetit', width:150},
+        {field: 'uKrijua', headerName:'Data e Regjistrimit', width:180},
+    
+        {
+            field:'Edit',
+            headerName:'Përditëso',
+            width:120,
+            renderCell: (params) =>(
+                <Link to={`/edit/fakulteti/${params.row.FakultetiID}`}>
+                <Button id="editBtn" color="success" variant="contained"
+                startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
+                </Link>
+        )
+    }, 
+    {
+         field:'Delete',
+            headerName:'Fshij',
+            width:120,
+            renderCell : (params) => (
+                <Button 
+                color="error"
+                variant="contained" sx={{width:'100%'}}
+                startIcon={<Delete sx={{color:'white'}}/>}
+                onClick={() => deleteFakultet(params.row.FakultetiID)}>
+                Delete
+                </Button>
+            )
+        }
+    ]
+
+    const rows = fakultetet.map((fakultet, index) => ({
+
+        id:index + 1,
+        ...fakultet,
+        uKrijua: new Date(fakultet.uKrijua).toLocaleString()
+    }))
+
     return(
 
         <div className="fade-in" id="container">
@@ -128,12 +173,12 @@ useEffect (() => {
       )}
 
             {dataMessage && (
-                <div id="dataMsgLendet" className="fade-in" role="alert">
+                <div id="dataMsgFkt" className="fade-in" role="alert">
                   <Alert severity="info">  {dataMessage}</Alert>
                 </div>
             )}   
 
-        <div id="searchBtnHolder">
+        <div id="searchBtnHolderFkt">
             
             <input id="searchLendaInput"
               type="text"
@@ -148,50 +193,52 @@ useEffect (() => {
 
             <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
                 <Search></Search> Kërko</Button>
-            <Button onClick={handleReset} variant="contained" id="resetSearchLnd" className="mb-3">Reset</Button> 
+            <Button onClick={handleReset} variant="contained" id="resetSearchFkt" className="mb-3">Reset</Button> 
       
         </div>
-            <table border="1">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Fakulteti</th>
-                    <th>Niveli</th>
-                    <th>Lokacioni</th>
-                    <th>Kodi Fakultetit</th>
-                    <th>Data e Regjistrimit</th>
-                    <th>Përditëso</th>
-                    <th>Fshij</th>
-                </tr>
-                </thead>
-                    <tbody>
+            
+            <div className="dataGridFakultet" >
+           <DataGrid
+           disableColumnResize
+                showCellVerticalBorder
+                showColumnVerticalBorder
+                
+                rows={rows}
+                columns={columns}
+                scrollbarSize={{}}
+                initialState={{
+                pagination: {
+                paginationModel: {
+                  pageSize:100,
+                },
+              },
+            }}
 
-                    {fakultetet.map((fakulteti, index) =>(
+             sx={{
+                
+            "& .MuiDataGrid-cell:focus": {
+               outline: "none",
+                    },
+             "& .MuiDataGrid-cell:focus-within": {
+               outline: "none",
+             },
 
-                        <tr key={fakulteti.FakultetiID}>
-                        <td>{index + 1}</td>
-                        <td>{fakulteti.Emri}</td>
-                        <td>{fakulteti.Niveli}</td>
-                        <td>{fakulteti.Lokacioni}</td>
-                        <td>{fakulteti.Kodi_Fakultetit}</td> 
-                        <td>{fakulteti.uKrijua ? new Date(fakulteti.uKrijua).toLocaleString() : ''}</td> 
+             "& .MuiDataGrid-columnHeader":{
+                backgroundColor:'#f5f5f5',
+             },
 
-                        {console.log(fakulteti.uKrijua)}
-                    <td>
-                        <Link to={`/edit/fakulteti/${fakulteti.FakultetiID}`}>
-                        <Button id="editBtn" color="success" variant="contained"
-                        startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
-                        </Link>
-                    </td> 
-                     <td>
-                        
-              <Button color='error' variant='contained' startIcon={<Delete sx={{color:"white"}}/>}
-               onClick={ () => deleteFakultet(fakulteti.FakultetiID)}>Delete</Button>
-              </td>
-                    </tr>
-                    ))}
-                </tbody>            
-            </table>
+             "& .MuiDataGrid-columnHeader:focus": {
+               outline: "none",
+                    },
+             "& .MuiDataGrid-columnHeader:focus-within": {
+               outline: "none",
+             },
+             }}
+                checkboxSelection
+                disableRowSelectionOnClick
+                    
+                />
+                </div>
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import {BrowserRouter as Router, Routes, Route, Link, useNavigate} from 'react-router-dom';
+import {Suspense, lazy } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { PersonRounded, Home, LibraryBooks, 
@@ -6,46 +7,35 @@ import { PersonRounded, Home, LibraryBooks,
   PeopleAlt } from '@mui/icons-material';
 
 import Swal from 'sweetalert2';
+import Loading from './admin-pages/login-register/utils/Loading';
 
-import Login from "./admin-components/login-register/Login";
-import RequireAuth from './admin-components/login-register/utils/RequireAuth';
+import Login from "./admin-pages/login-register/Login";
+import RequireAuth from './admin-pages/login-register/utils/RequireAuth';
 
-import Register from './admin-components/studentet/StudentRegister';
-import StudentList from './admin-components/studentet/Students';
-import StudentsEdit from './admin-components/studentet/StudentsEdit';
+const Register = lazy(() => import ('./admin-pages/studentet/StudentRegister'));
+const StudentList = lazy(() => import ('./admin-pages/studentet/Students'));
+const StudentsEdit = lazy(() => import ('./admin-pages/studentet/StudentsEdit'));
 import "./assets/App.css";
 
-import HomeAdmin from './admin-components/navigation/HomeAdmin';
-import DropDownMenu from './admin-components/navigation/NavDropDown';
+const HomeAdmin = lazy(() => import ('./admin-pages/navigation/HomeAdmin'));
+import DropDownMenu from './admin-pages/navigation/NavDropDown';
 
-import RegjistroFakultetin from './admin-components/fakultetet/RegjistroFakultetin';
-import ListaFakulteteve from './admin-components/fakultetet/ListaFakulteteve';
-import EditFakultetet from './admin-components/fakultetet/EditFakultetet';
+import RegjistroFakultetin from './admin-pages/fakultetet/RegjistroFakultetin';
+const ListaFakulteteve = lazy(() => import ('./admin-pages/fakultetet/ListaFakulteteve'));
+const EditFakultetet = lazy(() => import ('./admin-pages/fakultetet/EditFakultetet'));
 
-import RegjistroLendet from './admin-components/lendet/RegjistroLendet';
-import ListaLendeve from './admin-components/lendet/Lendet';
-import EditLendet from './admin-components/lendet/EditLendet';
+import RegjistroLendet from './admin-pages/lendet/RegjistroLendet';
+const ListaLendeve = lazy(() => import ('./admin-pages/lendet/Lendet'));
+const EditLendet = lazy(() => import ('./admin-pages/lendet/EditLendet'));
 
-import RegjistroProfesoret from './admin-components/profesoret/RegjistroProfesoret';
-import ListaProfesoreve from './admin-components/profesoret/ListaProfesoreve';
-import EditProfesoret from './admin-components/profesoret/EditProfesoret';
-import CaktoLendetProfesoret from './admin-components/profesoret/CaktoLendetProfesoret';
+import RegjistroProfesoret from './admin-pages/profesoret/RegjistroProfesoret';
+const ListaProfesoreve = lazy(() => import ('./admin-pages/profesoret/ListaProfesoreve'));
+const EditProfesoret = lazy(() => import ('./admin-pages/profesoret/EditProfesoret'));
+const CaktoLendetProfesoret = lazy(() => import ('./admin-pages/profesoret/CaktoLendetProfesoret'));
 
 function AppContent() {
 
   const navigate = useNavigate();
-
-  const logout = async () =>{
-    try{
-
-        const response = await axios.post("http://localhost:3000/admin/logout",{},{withCredentials:true});
-    
-        navigate('/login');
-    
-}catch(err){
-    console.err("Ç'kyçja dështoi!", err);
-}      
-} 
 
 const isLoginPage = location.pathname === '/login';
 
@@ -112,13 +102,20 @@ const isLoginPage = location.pathname === '/login';
                       popup: 'popupDesign'
                   }
 
-                }).then((result) => {
+                }).then( async (result) => {
                   if(result.isConfirmed){
-                    logout();
-                  }
-                });
-            }
+
+                    try{
+
+                    const module = await import('./admin-pages/login-register/Logout');
+                    module.default(navigate);
+                    }catch(err){
+                      console.error(err);
+                    }  
+                }
+            })
           },
+        }
            ]}
            className='rightAlign'
         />
@@ -126,6 +123,7 @@ const isLoginPage = location.pathname === '/login';
         </nav>
       </div>
       )}
+      <Suspense fallback={<Loading/>}>
         <Routes>
 
           <Route path='/login' element={<Login/>} />
@@ -148,7 +146,9 @@ const isLoginPage = location.pathname === '/login';
           <Route path="/edit/profesori/:ProfesoriID" element={<RequireAuth><EditProfesoret /></RequireAuth>} />
           <Route path='/lendet/profesoret/assign' element={<RequireAuth><CaktoLendetProfesoret /></RequireAuth>} />
         </Routes>
+        </Suspense>
         </>
+        
   );
 }
 
