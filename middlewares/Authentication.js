@@ -42,10 +42,18 @@ const verifyRefreshToken = (req, res, next) =>{
 
 const eshteAdmin = (req, res, next) =>{
 
-    if(req.user.role !== 'admin'){
-        return res.status(403).json({message: "Nuk keni autorizim!"})
+    if(req.user.role !== 'admin' &&  req.user.role !== 'superadmin'){
+        return res.status(403).json({message: "Nuk keni autorizim si admin!"})
     }
     next();
 }
 
-export default {verifyToken, verifyRefreshToken, eshteAdmin};
+const eshteSuperAdmin = (req, res, next) =>{
+
+    if(req.user.role !== 'superadmin' ){
+        return res.status(403).json({message: "Vetem superadmini ka akses!"})
+    }
+    next();
+}
+
+export default {verifyToken, verifyRefreshToken, eshteAdmin, eshteSuperAdmin};

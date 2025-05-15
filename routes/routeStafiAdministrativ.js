@@ -13,17 +13,20 @@ import refreshAccessToken from "../middlewares/RefreshToken.js";
 const router = express.Router();
 
 //ADMIN//
-router.get("/all",auth.verifyToken, auth.eshteAdmin, kontrollerAdmin.readAdminet);
-router.post("/register",kontrollerAdmin.registerAdmin);
-router.post("/login",kontrollerAdmin.loginAdmin);
-router.patch("/update/:AdminID",auth.verifyToken, auth.eshteAdmin,kontrollerAdmin.updatePassword);
-router.get("/edit/:AdminID", auth.verifyToken, auth.eshteAdmin, kontrollerAdmin.readAdminById);
-router.get("/admin/search", auth.verifyToken, auth.eshteAdmin, kontrollerAdmin.readAdminByName);
-router.get("/admin", auth.verifyToken, auth.eshteAdmin, kontrollerAdmin.getAdminByEmail);
+router.get("/all",auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminet);
+router.post("/register", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.registerAdmin);
+router.post("/login", kontrollerAdmin.loginAdmin);
+router.patch("/update/:AdminID",auth.verifyToken, auth.eshteSuperAdmin,kontrollerAdmin.updatePassword);
+router.get("/edit/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminById);
+router.get("/admin/search", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminByName);
+router.get("/admin", auth.verifyToken, kontrollerAdmin.getAdminByEmail);
 
 //login
-router.get('/admin/check-auth', auth.verifyToken, (req, res) => {
-    res.status(200).json({ message: "Authenticated", user: req.user });
+router.get('/admin/check-auth', auth.verifyToken, auth.eshteAdmin, (req, res) => {
+    res.status(200).json({ 
+      message: "Authenticated", 
+      user: req.user, 
+      role: req.user.role });
   });
 
 router.post('/admin/refresh-token', refreshAccessToken );

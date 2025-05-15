@@ -143,11 +143,26 @@ const loginProfessor = async (req, res) =>{
                     role: "profesor"
                 }
 
-                const token = jwt.sign(tokenPayLoad,process.env.SECRET_TOKEN, {expiresIn:"1h" });
+                const accessToken = jwt.sign(tokenPayLoad,process.env.SECRET_TOKEN, {expiresIn:"1h" });
                 
+                const refreshToken = jwt.sign(tokenPayLoad, process.env.REFRESH_TOKEN, {expiresIn:'7d'})
+
+                res.cookie('accessToken',accessToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    maxAge: 60 * 60 * 1000,
+                    sameSite: 'Strict'
+                })
+
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    maxAge: 7 * 24 * 60 * 60 * 1000,
+                    sameSite: 'Strict'
+                })
+
                 return res.status(200).json({loginMessage:"Kyçja e suksesshme", 
                     message: `Pershendetje Profesor: ${Email}`,
-                    token,
                     data: results
             });
         })

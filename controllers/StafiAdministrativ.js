@@ -1,6 +1,5 @@
 import db from "../database/Database.js";
 import StafiAdministrativ from "../models/StafiAdministrativ.js";
-import Admin from "../models/StafiAdministrativ.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import env from "dotenv";
@@ -11,7 +10,7 @@ const readAdminet = async (req, res) => {
     
     try{
 
-        Admin.lexoAdminet((err, adminet) =>{
+        StafiAdministrativ.lexoAdminet((err, adminet) =>{
 
             if(err){
                 return res.status(500).json(err);
@@ -35,7 +34,7 @@ const registerAdmin = async (req, res) =>{
 
     try{
 
-        const {FakultetiID, Email, Password, Emri, Mbiemri} = req.body;
+        const {FakultetiID, Email, Password, Emri, Mbiemri, role} = req.body;
 
         const emailCheckQuery = `
             SELECT EmailPrivat FROM profesori WHERE EmailPrivat = ? 
@@ -57,16 +56,16 @@ const registerAdmin = async (req, res) =>{
         const upCMbiemri = Mbiemri.charAt(0).toUpperCase() + Mbiemri.slice(1);
 
 
-        Admin.regjistroAdmin(FakultetiID, Email.trim(), hashedPassword, upCEmri.trim(), upCMbiemri.trim(),(err, results) =>{
+        StafiAdministrativ.regjistroAdmin(FakultetiID, Email.trim(), hashedPassword, upCEmri.trim(), upCMbiemri.trim(), role.trim(),(err, results) =>{
 
             if(err){
                 return res.status(500).json(err);
             }
             if(results.affectedRows === 0){
-                return res.status(404).json({message:"Te dhenat nuk u regjistruan.."});
+                return res.status(404).json({message:"Te dhënat nuk u regjistruan.."});
             }
             
-            return res.status(201).json({message:"Te dhenat u regjistruan me sukses!", Data: results});
+            return res.status(201).json({message:"Te dhënat u regjistruan me sukses!", Data: results});
         })
     } catch(err){
         console.error(err);
@@ -81,16 +80,18 @@ const loginAdmin = async (req,res) =>{
         const {Email, Password} = req.body;
 
         const trimEmail = Email.trim();
-
-        const sql = "SELECT Password FROM stafiadministrativ WHERE Email = ?";
-
-        const [storedPassword] = await db.promise().query(sql, Email);
-
-        const admin = storedPassword[0];
         
         if(!Email && !Password){
             return res.status(404).json({message: "Plotësoni fushat!"});
         }
+
+        const sql = "SELECT Password, role FROM stafiadministrativ WHERE Email = ?";
+
+        const [storedPassword] = await db.promise().query(sql, [trimEmail]);
+
+        const admin = storedPassword[0];
+        
+        
         
         if(!admin){
             return res.status(404).json({message: "Email nuk ekziston!"});
@@ -109,12 +110,12 @@ const loginAdmin = async (req,res) =>{
                 }
 
                 if(!passCheck){
-                    return res.status(404).json({loginMessage: "Kyçja dështoi!", message:"Ju lutem kontrolloni passwordin tuaj!"});
+                    return res.status(401).json({loginMessage: "Kyçja dështoi!", message:"Ju lutem kontrolloni passwordin tuaj!"});
                 }
 
                 const tokenPayLoad = {
-                    email: Email,
-                    role: 'admin'
+                    email: trimEmail,
+                    role: admin.role
                 }
                 
                 const accessToken = jwt.sign(tokenPayLoad,process.env.SECRET_TOKEN,{expiresIn:"1h"});
@@ -128,6 +129,8 @@ const loginAdmin = async (req,res) =>{
                     sameSite: 'Strict'
                 })
 
+                console.log(results);
+
                 res.cookie('refreshToken', refreshToken, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === 'production',
@@ -137,8 +140,8 @@ const loginAdmin = async (req,res) =>{
 
 
                 return res.status(200).json({loginMessage:"Kyçja e suksesshme", 
-                    message: `Përshëndetje Admin: ${Email}`,
-                    data: results
+                    message: `Përshëndetje Admin: ${trimEmail}`,
+                    data: results,
                 });
             });
         })
@@ -192,7 +195,7 @@ const updatePassword = async (req, res) =>{
             StafiAdministrativ.updatePasword(ID,hashedPassword,(err, results) =>{
 
                 if(err){
-                    return res.status(500).json(err,{message:"Server error"});
+                    return res.status(500).json({error:err,message:"Server error"});
                 }
     
                 if(results.affectedRows === 0){

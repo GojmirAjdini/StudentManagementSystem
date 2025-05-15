@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 class StafiAdministrativ {
    
-    constructor(AdminID, FakultetiID, Email, Password, Emri_Adminit, Mbiemri_Adminit){
+    constructor(AdminID, FakultetiID, Email, Password, Emri_Adminit, Mbiemri_Adminit, role){
 
         this.AdminID = AdminID;
         this.FakultetiID = FakultetiID;
@@ -11,6 +11,7 @@ class StafiAdministrativ {
         this.Password = Password;
         this.Emri_Adminit = Emri_Adminit;
         this.Mbiemri_Adminit = Mbiemri_Adminit;
+        this.role = role;
     }
 
     static lexoAdminet(callback){
@@ -23,25 +24,25 @@ class StafiAdministrativ {
             }
            
             const adminet = results.map((rows) => new StafiAdministrativ(rows.AdminID, rows.FakultetiID,
-                rows.Email, rows.Password, rows.Emri_Adminit, rows.Mbiemri_Adminit));
+                rows.Email, rows.Password, rows.Emri_Adminit, rows.Mbiemri_Adminit, rows.role));
             
             callback(null, adminet);
         });
     }
 
-    static regjistroAdmin(FakultetiID, Email, Password, Emri_Adminit, Mbiemri_Adminit, callback){
+    static regjistroAdmin(FakultetiID, Email, Password, Emri_Adminit, Mbiemri_Adminit,role, callback){
 
         const sql = `INSERT INTO stafiadministrativ(FakultetiID, Email, Password, 
-        Emri_Adminit, Mbiemri_Adminit) VALUES (?, ?, ?, ?, ?)`;
+        Emri_Adminit, Mbiemri_Adminit, role) VALUES (?, ?, ?, ?, ?, ?)`;
 
-        const values = [FakultetiID, Email, Password, Emri_Adminit, Mbiemri_Adminit];
+        const values = [FakultetiID, Email, Password, Emri_Adminit, Mbiemri_Adminit, role];
 
         db.query(sql, values,(err, results) =>{
             if(err){
                 return callback(err);
             }
             const newAdmin = new StafiAdministrativ(results.insertId, FakultetiID, Email,
-                Password, Emri_Adminit, Mbiemri_Adminit)
+                Password, Emri_Adminit, Mbiemri_Adminit, role)
            
             callback(null, newAdmin)
         })
@@ -49,7 +50,7 @@ class StafiAdministrativ {
 
     static loginAdmin(Email, callback){
 
-        const sql = `SELECT FakultetiId, Email, Emri_Adminit, Mbiemri_Adminit 
+        const sql = `SELECT FakultetiId, Email, Emri_Adminit, Mbiemri_Adminit, role
         FROM stafiadministrativ
         WHERE Email = ?`;
 
@@ -97,7 +98,8 @@ class StafiAdministrativ {
                 return callback(new Error("Admin nuk u gjet!"));
             }
 
-            const admini = new StafiAdministrativ(results[0].AdminID, results[0].FakultetiID, results[0].Email, results[0].Password, results[0].Emri_Adminit, results[0].Mbiemri_Adminit);
+            const admini = new StafiAdministrativ(results[0].AdminID, results[0].FakultetiID, results[0].Email, 
+                results[0].Password, results[0].Emri_Adminit, results[0].Mbiemri_Adminit, results[0].role);
             callback(null, admini);
         })
     }
@@ -124,7 +126,7 @@ class StafiAdministrativ {
 
     static getAdminByEmail(Email, callback){
 
-        const sql = `SELECT sa.Email, f.Emri Fakulteti, sa.Emri_Adminit, sa.Mbiemri_Adminit  
+        const sql = `SELECT sa.Email, f.Emri Fakulteti, sa.Emri_Adminit, sa.Mbiemri_Adminit, sa.role  
         FROM StafiAdministrativ sa
         INNER JOIN Fakulteti f on f.FakultetiID = sa.FakultetiID
         WHERE Email = ?`;

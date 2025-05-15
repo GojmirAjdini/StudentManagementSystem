@@ -8,6 +8,6 @@ export default async function logout(navigate) {
         navigate('/login');
     
 }catch(err){
-    console.err("Ç'kyçja dështoi!", err);
+    console.error("Ç'kyçja dështoi!", err);
 }      
 } 

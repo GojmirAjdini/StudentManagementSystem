@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Loading from "./Loading";
 
-const RequireAuth = ({children}) => {
+const RequireAuth = ({children, allowedRoles =['admin', 'superadmin']}) => {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [authState, setAuthState] = useState({isAuthenticated:null, role:null});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,11 +13,20 @@ const RequireAuth = ({children}) => {
     const checkAuthentication = async() =>{
 
         try{
-        await axios.get('http://localhost:3000/admin/admin/check-auth', { withCredentials: true })
-            setIsAuthenticated(true);
+        const res = await axios.get('http://localhost:3000/admin/admin/check-auth', { withCredentials: true })
+            
+            setAuthState({
+              isAuthenticated:true,
+              role: res.data.role,
+            })
+            
         }
       catch(err){
-        setIsAuthenticated(false);
+         
+            setAuthState({
+              isAuthenticated:null,
+              role: null,
+            })
         navigate('/login'); 
       };
     };
@@ -25,11 +34,15 @@ const RequireAuth = ({children}) => {
     checkAuthentication();
   }, [navigate]);
 
-  if (isAuthenticated === null) {
+  if (authState.isAuthenticated === null) {
     return <Loading/>;
   }
 
-  return isAuthenticated ? children : null;
+   if (!allowedRoles.includes(authState.role)) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
 };
 
 export default RequireAuth;

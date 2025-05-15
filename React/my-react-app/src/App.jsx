@@ -1,10 +1,10 @@
 import {BrowserRouter as Router, Routes, Route, Link, useNavigate} from 'react-router-dom';
-import {Suspense, lazy } from 'react';
+import {Suspense, lazy, useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { PersonRounded, Home, LibraryBooks, 
   School, AccountBalance, AccountBox,
-  PeopleAlt } from '@mui/icons-material';
+  PeopleAlt, AdminPanelSettings } from '@mui/icons-material';
 
 import Swal from 'sweetalert2';
 import Loading from './admin-pages/login-register/utils/Loading';
@@ -37,7 +37,29 @@ function AppContent() {
 
   const navigate = useNavigate();
 
-const isLoginPage = location.pathname === '/login';
+  const [userRole, setUserRole] = useState(null);
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+
+useEffect(() => {
+  const fetchRole = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/admin/admin/check-auth", {
+        withCredentials: true,
+      });
+      console.log(res.data.role)
+      
+      setUserRole(res.data.role);
+      
+    } catch (err) {
+      setUserRole(null);
+    }
+  };
+
+  fetchRole();
+}, [location.pathname]);
+
+
 
   return (
     <>
@@ -78,6 +100,17 @@ const isLoginPage = location.pathname === '/login';
             { label: 'Lista e Lëndëve', path: '/lendet' },
            ]}
         />
+  
+        {userRole === 'superadmin' && (
+        <DropDownMenu
+           titulli={( <> <AdminPanelSettings sx={{marginRight: "7px", marginTop:"-4px"}}/>Adminët </>)} 
+           data={[
+            { label: 'Regjistro Admin', path: '/register/admin' },
+            { label: 'Lista e Adminëve', path: '/admin' },
+           ]}
+        />
+        )}
+  
         <DropDownMenu
            titulli={( <> <AccountBox sx={{marginRight: "5px", marginTop:"-4px"}}/>Llogaria </>)} 
            data={[
@@ -127,24 +160,24 @@ const isLoginPage = location.pathname === '/login';
         <Routes>
 
           <Route path='/login' element={<Login/>} />
-          <Route path='/' element={<RequireAuth><HomeAdmin/></RequireAuth>} />
+          <Route path='/' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><HomeAdmin/></RequireAuth>} />
 
-          <Route path="/register/student" element={<RequireAuth><Register/></RequireAuth>} />
-          <Route path="/studentet" element={<RequireAuth> <StudentList /> </RequireAuth>} />
-          <Route path='/edit/studenti/:ID' element={<RequireAuth> <StudentsEdit /> </RequireAuth>} />
+          <Route path="/register/student" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><Register/></RequireAuth>} />
+          <Route path="/studentet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <StudentList /> </RequireAuth>} />
+          <Route path='/edit/studenti/:ID' element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <StudentsEdit /> </RequireAuth>} />
 
-          <Route path="/register/fakutetet" element={<RequireAuth> <RegjistroFakultetin />  </RequireAuth>} />
-          <Route path="/fakultetet" element={<RequireAuth><ListaFakulteteve/></RequireAuth>} />
-          <Route path="/edit/fakulteti/:FakultetiID" element={<RequireAuth><EditFakultetet /></RequireAuth>} />
+          <Route path="/register/fakutetet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <RegjistroFakultetin />  </RequireAuth>} />
+          <Route path="/fakultetet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaFakulteteve/></RequireAuth>} />
+          <Route path="/edit/fakulteti/:FakultetiID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditFakultetet /></RequireAuth>} />
 
-          <Route path="/register/lendet" element={<RequireAuth><RegjistroLendet /></RequireAuth>} />
-          <Route path="/lendet" element={<RequireAuth><ListaLendeve /></RequireAuth>} />
-          <Route path="/edit/lenda/:LendaID" element={<RequireAuth><EditLendet /></RequireAuth>} />
+          <Route path="/register/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroLendet /></RequireAuth>} />
+          <Route path="/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaLendeve /></RequireAuth>} />
+          <Route path="/edit/lenda/:LendaID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditLendet /></RequireAuth>} />
 
-          <Route path="/register/profesoret" element={<RequireAuth><RegjistroProfesoret /></RequireAuth>} />
-          <Route path="/profesoret" element={<RequireAuth><ListaProfesoreve /></RequireAuth>} />
-          <Route path="/edit/profesori/:ProfesoriID" element={<RequireAuth><EditProfesoret /></RequireAuth>} />
-          <Route path='/lendet/profesoret/assign' element={<RequireAuth><CaktoLendetProfesoret /></RequireAuth>} />
+          <Route path="/register/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroProfesoret /></RequireAuth>} />
+          <Route path="/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaProfesoreve /></RequireAuth>} />
+          <Route path="/edit/profesori/:ProfesoriID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditProfesoret /></RequireAuth>} />
+          <Route path='/lendet/profesoret/assign' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoLendetProfesoret /></RequireAuth>} />
         </Routes>
         </Suspense>
         </>
