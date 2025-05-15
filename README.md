@@ -54,9 +54,105 @@ The URL for application will appear on terminal, that would usually be like:
 - Admin and superadmin have the same priorities, expect that superadmin can CRUD(Create,Read,Update,Delete) other admins!
 ---
 
+### **Register Faculties (Regjistro Fakultetet)**
+This endpoint allows the admin to submit information about fakultetet.(Ky endpoint lejon adminin te regjistroje te dhenat per fakultetin.)  
+#### Request
+1. **Method: POST**
+2. **URL:** 
+```bash 
+localhost:3000/admin/fakultetet/submit/
+```
+3. **Body** (x-www-form-urlencoded):
+- Emri (text, required): The name of the fakulteti.
+- Niveli (text, required): The level of the fakulteti.
+- Lokacioni (text, required): The location of the fakulteti.
+- Kodi_Fakultetit(number, required): Faculty Code.
+
+#### Response
+The response after successful registration would look like this in (JSON):  
+```json
+{
+    "message": "Fakulteti u regjistrua me sukses!",
+    "data": {
+        "FakultetiID": 84,
+        "Emri": "Shkenca Kompjuterike",
+        "Niveli": "Master",
+        "Lokacioni": "Prishtine",
+        "Kodi_Fakultetit": "10000"
+    }
+}
+```
+---
+### **Read Faculties (Lexo fakultetet)** 
+The endpoint retrieves a list of all faculties available in the system.(Ky endpoint merr nje liste te te gjithe fakulteteve te disponueshme ne sistem.)  
+
+#### Request
+1. **Method: GET**
+2. **URL:** 
+```bash 
+localhost:3000/admin/fakultetet/all/
+```
+#### Response
+The response is a JSON array containing objects with the following properties:  
+- FakultetiID (number): The ID of the faculty.
+- Emri (string): The name of the faculty.
+- Niveli (string): The level of the faculty.
+- Lokacioni (string): The location of the faculty.
+- Kodi_Fakultetit (number): The code of the faculty.
+- uKrijua (string): The creation date of the faculty.  
+
+Example: 
+
+```json
+[
+    {
+        "FakultetiID": 0,
+        "Emri": "",
+        "Niveli": "",
+        "Lokacioni": "",
+        "Kodi_Fakultetit": 0,
+        "uKrijua": ""
+    }
+]
+
+```
+---
+### **Delete faculty (Fshij fakultetin)**
+This endpoint sends an **HTTP DELETE** request to **URL**:    
+``` bash
+localhost:3000/admin/fakultetet/delete/:FakultetiID
+``` 
+to delete a specific fakulteti (faculty) identified by the FakultetiID parameter. (Kerkese HTTP Delete per te fshire fakultetin specifik i cili identifikohet me ane te FakultetiID si parameter.)
+
+#### Response
+The response is a message confirming whether the deletion was successful or not.  
+Example:  
+```json
+{
+    "message": "Fakulteti u fshi me sukses!"
+}
+```
+---
+### **Update Fakulteti Information (Perditeso te dhenat e fakultetit)**
+This endpoint allows the admin to update information about a specific fakulteti. (Ky endpoint lejon adminin te perditesoje informata rreth nje fakulteti specifik.)
+#### Request 
+1. **Method: PATCH** 
+2. **URL:** 
+```bash
+http://localhost:3000/admin/fakultetet/edit/:FakultetiID
+```
+3. **Body:**  
+- Emri: (text) The name of the fakulteti.
+- Niveli: (text) The level of the fakulteti.
+- Lokacioni: (text) The location of the fakulteti.
+- Kodi_Fakultetit: (number) The code of the fakulteti.
+
+
+---
+
 ### **Register Courses (Regjistro Lendet)**
 This endpoint allows the admin to submit information about a course.
-(Ky endpoint lejon adminin te regjistroj te dhenat per ndonje lende.)
+ (Ky endpoint lejon adminin te regjistroj te dhenat per ndonje lende.)
 #### Request
 1. **Method**: POST
 2. **URL**: 
@@ -64,7 +160,7 @@ This endpoint allows the admin to submit information about a course.
 http://localhost:3000/admin/lendet/submit 
 ```    
 3. **Body**:   
-• FakultetiID (text): The ID of the faculty to which the course belongs.  
+• FakultetiID (number): The ID of the faculty to which the course belongs.  
 • Emri_Lendes (text): The name of the course.  
 • ECTS (number): The number of ECTS credits for the course.  
 • semestri (number): The semester in which the course is offered.  
@@ -89,7 +185,7 @@ http://localhost:3000/admin/lendet/all
 ```
 #### Response   
 The response for this request is a JSON object representing the list of all courses.
-(Pergjigja nga kjo kerkese eshte objekt JSON qe reprezenton nje liste te te gjithe lendeve.)
+ (Pergjigja nga kjo kerkese eshte objekt JSON qe reprezenton nje liste te te gjithe lendeve.)
 ```json
 {    
    "LendaID": 123,

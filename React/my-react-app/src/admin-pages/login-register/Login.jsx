@@ -67,7 +67,7 @@ function Login(){
       )} 
 
         <form id="loginForm" className="fade-in">
-            <h1 id="adminLoginH1">ADMIN - LOGIN</h1>
+            <h1 id="adminLoginH1">STAFF - LOGIN</h1>
         <div className="input-label">
     <label htmlFor="Email">Email <span>*</span></label>
     <input className="form-control" required type="email" name="Email" 

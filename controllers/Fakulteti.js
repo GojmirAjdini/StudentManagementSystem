@@ -108,8 +108,7 @@ const lexoFakultetinId = async (req, res) =>{
     }
 }
 
-const patchFakulteti = async (req, res) =>{
-    
+const patchFakulteti = async (req, res) =>{    
     
     try{
     
@@ -119,9 +118,12 @@ const patchFakulteti = async (req, res) =>{
     const fushat =[];
     const values = [];
 
-    if(Emri.charAt(0).toUpperCase() + Emri.slice(1)){ fushat.push("Emri = ?"); values.push(Emri.trim()); } 
+    const upCEmri = Emri.charAt(0).toUpperCase() + Emri.slice(1);
+    const upCLokacioni = Lokacioni.charAt(0).toUpperCase() + Lokacioni.slice(1);
+        
+    if(upCEmri){ fushat.push("Emri = ?"); values.push(upCEmri.trim()); } 
     if(Niveli){ fushat.push("Niveli = ?"); values.push(Niveli); } 
-    if(Lokacioni.charAt(0).toUpperCase() + Lokacioni.slice(1)){ fushat.push("Lokacioni = ?"); values.push(Lokacioni.trim()); } 
+    if(upCLokacioni){ fushat.push("Lokacioni = ?"); values.push(upCLokacioni.trim()); } 
     if(Kodi_Fakultetit){ fushat.push("Kodi_Fakultetit = ?"); values.push(Kodi_Fakultetit); }
 
     if(fushat.length === 0){    

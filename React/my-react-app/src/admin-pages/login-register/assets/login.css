@@ -11,6 +11,12 @@
     height: 100vh;
     align-items: center;
     background-color:#5500ff;
+    transition: 0.3s ease-in-out;
+}
+
+.loginContainer:hover{
+    background-color: #3a02ab;
+    transition: 0.3s ease-in-out;
 }
 
 #adminLoginH1{
