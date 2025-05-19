@@ -48,19 +48,97 @@ The URL for application will appear on terminal, that would usually be like:
    ``` 
 ## API (Admin) Endpoints 
 ### Notes:
-- All these protected endpoints below require a **valid `accessToken` cookie**.
+- All these (Admin) protected endpoints below require a **valid `accessToken` cookie**.
 - You do **not** need to manually attach tokens; they are sent automatically if your frontend uses `credentials: 'include'` in fetch or `withCredentials: true` in Axios.
 - Only users with appropriate role (e.g., `'admin'` or `'superadmin'`) can access admin-level routes.
-- Admin and superadmin have the same priorities, expect that superadmin can CRUD(Create,Read,Update,Delete) other admins!
+- Admin and superadmin have the same priorities, expect that superadmin can CRUD(Create,Read,Update,Delete) other admins, while admin cannot!
 ---
 
+## **Admin Register (Regjistrimi si Admin, Superadmin )**
+### Notes about Admin registration
+- Admins cannot register themselves, they are registered by superadmins only,   
+- Superadmins also cannot register themselves,  
+- One superadmin can be registered manually in database, then we use this one account to register other superadmins, admins.  
+
+### Request
+This endpoint allows administrators to register new users. The request should be sent via an **HTTP POST** method to `localhost:3000/admin/register`.   
+### Body
+The request body should be of type x-www-form-urlencoded and include the following parameters:  
+- FakultetiID (number): The ID of the faculty to which the user belongs. 
+- Email (text): The email address of the user.
+- Password (text): The password for the user account.
+- Emri (text): The first name of the user.
+- Mbiemri (text): The last name of the user.
+- Role(text): The role (**'superadmin'**, **'admin'**)
+
+Upon successful registration, the endpoint will return a response with the relevant user information.
+
+### Response
+
+```json
+{
+    "message": "Te dhënat u regjistruan me sukses!",
+    "Data": {
+        "AdminID": 7,
+        "Fakulteti": "1",
+        "Email": "user@gmail.com",
+        "Password": "Psw",
+        "Emri_Adminit": "Name",
+        "Mbiemri_Adminit": "Surname",
+        "role": "admin"
+    }
+}
+```
+---
+## **Login Admin (Kyçja si Admin)**
+
+This endpoint allows administrators to log in (Use the credentials of the account registered in endpoint above **Admin Register**).
+
+#### Request
+1. **Method: POST**
+2. **URL:** 
+```bash 
+http://localhost:3000/admin/login
+```
+#### Body
+
+- Email (text): The email of the administrator.
+- Password (text): The password of the administrator.
+
+#### Response
+The response Example below in (JSON):
+
+```json
+{
+    "loginMessage": "Kyçja e suksesshme",
+    "message": "Përshëndetje Admin: superadmin@gmail.com",
+    "data": [
+        {
+            "FakultetiId": 1,
+            "Email": "superadmin@gmail.com",
+            "Emri_Adminit": "Superadmin",
+            "Mbiemri_Adminit": "Superadmin",
+            "role": "superadmin"
+        }
+    ]
+}
+```
+---
+
+
+
+
+
+
+
+---
 ### **Register Faculties (Regjistro Fakultetet)**
 This endpoint allows the admin to submit information about fakultetet.(Ky endpoint lejon adminin te regjistroje te dhenat per fakultetin.)  
 #### Request
 1. **Method: POST**
 2. **URL:** 
 ```bash 
-localhost:3000/admin/fakultetet/submit/
+http://localhost:3000/admin/fakultetet/submit/
 ```
 3. **Body** (x-www-form-urlencoded):
 - Emri (text, required): The name of the fakulteti.
@@ -90,7 +168,7 @@ The endpoint retrieves a list of all faculties available in the system.(Ky endpo
 1. **Method: GET**
 2. **URL:** 
 ```bash 
-localhost:3000/admin/fakultetet/all/
+http://localhost:3000/admin/fakultetet/all/
 ```
 #### Response
 The response is a JSON array containing objects with the following properties:  
@@ -120,7 +198,7 @@ Example:
 ### **Delete faculty (Fshij fakultetin)**
 This endpoint sends an **HTTP DELETE** request to **URL**:    
 ``` bash
-localhost:3000/admin/fakultetet/delete/:FakultetiID
+http://localhost:3000/admin/fakultetet/delete/:FakultetiID
 ``` 
 to delete a specific fakulteti (faculty) identified by the FakultetiID parameter. (Kerkese HTTP Delete per te fshire fakultetin specifik i cili identifikohet me ane te FakultetiID si parameter.)
 
@@ -145,9 +223,17 @@ http://localhost:3000/admin/fakultetet/edit/:FakultetiID
 - Emri: (text) The name of the fakulteti.
 - Niveli: (text) The level of the fakulteti.
 - Lokacioni: (text) The location of the fakulteti.
-- Kodi_Fakultetit: (number) The code of the fakulteti.
+- Kodi_Fakultetit: (number) The code of the fakulteti.  
 
+#### Response 
+Example of JSON response after successful updation:
 
+```json
+{
+    "message": "Fakulteti u përditësua me sukses!"
+}
+
+```
 ---
 
 ### **Register Courses (Regjistro Lendet)**
