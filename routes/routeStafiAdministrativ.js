@@ -13,41 +13,51 @@ import refreshAccessToken from "../middlewares/RefreshToken.js";
 const router = express.Router();
 
 //ADMIN//
-router.get("/all",auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminet);
-router.post("/register", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.registerAdmin);
-router.post("/login", kontrollerAdmin.loginAdmin);
-router.patch("/update/:AdminID",auth.verifyToken, auth.eshteSuperAdmin,kontrollerAdmin.updatePassword);
-router.get("/edit/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminById);
-router.get("/admin/search", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminByName);
-router.get("/admin", auth.verifyToken, kontrollerAdmin.getAdminByEmail);
+  router.get("/all",auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminet);
+  router.post("/register", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.registerAdmin);
+  router.post("/login", kontrollerAdmin.loginAdmin);
+  router.patch("/update/:AdminID",auth.verifyToken, auth.eshteSuperAdmin,kontrollerAdmin.updatePassword);
+  router.get("/admin/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminById);
+  router.get("/search", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminByName);
+  router.get("/getAdminByEmail", auth.verifyToken, auth.eshteAdmin, kontrollerAdmin.getAdminByEmail);
+  router.delete("/delete/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.deleteAdminById);
+  router.delete("/deleteAll", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.deleteAllAdminet);
+  router.patch("/edit/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.patchAdmin);
 
 //login
-router.get('/admin/check-auth', auth.verifyToken, auth.eshteAdmin, (req, res) => {
+router.get('/check-authentication', auth.verifyToken, auth.eshteAdmin, (req, res) => {
     res.status(200).json({ 
       message: "Authenticated", 
       user: req.user, 
       role: req.user.role });
   });
 
-router.post('/admin/refresh-token', refreshAccessToken );
+router.post('/refresh-token', refreshAccessToken );
 
 //logout
 
-router.post("/logout", auth.verifyToken, (req, res) => {
-    
-    res.clearCookie('accessToken', {
+router.post("/logout", auth.verifyToken, auth.verifyRefreshToken, auth.eshteAdmin,(req, res) => {
+   try {
+  
+   res.clearCookie('accessToken', {
       httpOnly:true,
       secure:process.env.NODE_ENV === 'production',
       sameSite: 'Strict', 
-      path: '/' });
+      path: '/'
+    });
 
     res.clearCookie('refreshToken', {
       httpOnly:true,
       secure:process.env.NODE_ENV === 'production',
       sameSite: 'Strict', 
-      path: '/' });
+      path: '/'
+    });
 
-    res.status(200).json({ message: "Ç'kyçja e suksesshme!" });
+    return res.status(200).json({ message: "Ç'kyçja e suksesshme!" });
+  } catch(err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Logout failed' });
+  }
 });
 
   

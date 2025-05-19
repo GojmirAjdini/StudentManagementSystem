@@ -36,6 +36,10 @@ const registerAdmin = async (req, res) =>{
 
         const {FakultetiID, Email, Password, Emri, Mbiemri, role} = req.body;
 
+        if (!FakultetiID || !Email || !Password || !Emri || !Mbiemri || !role) {
+            return res.status(400).json({ message: "Të gjitha fushat janë të detyrueshme." });
+        }
+
         const emailCheckQuery = `
             SELECT EmailPrivat FROM profesori WHERE EmailPrivat = ? 
             UNION 
@@ -211,21 +215,19 @@ const updatePassword = async (req, res) =>{
     }
 }
 
-const readAdminById  = async (req, res) =>{
+const readAdminById = async (req, res) =>{
 
     try{
 
-        const AdminID = req.params.AdminId;
+        const AdminID = req.params.AdminID;
 
         StafiAdministrativ.searchAdminById([AdminID],(err, adminet) =>{
 
             
             if(err){
-                return res.status(500).json(err);
+                return res.status(500).json({err: true, message:err});
             }   
-            if(adminet.length === 0){
-                return res.status(404).json({message: "Nuk ka të dhëna për adminët!"});
-            }
+        
             console.log(adminet.length);
             res.status(200).json(adminet);
         })
@@ -243,22 +245,22 @@ const readAdminByName  = async (req, res) =>{
 
         const Emri = req.query.Emri_Adminit;
 
-        StafiAdministrativ.searchAdminById([Emri],(err, adminet) =>{
+        StafiAdministrativ.searchAdminByName([Emri.trim()],(err, adminet) =>{
 
             
             if(err){
-                return res.status(500).json(err);
+                return res.status(500).json({err: true, message: err.message});
             }   
             if(adminet.length === 0){
-                return res.status(404).json({message: "Nuk ka të dhëna për adminët!"});
+                return res.status(404).json({message: "Admini nuk ekziston!"});
             }
-            console.log(adminet.length);
+            
             res.status(200).json(adminet);
         })
     }
     catch(err){
         console.error(err);
-        return res.status(500).json({message: err});
+        return res.status(500).json({err: true, message: err.message});
 
     }
 }
@@ -268,6 +270,8 @@ const getAdminByEmail = async (req, res) =>{
     try{
 
         const email = req.user.email;
+
+        console.log(email);
 
         StafiAdministrativ.getAdminByEmail([email], (err, results) =>{
             
@@ -288,6 +292,91 @@ const getAdminByEmail = async (req, res) =>{
     }
 }
 
+const deleteAdminById = async (req, res) =>{
+
+    try{
+
+        const AdminID = req.params.AdminID;
+
+        StafiAdministrativ.deleteAdminById([AdminID],(err, results) =>{
+
+            if(err){
+                return res.status(500).json({message: err});
+            }
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Admini nuk ekziston!"});
+            }
+
+            return res.status(200).json({message: "Admini u fshi me sukses!"});
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+
+    }
+}
+
+const deleteAllAdminet = async (req, res) =>{   
+    try{
+
+        StafiAdministrativ.deleteAllAdminet((err, results) =>{
+
+            if(err){
+                return res.status(500).json({message: err});
+            }
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Nuk ka adminë për tu fshirë!"});
+            }
+
+            return res.status(200).json({message: "Të gjithë adminët u fshinë me sukses!"});
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+
+    }
+}
+
+const patchAdmin = async (req, res) =>{
+
+    try{
+
+        const id = req.params.AdminID;
+        const {FakultetiID, Email, Emri_Adminit, Mbiemri_Adminit, role} = req.body;
+        const fushat = [];
+        const values = [];
+
+        const upCEmri = Emri_Adminit.charAt(0).toUpperCase() + Emri_Adminit.slice(1);
+        const upCMbiemri = Mbiemri_Adminit.charAt(0).toUpperCase() + Mbiemri_Adminit.slice(1);
+
+        if(FakultetiID){ fushat.push("FakultetiID = ?"); values.push(FakultetiID); }
+        if(Email){ fushat.push("Email = ?"); values.push(Email); }
+        if(upCEmri){ fushat.push("Emri_Adminit = ?"); values.push(upCEmri); }
+        if(upCMbiemri){ fushat.push("Mbiemri_Adminit = ?"); values.push(upCMbiemri); }
+        if(role){ fushat.push("role = ?"); values.push(role); } 
+
+        if(fushat.length === 0){
+            return res.status(400).json({message: "Nuk ka të dhëna për përditësim!"});
+        }
+
+        StafiAdministrativ.patchAdminin(id, fushat, values, (err, results) =>{
+
+            if(err){
+                return res.status(500).json({message: err});
+            }
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Admini nuk ekziston!"});
+            }
+
+            return res.status(200).json({message: "Admini u përditësua me sukses!"});
+        })
+        
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+    }
+    }
+
 export default {readAdminet, registerAdmin, loginAdmin, 
     updatePassword, readAdminById, readAdminByName,
-    getAdminByEmail};
+    getAdminByEmail, deleteAdminById, deleteAllAdminet, patchAdmin};

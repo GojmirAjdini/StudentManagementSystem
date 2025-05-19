@@ -2,12 +2,12 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2";
 import './assets/RegisterProfesoret.css';
-import {Alert, Button} from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Button from "@mui/material/Button";
+import axiosInstance from '../../services/axiosInstance';
 
 
 function RegjistroProfesoret() {
-
-    const API_URL = "http://localhost:3000/";
   
     const [fakultetet, setFakultetet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
@@ -37,7 +37,7 @@ function RegjistroProfesoret() {
 
     const fetchFakultetet = async() =>{
         try{
-            const response = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
+            const response = await axiosInstance.get(`admin/fakultetet/all`);
             console.log(response.data);
             setFakultetet(response.data);
         }catch(err){
@@ -68,7 +68,7 @@ function RegjistroProfesoret() {
         }
 
         try{
-            const response = await axios.post(`${API_URL}profesoret/register`, {
+            const response = await axiosInstance.post(`profesoret/register`, {
                 FakultetiID : FakultetiID,   
                 Emri: Emri,
                 Mbiemri: Mbiemri,
@@ -122,7 +122,7 @@ function RegjistroProfesoret() {
     return (
     <div className='container' id="fadeInPage">
 
-    <h1>REGJISTRO PROFESORIN</h1>
+    <h1 id='profH1'>REGJISTRO PROFESORIN</h1>
 
     <form onSubmit={submitProfesori}>
 

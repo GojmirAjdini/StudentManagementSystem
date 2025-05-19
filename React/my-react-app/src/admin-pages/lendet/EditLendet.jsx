@@ -6,10 +6,10 @@ import './assets/LendaRegister.css';
 import { FaArrowLeft } from "react-icons/fa";
 import Alert from '@mui/material/Alert';
 import Button from "@mui/material/Button";
+import axiosInstance from "../../services/axiosInstance";  
 
 function EditLendet() {
   const { LendaID } = useParams();
-  const API_URL = "http://localhost:3000/";
 
   const [lenda, setLenda] = useState({
     Emri_Lendes: '',
@@ -32,7 +32,7 @@ function EditLendet() {
 
   const fetchLenda = async () => {
     try {
-      const response = await axios.get(`${API_URL}admin/lendet/${LendaID}`, { withCredentials:true});
+      const response = await axiosInstance.get(`admin/lendet/${LendaID}`);
       setLenda(response.data[0]);
       setOrgLenda(response.data[0]);
     } catch (err) {
@@ -44,7 +44,7 @@ function EditLendet() {
   const fakultetetDisponueshme = async() =>{
 
     try{
-        const response = await axios.get(`${API_URL}admin/fakultetet/all`, { withCredentials:true});
+        const response = await axiosInstance.get(`admin/fakultetet/all`);
         setFakultetet(response.data);
         console.log(response.data);
 
@@ -55,7 +55,7 @@ function EditLendet() {
 
   const fetchSemestrat = async() =>{
     try{
-        const response = await axios.get(`${API_URL}admin/semestri/all`, { withCredentials:true});
+        const response = await axiosInstance.get(`admin/semestri/all`);
         setSemestrat(response.data); 
         console.log(response.data);
     }
@@ -115,7 +115,7 @@ function EditLendet() {
 
     if (result.isConfirmed) {
       try {
-        const response = await axios.patch(`${API_URL}admin/lendet/edit/${LendaID}`, lenda, {withCredentials:true});
+        const response = await axiosInstance.patch(`admin/lendet/edit/${LendaID}`, lenda);
         setSuccessMessage(response.data.message);
         setTimeout(() => setSuccessMessage(''), 3000);
       } catch (err) {
@@ -127,7 +127,7 @@ function EditLendet() {
 
   return (
     <div id="fadeInPage" className="container">
-      <h1>PËRDITËSO LËNDËN</h1>
+      <h1 id="lendaH1">PËRDITËSO LËNDËN</h1>
 
       {successMessage && (
         <div id="successMsgLenda" className="fade-in" role="alert">

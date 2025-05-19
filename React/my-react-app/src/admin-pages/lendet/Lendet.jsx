@@ -1,27 +1,29 @@
-import {useState, useEffect} from "react";
-import axios from "axios";
+import {useState, useEffect, useMemo} from "react";
 import Swal from "sweetalert2";
 import './assets/Lendet.css';
 import {Link} from "react-router-dom";
-import {Alert, Button} from '@mui/material';
-import {Delete, Edit, Search} from '@mui/icons-material';
-import { DataGrid, } from '@mui/x-data-grid';
+
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
+import { DataGrid, GridToolbar} from '@mui/x-data-grid';
+import axiosInstance from "../../services/axiosInstance";
 
 
 function Lendet() {
 
-    const API_URL = "http://localhost:3000/";
     const [lendet, setLendet] = useState([]);
     const [orgLendet, setOrgLendet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
-    const [dataMessage, setDataMessage] = useState('');
     const [searchLenda, setSearchLenda] = useState('');
 
-    
     const fetchLendet = async () =>{
 
         try{
-            const response = await axios.get(`${API_URL}admin/lendet/all`, {withCredentials:true});
+            const response = await axiosInstance.get(`admin/lendet/all`);
             console.log(response.data);
 
             setLendet(response.data);
@@ -32,40 +34,13 @@ function Lendet() {
         }
     }
 
-    const handleReset = () =>{
-        setSearchLenda('');
-    }
-
-    const handleSearch = async () =>{
-
-        if(!searchLenda){
-            setDataMessage('Ju lutem shënoni lëndën!');
-
-            setTimeout(() => {setDataMessage('')},3000);
-            return;
-        }
-        try{
-
-            const response = await axios.get(`${API_URL}admin/lendet/lenda/search?Emri_Lendes=${searchLenda}`, 
-                {withCredentials:true});
-            
-            console.log(response.data);
-            setLendet(response.data);
-        }catch(err){
-            console.error(err);
-            setDataMessage(err.response.data.message);
-
-            setTimeout(() => { setDataMessage('')},3000);
-        }
-
-    }
-
     const deleteLenda = async (LendaID) => {
 
         const result = await Swal.fire({
             background:"#F5F5F5",
             position: "center",
             title: "Dëshironi t'i fshini të dhënat?",
+            text: "Ky veprim është i pakthyeshëm!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',  
@@ -84,7 +59,7 @@ function Lendet() {
         if(result.isConfirmed){
 
             try{
-                const response = await axios.delete(`${API_URL}admin/lendet/delete/${LendaID}`,{withCredentials:true});
+                const response = await axiosInstance.delete(`admin/lendet/delete/${LendaID}`);
                 const message = response.data.message;
                 setLendet(prev => prev.filter(lenda => lenda.LendaID !==  LendaID));
                 setSuccessMessage(message);
@@ -101,19 +76,14 @@ function Lendet() {
 
     useEffect(() => {
 
-        if(searchLenda){
-
-            return; 
-        }
-
         fetchLendet();
 
         const interval = setInterval (() =>{
-            fetchLendet()}, 5000);
+            fetchLendet()}, 60000);
 
         return () => clearInterval(interval);
 
-    },[searchLenda]);
+    },[]);
 
     const columns =  [
         
@@ -131,8 +101,8 @@ function Lendet() {
             width:120,
             renderCell : (params) => (
                 <Link to={`/edit/lenda/${params.row.LendaID}`}>
-                <Button id="editBtnLenda" color="success" variant="contained"
-                startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
+                <Button id="editBtnLenda" color="primary" variant="contained"
+                startIcon={<EditIcon sx={{color:"white"}}/>}>Edit</Button>
                 </Link>
             )
         },
@@ -146,7 +116,7 @@ function Lendet() {
                 <Button 
                 color="error"
                 variant="contained" sx={{width:'100%'}}
-                startIcon={<Delete sx={{color:'white'}}/>}
+                startIcon={<DeleteIcon sx={{color:'white'}}/>}
                 onClick={() => deleteLenda(params.row.LendaID)}>
                 Delete
                 </Button>
@@ -154,13 +124,14 @@ function Lendet() {
         }
     ]
 
-    const rows = lendet.map((lenda, index) => ({
+    const rows = useMemo(() => lendet.map((lenda, index) => ({
 
         id:index + 1,
         ...lenda,   
         uKrijua: new Date(lenda.uKrijua).toLocaleString()
         
     }))
+    , [lendet]); 
 
     return(
         <div className="fadeInPage" id="container">
@@ -172,31 +143,7 @@ function Lendet() {
                     <Alert severity="success">  {successMessage}</Alert>
                 </div>
             )}
-
-        {dataMessage && (
-                <div id="dataMsgLendet" className="fade-in" role="alert">
-                  <Alert severity="info">  {dataMessage}</Alert>
-                </div>
-            )}   
-        
-        <div id="searchBtnHolder">
             
-            <input id="searchLendaInput"
-              type="text"
-              placeholder="Kërko lëndën..."
-              value={searchLenda}
-              onChange={(e) => setSearchLenda(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSearch();
-              }}
-              className="form-control mb-3"
-            />
-
-            <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
-                <Search></Search> Kërko</Button>
-            <Button onClick={handleReset} variant="contained" id="resetSearchLnd" className="mb-3">Reset</Button>
-
-            </div>
             <div id="dataGridLendet">
               <DataGrid
                 disableColumnResize
@@ -204,15 +151,36 @@ function Lendet() {
                 showColumnVerticalBorder
                 rows={rows}
                 columns={columns}
-                scrollbarSize={{}}
+                scrollbarSize={0}
                 initialState={{
                 pagination: {
-                paginationModel: {
-                  pageSize:20,
-                },
-              },
-            }}
+                paginationModel:{
+                pageSize:25,
+                }
+                }
+            } }
 
+            
+         slots={{ toolbar: GridToolbar }}
+         slotProps={{
+           toolbar: {
+             showQuickFilter: true,
+             quickFilterProps: { debounceMs: 250 },
+
+             sx: {
+        '& .MuiButton-startIcon svg': {
+          color: 'blue',
+          
+        },
+        '& .MuiButton-root': {
+          color: 'blue', 
+          fontFamily:'Montserrat'
+        },
+      },
+           },
+         }}
+            pageSizeOptions={[25, 50, 100]}
+            
              sx={{
                 
             "& .MuiDataGrid-cell:focus": {
@@ -233,7 +201,7 @@ function Lendet() {
                outline: "none",
              },
              }}
-                checkboxSelection
+                
                 disableRowSelectionOnClick
                     
                 />

@@ -30,7 +30,6 @@
     width: 100%;
     height: 100%;
     margin-top: 60px;
-    
   }
   
   @keyframes fadeInPage {
@@ -49,12 +48,11 @@
     animation: fadeInPage 0.5s ease-in-out forwards;
   
   }
-  
-  #successMessageLendet{
+
+  #successMessageAdm{
   
     position: absolute;
     top: 130px;
-    left: 42%;
     text-align: center;
     font-size: 15px;
   }
@@ -70,17 +68,13 @@
     font-size: 24px;
   }
   
-  #btnEditLenda{
+  #editBtn{
     width: 100%;
   }
 
-#dataGridLendet{
-
+.dataGridAdm{
+  
   margin-top: 80px;
   outline: none;
-}
 
-#editBtnLenda{
-
-  width: 100%;
 }

@@ -4,10 +4,9 @@ import axios from "axios";
 import './assets/FakultetiRegister.css';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import axiosInstance from "../../services/axiosInstance";
 
 function RegjistroFakultetin() {
-
-    const API_URL = "http://localhost:3000/";
     
     const [successMessage, setSuccessMessage] = useState('');
     const [Emri, setEmri] = useState('');
@@ -38,12 +37,13 @@ function RegjistroFakultetin() {
         }
         
             try{
-                const response = await axios.post(`${API_URL}admin/fakultetet/submit`,{
+                const response = await axiosInstance.post(`admin/fakultetet/submit`,{
                     Emri: Emri,
                     Niveli: Niveli,
                     Lokacioni: Lokacioni,
                     Kodi_Fakultetit: Kodi_Fakultetit
-            }, { withCredentials:true});
+            }, );
+            
                 console.log(response.data);
                 setSuccessMessage(response.data.message);
                 
@@ -66,7 +66,7 @@ function RegjistroFakultetin() {
 
         <div id="fadeInPage" className="container">
 
-            <h1>REGJISTRO FAKULTETIN</h1>
+            <h1 id="fakultetiH1">REGJISTRO FAKULTETIN</h1>
             
             <form id="formFakulteti" onSubmit={submitFakulteti} action="">
 

@@ -4,11 +4,10 @@ import Swal from "sweetalert2";
 import './assets/LendaRegister.css';
 import { useParams } from "react-router-dom";
 import Alert from '@mui/material/Alert';
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
+import axiosInstance from "../../services/axiosInstance";
 
 function RegjistroLendet() {
-
-    const API_URL = "http://localhost:3000/";
 
     const [EmriLendes, setEmriLendes] = useState('');
     const [KodiLendes, setKodiLendes] = useState('');
@@ -29,7 +28,7 @@ function RegjistroLendet() {
     const fakultetetDisponueshme = async() =>{
 
         try{
-            const response = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
+            const response = await axiosInstance.get(`admin/fakultetet/all`);
             setFakultetet(response.data);
             console.log(response.data);
 
@@ -40,7 +39,7 @@ function RegjistroLendet() {
 
     const semestratDisponueshme = async() =>{
         try{
-            const response = await axios.get(`${API_URL}admin/semestri/all`, {withCredentials:true});
+            const response = await axiosInstance.get(`admin/semestri/all`);
             setSemestrat(response.data); 
             console.log(response.data);
         }
@@ -72,15 +71,14 @@ function RegjistroLendet() {
         }
 
         try{
-            const response = await axios.post(`${API_URL}admin/lendet/submit`,{
+            const response = await axiosInstance.post(`admin/lendet/submit`,{
                 
                 FakultetiID: FakultetiID,
                 Emri_Lendes: EmriLendes,
                 ECTS: ECTS,
                 Kodi_Lendes: KodiLendes,
                 SemestriID: SemestriID
-            }, 
-            {withCredentials:true});
+        });
             
             console.log(response.data);
             setSuccessMessage(response.data.message);
@@ -107,7 +105,7 @@ function RegjistroLendet() {
     return(
         <div id="fadeInPage" className="container">
 
-            <h1>REGJISTRO LËNDËN</h1>
+            <h1 id="lendaH1">REGJISTRO LËNDËN</h1>
 
             <form id="formLenda" onSubmit={submitLenda} className="form-container">
 

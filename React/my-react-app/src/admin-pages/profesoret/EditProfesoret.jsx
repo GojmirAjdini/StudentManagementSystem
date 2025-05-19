@@ -6,11 +6,11 @@ import Swal from 'sweetalert2';
 import './assets/RegisterProfesoret.css';
 import Alert from '@mui/material/Alert';
 import Button from "@mui/material/Button";
+import axiosInstance from '../../services/axiosInstance';
 
 
 function EditProfesoret() {
 
-    const API_URL = "http://localhost:3000/";
     const {ProfesoriID} = useParams();
     
     const [successMessage,setSuccessMessage] = useState('');
@@ -40,7 +40,7 @@ function EditProfesoret() {
 
         try{
 
-            const response = await axios.get(`${API_URL}admin/profesoret/${ProfesoriID}`, { withCredentials:true});
+            const response = await axiosInstance.get(`admin/profesoret/${ProfesoriID}`);
 
             console.log(response.data);
 
@@ -56,7 +56,7 @@ function EditProfesoret() {
 
         try{
 
-            const response = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
+            const response = await axiosInstance.get(`admin/fakultetet/all`);
 
             console.log(response.data);
 
@@ -133,7 +133,7 @@ function EditProfesoret() {
 
             try{
 
-                const response = await axios.patch(`${API_URL}admin/profesoret/edit/${ProfesoriID}`,profesori, { withCredentials:true});
+                const response = await axiosInstance.patch(`admin/profesoret/edit/${ProfesoriID}`,profesori,);
             
                 setSuccessMessage(response.data.message);
 
@@ -151,7 +151,7 @@ function EditProfesoret() {
 
     <div className='container' id="fadeInPage">
 
-    <h1>PËRDITËSO PROFESORIN</h1>
+    <h1 id='profH1'>PËRDITËSO PROFESORIN</h1>
 
     {successMessage && (
         <div id="successMsgFakulteti" className="fade-in" role="alert">
@@ -253,13 +253,11 @@ function EditProfesoret() {
     </div>
 
     <div className="inputProf">
-        <Button variant='contained' id="updateBtnProf" type="submit">Ruaj Ndryshimet</Button>
-    
-    </div>
-    <div className="input-label">
-
-        <Link className="kthehuLinkFkt" to={`/profesoret`}>  
-          <Button variant='contained' color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>          
+        
+        <Link className="kthehuLinkProf" to={`/profesoret`}>  
+          <Button variant='contained' color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>
+          
+          <Button variant='contained' id="updateBtnProf" type="submit">Ruaj Ndryshimet</Button>         
         </div>
         </form>
     </div>

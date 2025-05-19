@@ -1,9 +1,9 @@
-import axios from "axios";
+import axiosInstance from "../../services/axiosInstance";
 
 export default async function logout(navigate) {
     try{
 
-        await axios.post("http://localhost:3000/admin/logout", {},{withCredentials:true});
+        await axiosInstance.post("http://localhost:3000/admin/logout",{},{withCredentials:true});
     
         navigate('/login');
     

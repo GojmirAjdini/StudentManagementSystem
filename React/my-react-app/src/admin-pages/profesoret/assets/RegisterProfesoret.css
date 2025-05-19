@@ -1,8 +1,9 @@
 
-h1{
+#profH1{
 
     text-align: center;
-    margin-top: 60px;
+    margin-top: 120px;
+    font-size: 36px;
 }
 span{
 
@@ -44,16 +45,6 @@ form{
   
   border: 1px solid gray;
   padding: 8px;
-  border-radius: 10px;
-}
-#primaryBtn{
-
-  position: relative;
-  background-color: rgb(101, 64, 235);
-  left: 80px;
-  top: 25px;
-  height: 40px;
-  width: 120px;
   border-radius: 10px;
 }
 #gjinia{
@@ -181,13 +172,15 @@ form{
     }
 }
 
-.kthehuLink{
+.kthehuLinkProf{
 
   width: fit-content;
   padding: 7px;
   border-radius: 10px;
   text-decoration: none;
   color: rgb(0, 0, 0);
+  margin-right: auto;
+  margin-top: 25px;
 }
 .textSwal{
   font-size: 15px;
@@ -202,7 +195,7 @@ form{
 .inputProf{
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 300%;
   justify-content: center;
   align-items: center;
@@ -211,9 +204,10 @@ form{
 #updateBtnProf{
 
   border-radius: 10px;
-  margin-top: 30px;
   text-align: center;
   z-index: 1;
+  margin-top: -50px;
+  height: 40px;
   width: 25%;
   background-color: rgb(101, 64, 235);
 }

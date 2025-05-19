@@ -2,11 +2,12 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import './assets/Register.css';
 import Swal from "sweetalert2";
-import {Alert, Button} from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+
+import axiosInstance from "../../services/axiosInstance";
 
 function Register(){
-
-    const API_URL = "http://localhost:3000/";
 
     const [fakultetet, setFakultetet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
@@ -41,7 +42,7 @@ function Register(){
     const fakultetetDisponueshme = async() =>{
 
         try{
-        const response = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
+        const response = await axiosInstance.get(`admin/fakultetet/all`);
 
         setFakultetet(response.data);
     }catch(err){
@@ -78,12 +79,12 @@ function Register(){
 
     try{
 
-        const response = await axios.post(`${API_URL}admin/studentet/register/`,{
+        const response = await axiosInstance.post(`admin/studentet/register/`,{
 
             Emri: emri, Mbiemri: mbiemri, Gjinia: gjinia, EmailPrivat: emailprivat,
             Vendlindja: vendlindja, Data_Lindjes: data_lindjes, Adresa: adresa, Nr_Tel: nr_tel,
             FakultetiID: fakultetiID, Statusi: statusi 
-        }, {withCredentials:true});
+        });
 
         setSuccessMessage(response.data.message);
         setSuccessEmail(response.data.emailNotification);
@@ -125,9 +126,9 @@ useEffect(() =>{
 
 return (
 
-    <div id="fadeInPage" className="container">
+    <div className="container fade-in">
 
-        <h1>REGJISTRO STUDENTË</h1>
+        <h1 id="studentH1">REGJISTRO STUDENTË</h1>
 
         <form onSubmit={submitStudenti} autoComplete='on' action="">
 

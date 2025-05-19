@@ -4,11 +4,12 @@ import axios from "axios";
 import "./assets/Register.css";
 import Swal from "sweetalert2";
 import { FaArrowLeft } from "react-icons/fa";
-import {Alert, Button} from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import axiosInstance from "../../services/axiosInstance";
 
 function StudentsEdit() {
   const { ID } = useParams();
-  const API_URL = "http://localhost:3000/";
 
   const [originalStudenti, setOriginalStudenti] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
@@ -36,7 +37,7 @@ function StudentsEdit() {
 
   const fetchStudenti = async () => {
     try {
-      const res = await axios.get(`${API_URL}admin/studentet/${ID}`, {withCredentials:true});
+      const res = await axiosInstance.get(`admin/studentet/${ID}`)
       console.log("Studenti data:", res.data);
       setStudenti(
         res.data[0]
@@ -49,7 +50,7 @@ function StudentsEdit() {
 
   const fetchFakultetet = async () => {
     try {
-      const res = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
+      const res = await axiosInstance.get(`admin/fakultetet/all`);
       console.log(res.data);
       setFakultetet(res.data);
     } catch (err) {
@@ -121,7 +122,7 @@ const handleChange = (e) => {
 
     try {
 
-      const response  = await axios.patch(`${API_URL}admin/studentet/edit/${ID}`, studenti, {withCredentials:true});
+      const response  = await axiosInstance.patch(`admin/studentet/edit/${ID}`, studenti);
 
       setSuccessMessage(response.data.message);
 
@@ -135,7 +136,7 @@ const handleChange = (e) => {
 
     
     <div id="fadeInPage" className="container">
-      <h1>PËRDITËSO STUDENTIN</h1>
+      <h1 id="studentH1">PËRDITËSO STUDENTIN</h1>
 
       {successMessage && (
         <div id="successMsg" className="fade-in" role="alert">
@@ -213,7 +214,7 @@ const handleChange = (e) => {
 
         <div className="input-label">
           <label>Niveli <span>*</span></label>
-          <select className="form-select" name="Niveli" value={studenti.Niveli || ''} onChange={handleChange} required>
+          <select disabled className="form-select" name="Niveli" value={studenti.Niveli || ''} onChange={handleChange} required>
             <option disabled>Niveli</option>
             <option value="Bachelor">Bachelor</option>
             <option value="Master">Master</option>

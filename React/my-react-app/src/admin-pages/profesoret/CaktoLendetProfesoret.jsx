@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from "react";
 import './assets/CaktoLendetProfesoret.css';
+import './assets/RegisterProfesoret.css';
 import axios from "axios";
 import Swal from "sweetalert2";
-import {Alert, Button} from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Button from "@mui/material/Button";
+import axiosInstance from "../../services/axiosInstance";
 
 function CaktoLendetProf() {
-
-    const API_URL = 'http://localhost:3000/';
 
     const [successMessage, setSuccessMessage] = useState('');
 
@@ -33,7 +34,7 @@ function CaktoLendetProf() {
 
         try{
 
-            const response = await axios.get(`${API_URL}admin/lendet/all`, {withCredentials:true});
+            const response = await axiosInstance.get(`admin/lendet/all`);
 
            console.log(response.data);
            setLendet(response.data);
@@ -47,7 +48,7 @@ function CaktoLendetProf() {
 
         try{
 
-            const response = await axios.get(`${API_URL}admin/profesoret/all`, { withCredentials:true});
+            const response = await axiosInstance.get(`admin/profesoret/all`);
 
             console.log(response.data);
             setProfesoret(response.data);
@@ -80,11 +81,11 @@ function CaktoLendetProf() {
     return;
 }
         try{
-                const response = await axios.post(`${API_URL}admin/profesoret/assign`,{
+                const response = await axiosInstance.post(`admin/profesoret/assign`,{
                     LendaID: LendaID,
                     ProfesoriID: ProfesoriID,
 
-                }, { withCredentials:true})
+                })
 
         console.log(response.data.message);
 
@@ -119,7 +120,7 @@ function CaktoLendetProf() {
 
         <div className="container" id="fadeInPage">
 
-        <h1>CAKTO LËNDËT DHE PROFESORËT</h1>
+        <h1 id="profLndH1">CAKTO LËNDËT DHE PROFESORËT</h1>
 
         <form className="formProfLnd" onSubmit={handleSubmit}>
 
@@ -151,8 +152,8 @@ function CaktoLendetProf() {
     </div>
 
     <div className="input-labelProfLnd">
-        <Button variant="contained" id="primaryBtnProf"  type="submit">Cakto</Button>
-        <Button variant="contained" id="resetBtnProf"  type='button' onClick={handleReset}>Reset</Button>
+        <Button variant="contained" id="primaryBtnProfLenda"  type="submit">Cakto</Button>
+        <Button variant="contained" id="resetBtnProfLenda"  type='button' onClick={handleReset}>Reset</Button>
         </div>
         </form>
 

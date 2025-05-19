@@ -2,9 +2,15 @@ import {BrowserRouter as Router, Routes, Route, Link, useNavigate} from 'react-r
 import {Suspense, lazy, useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { PersonRounded, Home, LibraryBooks, 
-  School, AccountBalance, AccountBox,
-  PeopleAlt, AdminPanelSettings } from '@mui/icons-material';
+
+import PersonRounded  from '@mui/icons-material/PersonRounded';
+import Home from '@mui/icons-material/Home';
+import LibraryBooks from '@mui/icons-material/LibraryBooks';
+import AccountBox from '@mui/icons-material/AccountBox';
+import PeopleAlt from '@mui/icons-material/PeopleAlt';
+import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings';
+import AccountBalance from '@mui/icons-material/AccountBalance'; 
+import School from '@mui/icons-material/School';
 
 import Swal from 'sweetalert2';
 import Loading from './admin-pages/login-register/utils/Loading';
@@ -20,18 +26,23 @@ import "./assets/App.css";
 const HomeAdmin = lazy(() => import ('./admin-pages/navigation/HomeAdmin'));
 import DropDownMenu from './admin-pages/navigation/NavDropDown';
 
-import RegjistroFakultetin from './admin-pages/fakultetet/RegjistroFakultetin';
+const RegjistroFakultetin = lazy(() => import ('./admin-pages/fakultetet/RegjistroFakultetin'));
 const ListaFakulteteve = lazy(() => import ('./admin-pages/fakultetet/ListaFakulteteve'));
 const EditFakultetet = lazy(() => import ('./admin-pages/fakultetet/EditFakultetet'));
 
-import RegjistroLendet from './admin-pages/lendet/RegjistroLendet';
+const RegjistroLendet = lazy(() => import ('./admin-pages/lendet/RegjistroLendet'));
 const ListaLendeve = lazy(() => import ('./admin-pages/lendet/Lendet'));
 const EditLendet = lazy(() => import ('./admin-pages/lendet/EditLendet'));
 
-import RegjistroProfesoret from './admin-pages/profesoret/RegjistroProfesoret';
+const RegjistroProfesoret = lazy(() => import ('./admin-pages/profesoret/RegjistroProfesoret'));
+import axiosInstance from './services/axiosInstance';
 const ListaProfesoreve = lazy(() => import ('./admin-pages/profesoret/ListaProfesoreve'));
 const EditProfesoret = lazy(() => import ('./admin-pages/profesoret/EditProfesoret'));
 const CaktoLendetProfesoret = lazy(() => import ('./admin-pages/profesoret/CaktoLendetProfesoret'));
+
+import RegjistroAdmin from './admin-pages/adminet/RegjistroAdmin';
+const ListoAdminet = lazy(() => import ('./admin-pages/adminet/ListoAdminet'));
+const EditAdminet = lazy(() => import ('./admin-pages/adminet/EditAdminet'));
 
 function AppContent() {
 
@@ -44,9 +55,7 @@ function AppContent() {
 useEffect(() => {
   const fetchRole = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/admin/admin/check-auth", {
-        withCredentials: true,
-      });
+      const res = await axiosInstance.get("admin/check-authentication" );
       console.log(res.data.role)
       
       setUserRole(res.data.role);
@@ -106,7 +115,7 @@ useEffect(() => {
            titulli={( <> <AdminPanelSettings sx={{marginRight: "7px", marginTop:"-4px"}}/>Adminët </>)} 
            data={[
             { label: 'Regjistro Admin', path: '/register/admin' },
-            { label: 'Lista e Adminëve', path: '/admin' },
+            { label: 'Lista e Adminëve', path: '/adminet' },
            ]}
         />
         )}
@@ -178,6 +187,10 @@ useEffect(() => {
           <Route path="/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaProfesoreve /></RequireAuth>} />
           <Route path="/edit/profesori/:ProfesoriID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditProfesoret /></RequireAuth>} />
           <Route path='/lendet/profesoret/assign' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoLendetProfesoret /></RequireAuth>} />
+       
+          <Route path='/register/admin' element={<RequireAuth allowedRoles={['superadmin']}><RegjistroAdmin /></RequireAuth>} />
+          <Route path='/adminet' element={<RequireAuth allowedRoles={['superadmin']}><ListoAdminet /></RequireAuth>} />
+          <Route path='/edit/admin/:AdminID' element={<RequireAuth allowedRoles={['superadmin']}><EditAdminet /></RequireAuth>} />
         </Routes>
         </Suspense>
         </>

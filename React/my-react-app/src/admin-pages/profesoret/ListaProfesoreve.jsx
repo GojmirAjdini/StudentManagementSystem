@@ -1,27 +1,28 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useMemo} from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+
 import Swal from 'sweetalert2';
 import './assets/ListoProfesoret.css';
-import {Alert, Button} from '@mui/material';
-import {Delete, Edit, Search} from '@mui/icons-material';
-import { DataGrid } from '@mui/x-data-grid';
+
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
+import { DataGrid, GridToolbar} from '@mui/x-data-grid';
+import axiosInstance from '../../services/axiosInstance';
 
 function ListaProfesoreve() {
 
-    const API_URL = 'http://localhost:3000/'
-
     const [profesoret, setProfesoret] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
-    const [searchProfesori, setSearchProfesori] = useState('');
-    const [dataMessage, setDataMessage] = useState('');
-
 
     const fetchProfesoret = async () =>{
 
         try{
 
-            const response = await axios.get(`${API_URL}admin/profesoret/all`, { withCredentials:true});
+            const response = await axiosInstance.get(`admin/profesoret/all`);
             
             console.log(response.data);
             setProfesoret(response.data);
@@ -31,37 +32,6 @@ function ListaProfesoreve() {
         }
     }
 
-    const handleReset = () =>{
-
-      setSearchProfesori('');
-    }
-    
-  const handleSearch = async () =>{
-
-    if(!searchProfesori){
-
-      setDataMessage('Ju lutem shënoni Profesorin!');
-
-      setTimeout(() => { setDataMessage('')},3000);
-
-      return;
-    }
-
-    try{
-
-      const response = await axios.get(`${API_URL}admin/profesoret/profesori/search?Emri=${searchProfesori}`, { withCredentials:true});
-
-      console.log(response.data);
-      setProfesoret(response.data);
-    
-    }catch(err){
-      console.error(err);
-        setDataMessage(err.response.data.message);
-
-        setTimeout(() => { setDataMessage('')},3000);
-    }
-  }  
-
     const deleteProfesorById = async (ID) => {
         
          const result = await Swal.fire({
@@ -69,6 +39,7 @@ function ListaProfesoreve() {
               background:"#F5F5F5",
               position: "center",
               title: "Dëshironi t'i fshini të dhënat?",
+              text: "Ky veprim është i pakthyeshëm!",
               icon: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',  
@@ -88,7 +59,7 @@ function ListaProfesoreve() {
 
         try{
 
-            const response = await axios.delete(`${API_URL}admin/profesoret/delete/${ID}`, { withCredentials:true});
+            const response = await axiosInstance.delete(`admin/profesoret/delete/${ID}`);
 
             setProfesoret(prev => prev.filter(prof => prof.ProfesoriID !== ID));
 
@@ -105,12 +76,13 @@ function ListaProfesoreve() {
 
     useEffect(() =>{
 
+
         fetchProfesoret();
 
         const interval = setInterval(() => {
 
             fetchProfesoret()
-        },5000);
+        }, 60000);
 
         return () => clearInterval(interval);
 
@@ -135,8 +107,8 @@ function ListaProfesoreve() {
         width:120,
         renderCell: (params) =>(
           <Link to={`/edit/profesori/${params.row.ProfesoriID}`}>
-          <Button id="editBtn" color="success" variant="contained"
-          startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
+          <Button id="editBtn" color="primary" variant="contained"
+          startIcon={<EditIcon sx={{color:"white"}}/>}>Edit</Button>
           </Link>
         )
       },
@@ -148,14 +120,14 @@ function ListaProfesoreve() {
         width:120,
         renderCell: (params) =>(
           <Button color='error' sx={{width:'100%'}} 
-          variant='contained' startIcon={<Delete sx={{color:"white"}}/>}
+          variant='contained' startIcon={<DeleteIcon sx={{color:"white"}}/>}
           onClick={ () => deleteProfesorById(params.row.ProfesoriID)}>Delete</Button>
 
         )
       }
       ]
 
-    const rows = profesoret.map((prof, index) => ({
+    const rows = useMemo(() => profesoret.map((prof, index) => ({
 
       id:index + 1,
       ...prof,
@@ -163,6 +135,7 @@ function ListaProfesoreve() {
       uKrijua: new Date(prof.uKrijua).toLocaleString()
 
     }))
+    , [profesoret]);
 
 
     return (
@@ -174,49 +147,41 @@ function ListaProfesoreve() {
         <div id="successMessageProf" className="fade-in" role="alert">
           <Alert severity="success">  {successMessage}</Alert>
         </div>
-      )}
-      
-      {dataMessage && (
-          <div id="dataMsgProf" className="fade-in" role="alert">
-            <Alert severity="info">  {dataMessage}</Alert>
-          </div>
       )}   
-     
-     <div id="searchBtnHolderProf">
-      
-      <input id="searchLendaInput"
-        type="text"
-        placeholder="Kërko profesorin..."
-        value={searchProfesori}
-        onChange={(e) => setSearchProfesori(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') handleSearch();
-        }}
-        className="form-control mb-3"
-      />
-     
-      <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
-          <Search></Search> Kërko</Button>
-      <Button onClick={handleReset} variant="contained" id="resetSearchProf" className="mb-3">Reset</Button> 
-            </div>
-
+        
            <div className="dataGridProf" >
          <DataGrid
          disableColumnResize
          showCellVerticalBorder
          showColumnVerticalBorder
-         
          rows={rows}
          columns={columns}
-         scrollbarSize={{}}
+         scrollbarSize={0}
          initialState={{
          pagination: {
          paginationModel: {
-                pageSize:100,
+                pageSize:25,
               },
             },
           }}
-      
+          
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: true,
+              quickFilterProps: { debounceMs: 250 },
+              sx: {
+        '& .MuiButton-startIcon svg': {
+          color: 'blue', 
+        },
+        '& .MuiButton-root': {
+          color: 'blue',
+          fontFamily:'Montserrat'
+        },
+      },
+            },
+          }}
+      pageSizeOptions={[25, 50, 100]}
            sx={{
               
           "& .MuiDataGrid-cell:focus": {
@@ -237,7 +202,6 @@ function ListaProfesoreve() {
              outline: "none",
            },
            }}
-        checkboxSelection
         disableRowSelectionOnClick
                   
           />

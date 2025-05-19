@@ -1,3 +1,8 @@
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const refreshAccessToken = (req, res) =>{
 
     const refreshToken = req.cookies.refreshToken; 
@@ -12,7 +17,7 @@ const refreshAccessToken = (req, res) =>{
         }
 
         const newAccessToken = jwt.sign(
-            { Email: user.Email, role: user.role },
+            { email: user.email, role: user.role },
             process.env.SECRET_TOKEN,
             { expiresIn: '1h' }
         );

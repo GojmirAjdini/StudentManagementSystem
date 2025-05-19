@@ -1,7 +1,7 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Loading from "./Loading";
+import axiosInstance from "../../../services/axiosInstance";
 
 const RequireAuth = ({children, allowedRoles =['admin', 'superadmin']}) => {
 
@@ -13,8 +13,9 @@ const RequireAuth = ({children, allowedRoles =['admin', 'superadmin']}) => {
     const checkAuthentication = async() =>{
 
         try{
-        const res = await axios.get('http://localhost:3000/admin/admin/check-auth', { withCredentials: true })
+        const res = await axiosInstance.get('admin/check-authentication', {withCredentials:true});
             
+        console.log(res.data.role);
             setAuthState({
               isAuthenticated:true,
               role: res.data.role,

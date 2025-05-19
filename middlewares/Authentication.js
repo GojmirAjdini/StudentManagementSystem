@@ -1,7 +1,7 @@
 import jwt  from "jsonwebtoken";
-import env from "dotenv";
+import dotenv from "dotenv";
 
-env.config();
+dotenv.config();
 
 const verifyToken = (req, res, next) =>{
 

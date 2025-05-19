@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button } from "@mui/material";
-import {Visibility, VisibilityOff} from "@mui/icons-material";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./assets/login.css";
-
 
 function Login(){
 
@@ -66,7 +67,7 @@ function Login(){
         </div>  
       )} 
 
-        <form id="loginForm" className="fade-in">
+        <form id="loginForm" onSubmit={handleSubmit} className="fade-in">
             <h1 id="adminLoginH1">STAFF - LOGIN</h1>
         <div className="input-label">
     <label htmlFor="Email">Email <span>*</span></label>
@@ -84,12 +85,12 @@ function Login(){
      
      />
      <Button className="passVisibility" variant="text" 
-     sx={{height:"fit-content", marginLeft:"auto" , width:"fit-content"}} 
+     sx={{height:"fit-content" , width:"fit-content"}} 
      onClick={togglePassword}> {(!showPassword ? <Visibility/> : <VisibilityOff/>)}</Button>
    
     </div>
     <div className="input-labelButtons">
-        <Button id="loginLoginAdm" variant="contained" onClick={handleSubmit} color="primary">Login</Button>
+        <Button id="loginLoginAdm" variant="contained" type="submit" color="primary">Login</Button>
         <Button id="loginResAdm"  variant="contained" onClick={handleReset} color="inherit">Reset</Button>
         </div>
         </form>

@@ -1,27 +1,29 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useMemo} from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+
 import "./assets/Fakultetet.css";
 import Swal from "sweetalert2";
-import {Alert, Button} from '@mui/material';
-import {Delete, Edit, Search} from '@mui/icons-material';
-import { render } from "ejs";
-import { DataGrid } from "@mui/x-data-grid";
+
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import axiosInstance from "../../services/axiosInstance";
 
 function ListaFakulteteve() {
 
     const [fakultetet, setFakultetet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const [searchFakulteti, setSearchFakulteti] = useState('');
-    const [dataMessage, setDataMessage] = useState('');
-
-    const API_URL = "http://localhost:3000/";
 
     const fetchFakultetet = async () => {
 
         try{
 
-            const response = await axios.get(`${API_URL}admin/fakultetet/all`, {withCredentials:true});
+            const response = await axiosInstance.get(`admin/fakultetet/all`);
             console.log(response.data);
             setFakultetet(response.data);
         }catch(err){
@@ -36,6 +38,7 @@ function ListaFakulteteve() {
               background:"#F5F5F5",
               position: "center",
               title: "Dëshironi t'i fshini të dhënat?",
+              text: "Ky veprim është i pakthyeshëm!",
               icon: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',  
@@ -55,8 +58,7 @@ function ListaFakulteteve() {
 
             try{
 
-                const response = await axios.delete(`${API_URL}admin/fakultetet/delete/${FakultetiID}`,
-                     {withCredentials:true});
+                const response = await axiosInstance.delete(`admin/fakultetet/delete/${FakultetiID}`);
                 
                 const message = response.data.message;
                 setFakultetet(prev => prev.filter(fakultet => fakultet.FakultetiID !==  FakultetiID));
@@ -72,50 +74,17 @@ function ListaFakulteteve() {
         }
     }
 
-    const handleReset = () =>{
-        setSearchFakulteti('');
-    }
-
-    const handleSearch = async() =>{
-
-        if(!searchFakulteti){
-
-            setDataMessage('Ju lutem shënoni Fakultetin!');
-
-            setTimeout(() =>{ setDataMessage('')},3000);
-
-            return;
-        }
-        try{
-
-            const response = await axios.get(`${API_URL}admin/fakultetet/fakulteti/search?Emri=${searchFakulteti}`,
-                 {withCredentials:true});
-
-            console.log(response.data);
-            setFakultetet(response.data);
-        } 
-        catch(err){
-            console.error(err);
-            setDataMessage(err.response.data.message);
-
-            setTimeout(() => { setDataMessage('')},3000);
-        }
-    }
-
+   
 useEffect (() => {
 
-    if(searchFakulteti){
-
-        return;
-    }
     fetchFakultetet();
 
     const interval = setInterval(() => {
         fetchFakultetet();
-    }, 5000);
+    }, 60000);
 
     return () => clearInterval(interval)
-}, [searchFakulteti]);
+}, []);
 
     const columns = [
 
@@ -132,8 +101,8 @@ useEffect (() => {
             width:120,
             renderCell: (params) =>(
                 <Link to={`/edit/fakulteti/${params.row.FakultetiID}`}>
-                <Button id="editBtn" color="success" variant="contained"
-                startIcon={<Edit sx={{color:"white"}}/>}>Edit</Button>
+                <Button id="editBtn" color="primary" variant="contained"
+                startIcon={<EditIcon sx={{color:"white"}}/>}>Edit</Button>
                 </Link>
         )
     }, 
@@ -145,7 +114,7 @@ useEffect (() => {
                 <Button 
                 color="error"
                 variant="contained" sx={{width:'100%'}}
-                startIcon={<Delete sx={{color:'white'}}/>}
+                startIcon={<DeleteIcon sx={{color:'white'}}/>}
                 onClick={() => deleteFakultet(params.row.FakultetiID)}>
                 Delete
                 </Button>
@@ -153,12 +122,13 @@ useEffect (() => {
         }
     ]
 
-    const rows = fakultetet.map((fakultet, index) => ({
+    const rows = useMemo(() => fakultetet.map((fakultet, index) => ({
 
         id:index + 1,
         ...fakultet,
         uKrijua: new Date(fakultet.uKrijua).toLocaleString()
-    }))
+    })),
+    [fakultetet] );
 
     return(
 
@@ -172,31 +142,6 @@ useEffect (() => {
         </div>
       )}
 
-            {dataMessage && (
-                <div id="dataMsgFkt" className="fade-in" role="alert">
-                  <Alert severity="info">  {dataMessage}</Alert>
-                </div>
-            )}   
-
-        <div id="searchBtnHolderFkt">
-            
-            <input id="searchLendaInput"
-              type="text"
-              placeholder="Kërko fakultetin..."
-              value={searchFakulteti}
-              onChange={(e) => setSearchFakulteti(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSearch();
-              }}
-              className="form-control mb-3"
-            />
-
-            <Button onClick={handleSearch} variant="contained" color="primary" className="mb-3" >
-                <Search></Search> Kërko</Button>
-            <Button onClick={handleReset} variant="contained" id="resetSearchFkt" className="mb-3">Reset</Button> 
-      
-        </div>
-            
             <div className="dataGridFakultet" >
            <DataGrid
            disableColumnResize
@@ -205,17 +150,38 @@ useEffect (() => {
                 
                 rows={rows}
                 columns={columns}
-                scrollbarSize={{}}
+                scrollbarSize={0}
                 initialState={{
                 pagination: {
                 paginationModel: {
-                  pageSize:100,
+                  pageSize:25,
                 },
               },
             }}
+            
+         slots={{ toolbar: GridToolbar }}
+         slotProps={{
+           toolbar: {
+             showQuickFilter: true,
+             quickFilterProps: { debounceMs: 250 },
 
-             sx={{
+             sx: {
                 
+    
+        '& .MuiButton-startIcon svg': {
+          color: 'blue',
+          
+        },
+        '& .MuiButton-root': {
+          color: 'blue', 
+          fontFamily:'Montserrat'
+        },
+      },
+           },
+         }}
+       pageSizeOptions={[25, 50, 100]}
+             sx={{
+
             "& .MuiDataGrid-cell:focus": {
                outline: "none",
                     },
@@ -234,9 +200,8 @@ useEffect (() => {
                outline: "none",
              },
              }}
-                checkboxSelection
+            
                 disableRowSelectionOnClick
-                    
                 />
                 </div>
         </div>

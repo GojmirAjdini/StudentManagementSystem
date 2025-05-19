@@ -1,10 +1,10 @@
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../../assets/App.css";
-import { LogoutRounded } from "@mui/icons-material";
+import LogoutRounded from "@mui/icons-material/LogoutRounded";
 
 
-function DropDownMenu({titulli, data, className = ""}){
+const DropDownMenu = React.memo(({titulli, data, className = ""}) =>{
 
     const [dropDownOpen, setDropDownOpen] = useState(false);
     const location = useLocation();
@@ -40,5 +40,5 @@ function DropDownMenu({titulli, data, className = ""}){
                 
         </div>   
     );
-}   
+});  
 export default DropDownMenu;

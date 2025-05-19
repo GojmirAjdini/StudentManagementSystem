@@ -129,7 +129,8 @@ class Fakulteti{
                 return callback(new Error("Fakulteti nuk u gjet!"));
             }
 
-            const fakultetet = results.map((row) => new Fakulteti(row.FakultetiID, row.Emri, row.Niveli, row.Lokacioni, row.Kodi_Fakultetit, row.uKrijua));
+            const fakultetet = results.map((row) => new Fakulteti(row.FakultetiID, row.Emri, row.Niveli, 
+                row.Lokacioni, row.Kodi_Fakultetit, row.uKrijua));
             callback(null, fakultetet);
         })
     }

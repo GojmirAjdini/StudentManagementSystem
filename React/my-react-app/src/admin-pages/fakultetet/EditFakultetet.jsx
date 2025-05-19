@@ -1,10 +1,11 @@
 import {useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
-import { FaArrowLeft } from "react-icons/fa";
+import {FaArrowLeft}  from "react-icons/fa";
 import Swal from "sweetalert2";
 import './assets/FakultetiRegister.css';
-import { Button, Alert } from "@mui/material";
+import Button from "@mui/material/Button";
+import Alert from '@mui/material/Alert';
+import axiosInstance from "../../services/axiosInstance";
 
 function EditFakultetet() {
 
@@ -12,7 +13,6 @@ function EditFakultetet() {
     
     const [orgFakulteti, setOrgFakulteti] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
-    const API_URL = "http://localhost:3000/";
     const [fakulteti, setFakulteti] = useState({
         
         Emri: '',
@@ -29,7 +29,7 @@ function EditFakultetet() {
     const fetchFakulteti = async () => {
 
         try{
-            const response = await axios.get(`${API_URL}admin/fakultetet/${FakultetiID}`,{withCredentials:true});
+            const response = await axiosInstance.get(`admin/fakultetet/${FakultetiID}`);
             console.log("Fakulteti data:", response.data);  
 
             setFakulteti(response.data);
@@ -97,7 +97,7 @@ function EditFakultetet() {
             
         try{
 
-            const response = await axios.patch(`${API_URL}admin/fakultetet/edit/${FakultetiID}`, fakulteti, {withCredentials:true});
+            const response = await axiosInstance.patch(`admin/fakultetet/edit/${FakultetiID}`, fakulteti);
             
             console.log("Fakulteti updated:", response.data);
             console.log(response.data.message);
@@ -117,7 +117,7 @@ function EditFakultetet() {
     return(
         <div id="fadeInPage" className="container">
 
-            <h1>PËRDITËSO FAKULTETIN</h1>
+            <h1 id="fakultetiH1">PËRDITËSO FAKULTETIN</h1>
 
             {successMessage && (
         <div id="successMsgFakulteti" className="fade-in" role="alert">
