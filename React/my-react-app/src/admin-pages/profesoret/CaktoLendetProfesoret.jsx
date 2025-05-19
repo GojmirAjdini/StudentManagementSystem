@@ -118,7 +118,7 @@ function CaktoLendetProf() {
 
     return (
 
-        <div className="container" id="fadeInPage">
+        <div className="containerProfLnd" id="fadeInPage">
 
         <h1 id="profLndH1">CAKTO LËNDËT DHE PROFESORËT</h1>
 
