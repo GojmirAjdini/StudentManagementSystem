@@ -1,11 +1,14 @@
 import controllerProfesori from "../controllers/Profesori.js"
 import express from "express";
+import auth from "../middlewares/Authentication.js";
 
 const router = express.Router();
 
-router.post("/register",controllerProfesori.registerProfesoret);
-router.post("/login",controllerProfesori.loginProfessor);
-router.patch("/update/:ProfesoriID", controllerProfesori.updatePassword);
+
+router.patch("/updatePassword/:ProfesoriID", auth.verifyToken, 
+    auth.eshteProfesor, controllerProfesori.updatePassword);
+
+router.get("/profile", auth.verifyToken, controllerProfesori.lexoProfesorinSipasEmail);
 
 
 export default router;

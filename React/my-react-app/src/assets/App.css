@@ -83,10 +83,12 @@
 
   background-color: #f7f6f6;
   color: black;
+  
 }
 
 .dropdown-menu {
   animation: fadeIn 0.3s ease-in-out;
+  width: max-content;
   
 }
 #liDropDown .customLink{

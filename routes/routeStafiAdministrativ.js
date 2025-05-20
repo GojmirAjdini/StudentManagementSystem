@@ -15,7 +15,7 @@ const router = express.Router();
 //ADMIN//
   router.get("/all",auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminet);
   router.post("/register", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.registerAdmin);
-  router.post("/login", kontrollerAdmin.loginAdmin);
+  router.post("/profesor/login", kontrollerAdmin.loginAdmin);
   router.patch("/update/:AdminID",auth.verifyToken, auth.eshteSuperAdmin,kontrollerAdmin.updatePassword);
   router.get("/admin/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminById);
   router.get("/search", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminByName);
@@ -25,7 +25,7 @@ const router = express.Router();
   router.patch("/edit/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.patchAdmin);
 
 //login
-router.get('/check-authentication', auth.verifyToken, auth.eshteAdmin, (req, res) => {
+router.get('/check-authentication', auth.verifyToken, (req, res) => {
     res.status(200).json({ 
       message: "Authenticated", 
       user: req.user, 
@@ -36,22 +36,24 @@ router.post('/refresh-token', refreshAccessToken );
 
 //logout
 
-router.post("/logout", auth.verifyToken, auth.verifyRefreshToken, auth.eshteAdmin,(req, res) => {
+router.post("/logout",(req, res) => {
    try {
   
-   res.clearCookie('accessToken', {
-      httpOnly:true,
-      secure:process.env.NODE_ENV === 'production',
-      sameSite: 'Strict', 
-      path: '/'
-    });
-
     res.clearCookie('refreshToken', {
       httpOnly:true,
       secure:process.env.NODE_ENV === 'production',
       sameSite: 'Strict', 
       path: '/'
     });
+   
+    res.clearCookie('accessToken', {
+      httpOnly:true,
+      secure:process.env.NODE_ENV === 'production',
+      sameSite: 'Strict', 
+      path: '/'
+    });
+
+    
 
     return res.status(200).json({ message: "Ç'kyçja e suksesshme!" });
   } catch(err) {
@@ -63,13 +65,17 @@ router.post("/logout", auth.verifyToken, auth.verifyRefreshToken, auth.eshteAdmi
   
 //PROFESORET//
 
+
+router.post("/profesoret/register", auth.verifyToken, auth.eshteAdmin, controllerProfesori.registerProfesoret);
 router.get("/profesoret/all", auth.verifyToken, auth.eshteAdmin, controllerProfesori.readProfesoret);
 router.delete("/profesoret/delete/:ProfesoriID", auth.verifyToken, auth.eshteAdmin,controllerProfesori.deleteProfesorSipasId);
 router.patch("/profesoret/edit/:ProfesoriID", auth.verifyToken, auth.eshteAdmin, controllerProfesori.patchProfesorin);
 router.get("/profesoret/:ProfesoriID", auth.verifyToken, auth.eshteAdmin, controllerProfesori.lexoProfesorinSipasId);
 router.post("/profesoret/assign", auth.verifyToken, auth.eshteAdmin,controllerProfesori.caktoProfiLenda);
 router.get("/profesoret/profesori/search", auth.verifyToken, auth.eshteAdmin, controllerProfesori.lexoProfesorinSipasEmrit);
-
+router.get("/profesoret-lendet/all", auth.verifyToken, auth.eshteAdmin, controllerProfesori.lexoProfesoretLendet);
+router.delete("/profesoret-lendet/delete/:LendaID/:ProfesoriID", auth.verifyToken, auth.eshteAdmin, controllerProfesori.deleteProfesoretLendetSipasID);
+router.get("/profesoret-lendet/read/:ProfesoriID", auth.verifyToken, auth.eshteAdmin, controllerProfesori.lexoLendetSipasProfesoriID);
 
 //STUDENTET // 
 

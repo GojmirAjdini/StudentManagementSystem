@@ -150,6 +150,72 @@ class Profesori {
             callback(null, results);
         })
     }
-}
+
+    static lexoProfesoretLendet(callback){
+        
+        const sql = `SELECT lp.LendaID, lp.ProfesoriID, f.Emri Fakulteti, p.Emri, p.Mbiemri, p.Gjinia, p.Email, 
+        p.Titulli_Akademik, l.Emri_Lendes, l.Kodi_Lendes, l.ECTS, s.NrSemestrit
+                FROM lenda_profesori lp
+                INNER JOIN Profesori p on p.ProfesoriID = lp.ProfesoriID
+                INNER JOIN Lenda l on l.LendaID = lp.LendaID
+                INNER JOIN semestri s on s.Semestri_ID = l.SemestriID
+                INNER JOIN Fakulteti f on f.FakultetiID = p.FakultetiID`;
+        db.query(sql, (err, results)=>{
+            if(err){
+                return callback(err);
+            }
+            console.log(results);
+            callback(null, results);
+        })
+    }
+    
+    static deleteProfesoretLendet(LendaID, ProfesoriID, callback){
+        const sql = "DELETE FROM lenda_profesori WHERE LendaID = ? AND ProfesoriID = ?";
+        const values = [LendaID, ProfesoriID];
+
+        db.query(sql, values, (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+            console.log(results);
+            callback(null, results);
+        })
+    }
+
+    static lexoLendetSipasProfesorit(ProfesoriID, callback){
+
+        const sql =`SELECT l.*
+            FROM lenda_profesori lp
+            INNER JOIN lenda l on l.LendaID = lp.LendaID
+            WHERE lp.ProfesoriID = ?`
+
+        db.query(sql, [ProfesoriID], (err, results) =>{
+            if(err){
+                return callback(err);
+            }
+            console.log(results);
+            callback(null, results);
+        })
+        }
+
+        static lexoProfesorinSipasEmail(Email, callback){
+
+        const sql = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
+        p.Email, f.Emri Fakulteti , p.NrTel, p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, p.Titulli_Akademik  
+        FROM Profesori p 
+        INNER JOIN Fakulteti f on f.FakultetiID = p.FakultetiID
+        WHERE p.Email = ?`;
+
+        db.query(sql, [Email], (err, results) =>{
+            if(err){
+                return callback(err);
+            }
+            console.log(results.length);
+
+            callback(null, results);
+        })
+    }
+    }
 
 export default Profesori;

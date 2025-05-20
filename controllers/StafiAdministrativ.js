@@ -84,30 +84,35 @@ const loginAdmin = async (req,res) =>{
         const {Email, Password} = req.body;
 
         const trimEmail = Email.trim();
+
+        let roleProf;
         
         if(!Email && !Password){
             return res.status(404).json({message: "Plotësoni fushat!"});
         }
 
-        const sql = "SELECT Password, role FROM stafiadministrativ WHERE Email = ?";
+        let sql = "SELECT Password, role FROM stafiadministrativ WHERE Email = ?";
 
-        const [storedPassword] = await db.promise().query(sql, [trimEmail]);
+        let [rows] = await db.promise().query(sql, [trimEmail]);
 
-        const admin = storedPassword[0];
-        
-        
-        
-        if(!admin){
-            return res.status(404).json({message: "Email nuk ekziston!"});
+        if(rows.length === 0){
+            sql = "SELECT Password FROM Profesori WHERE Email = ?";
+            [rows] = await db.promise().query(sql, [trimEmail]);
+
+        if(rows.length === 0){
+            return res.status(404).json({message:"Email nuk ekziston!"});
         }
+        roleProf = 'profesor';
+    }
+        const user = rows[0];
         
-        StafiAdministrativ.loginAdmin(trimEmail,(err, results) =>{
+        StafiAdministrativ.loginStaff(trimEmail,(err, results) =>{
 
             if(err){
                 return res.status(500).json(err);
             }
 
-            bcrypt.compare(Password, admin.Password,(err, passCheck) =>{
+            bcrypt.compare(Password, user.Password,(err, passCheck) =>{
 
                 if(err){
                     return res.status(500).json(err);
@@ -119,7 +124,7 @@ const loginAdmin = async (req,res) =>{
 
                 const tokenPayLoad = {
                     email: trimEmail,
-                    role: admin.role
+                    role: user.role ? user.role : roleProf
                 }
                 
                 const accessToken = jwt.sign(tokenPayLoad,process.env.SECRET_TOKEN,{expiresIn:"1h"});
@@ -276,7 +281,7 @@ const getAdminByEmail = async (req, res) =>{
         StafiAdministrativ.getAdminByEmail([email], (err, results) =>{
             
             if(err){
-                return res.status(500).json({message:"Error",err});
+                return res.status(500).json({message:"Error",error:err});
             }
             if(results.length === 0){
                 return res.status(404).json({message:"Admini nuk ekziston!"});

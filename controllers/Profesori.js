@@ -98,11 +98,11 @@ const deleteProfesorSipasId = async (req, res) => {
         Profesori.fshijProfesorinSipasId(id,(err, results) =>{
 
             if(err){
-                return res.status(500).json("Server error");
+                return res.status(500).json({message:err});
             }
             if(results.affectedRows === 0){
                 return res.status(404).json({message: "Te dhenat nuk u fshine!"});
-            }
+            }   
 
             return res.status(200).json({message:"Te dhënat u fshinë me sukses!"});
         })
@@ -349,7 +349,102 @@ const lexoProfesorinSipasEmrit = async (req, res) => {
     }
 }
 
+const lexoProfesoretLendet = async(req, res)=>{
+
+    try{
+
+        Profesori.lexoProfesoretLendet((err, results) =>{
+
+            if(err){
+                return res.status(500).json({message:"Server error", err});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message: "Nuk ka të dhëna!"});
+            }
+
+            return res.status(200).json(results);
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+    }
+}
+
+const deleteProfesoretLendetSipasID = async (req, res) =>{
+
+    try{
+        const {LendaID, ProfesoriID} = req.params;
+
+
+        Profesori.deleteProfesoretLendet(LendaID,ProfesoriID,(err, results) =>{
+
+            if(err){
+                return res.status(500).json({message:"Server error", err});
+            }
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Të dhënat nuk u fshinë!"});
+            }
+
+            return res.status(200).json({message: "Të dhënat u fshinë me sukses!"});
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+    }
+}
+
+const lexoLendetSipasProfesoriID = async (req, res) =>{ 
+
+    try{
+
+        const ProfesoriID = req.params.ProfesoriID;
+
+        Profesori.lexoLendetSipasProfesorit(ProfesoriID, (err, results) =>{
+
+            if(err){
+                return res.status(500).json({message:"Server error", err});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message: "Nuk ka të dhëna!"});
+            }
+
+            return res.status(200).json(results);
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+    }
+}
+
+const lexoProfesorinSipasEmail = async (req, res) =>{
+
+
+    try{
+        
+    const Email = req.user.email;
+
+    Profesori.lexoProfesorinSipasEmail([Email],(err, results)=>{
+
+        if(err){
+                return res.status(500).json({message:"Server error", error:err});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message:"Profesori nuk ekziston!"});
+            }
+
+            return res.status(200).json(results);
+        })
+        
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message:"Error",err});
+
+    }
+}
+
 
 export default {readProfesoret, registerProfesoret,deleteProfesorSipasId, 
     loginProfessor, updatePassword, patchProfesorin, 
-    lexoProfesorinSipasId, caktoProfiLenda, lexoProfesorinSipasEmrit};
+    lexoProfesorinSipasId, caktoProfiLenda, lexoProfesorinSipasEmrit,
+    lexoProfesoretLendet, deleteProfesoretLendetSipasID, lexoLendetSipasProfesoriID,
+    lexoProfesorinSipasEmail};

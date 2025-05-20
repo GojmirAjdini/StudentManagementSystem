@@ -52,23 +52,38 @@ class StafiAdministrativ {
         })
     }
 
-    static loginAdmin(Email, callback){
+    static loginStaff(Email, callback){
 
-        const sql = `SELECT FakultetiId, Email, Emri_Adminit, Mbiemri_Adminit, role
+        const sqlAdmin = `SELECT FakultetiId, Email, Emri_Adminit, Mbiemri_Adminit, role
         FROM stafiadministrativ
         WHERE Email = ?`;
 
-        db.query(sql, Email,(err, results) =>{
+        const sqlProf = `SELECT FakultetiID, Emri, Mbiemri, Gjinia, 
+        Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik
+        FROM Profesori
+        WHERE Email = ?`;
+
+        db.query(sqlAdmin, Email,(err, results) =>{
             
             if(err){
                 return callback(err);
             }
-            console.log(results.length);
-            if(results.length === 0){
-                return callback(null, "Nuk ka te dhena!");
+            
+            if(results.length > 0){
+                return callback(null, results);
             }
-        
-        callback(null, results);
+            else{
+                db.query(sqlProf,Email, (err2,results2) =>{
+                    if(err2){
+                        return callback(err2);
+                    }
+                    if(results2.length === 0){
+                        return callback(null, "Nuk ka të dhëna!"); 
+                
+                    }
+                    return callback(null, results2);
+                });
+            }
         })
     }
 

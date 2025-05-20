@@ -51,9 +51,26 @@ const eshteAdmin = (req, res, next) =>{
 const eshteSuperAdmin = (req, res, next) =>{
 
     if(req.user.role !== 'superadmin' ){
-        return res.status(403).json({message: "Vetem superadmini ka akses!"})
+        return res.status(403).json({message: "Vetëm superadmini ka akses!"})
     }
     next();
 }
 
-export default {verifyToken, verifyRefreshToken, eshteAdmin, eshteSuperAdmin};
+const eshteStudent = (req, res, next) =>{
+
+    if(req.user.role !== 'student'){
+        return res.status(403).json({message:"Vetëm studenti ka akses!"});
+    }
+    next();
+}
+
+const eshteProfesor = (req, res, next) =>{
+
+    if(req.user.role !== 'profesor') {
+        return res.status(403).json({message:"Vetëm profesori ka akses!"});
+    }
+    next();
+}
+
+export default {verifyToken, verifyRefreshToken, eshteAdmin, 
+    eshteSuperAdmin, eshteStudent, eshteProfesor};

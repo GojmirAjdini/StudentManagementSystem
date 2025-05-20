@@ -1,0 +1,54 @@
+#profiliH1{
+
+    margin-top: 120px;
+    font-size: 36px;
+}
+.profilePageContainer{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px;
+    height: 80vh;
+    width: 100%;
+}
+
+#containerFormProfile{
+
+    display: flex;
+    flex-direction: column;
+   align-items: center;
+    width: 100%;
+    height: fit-content;
+}
+
+#loginProfesorProfileData{
+
+    display: grid;
+    grid-template-columns: auto auto auto;
+    width: 80%;
+    margin: 40px;
+    border-radius: 10px; 
+    padding: 50px;
+    border: 1px solid rgb(222, 222, 222);
+    gap: 20px;
+
+}
+
+#loginProfesorProfileData input{
+
+    border: 1px solid rgb(192, 192, 192);
+    cursor: not-allowed;
+    
+}
+
+#h3ProfesoriInfo{
+
+    margin-top: 30px;
+    margin-bottom: -30px;
+    align-self: flex-start;
+    margin-left: 150px;
+    color: rgb(126, 126, 126);
+    
+}

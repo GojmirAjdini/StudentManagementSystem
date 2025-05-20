@@ -13,46 +13,65 @@ import AccountBalance from '@mui/icons-material/AccountBalance';
 import School from '@mui/icons-material/School';
 
 import Swal from 'sweetalert2';
-import Loading from './admin-pages/login-register/utils/Loading';
+import Loading from './components/admin-pages/login-register/utils/Loading';
 
-import Login from "./admin-pages/login-register/Login";
-import RequireAuth from './admin-pages/login-register/utils/RequireAuth';
+import Login from "./components/admin-pages/login-register/Login";
+import RequireAuth from './components/admin-pages/login-register/utils/RequireAuth';
 
-const Register = lazy(() => import ('./admin-pages/studentet/StudentRegister'));
-const StudentList = lazy(() => import ('./admin-pages/studentet/Students'));
-const StudentsEdit = lazy(() => import ('./admin-pages/studentet/StudentsEdit'));
+const Register = lazy(() => import ('./components/admin-pages/studentet/StudentRegister'));
+const StudentList = lazy(() => import ('./components/admin-pages/studentet/Students'));
+const StudentsEdit = lazy(() => import ('./components/admin-pages/studentet/StudentsEdit'));
 import "./assets/App.css";
 
-const HomeAdmin = lazy(() => import ('./admin-pages/navigation/HomeAdmin'));
-import DropDownMenu from './admin-pages/navigation/NavDropDown';
+const HomeAdmin = lazy(() => import ('./components/admin-pages/navigation/HomeAdmin'));
+const DropDownMenu = lazy(() => import ('./components/admin-pages/navigation/NavDropDown'));
 
-const RegjistroFakultetin = lazy(() => import ('./admin-pages/fakultetet/RegjistroFakultetin'));
-const ListaFakulteteve = lazy(() => import ('./admin-pages/fakultetet/ListaFakulteteve'));
-const EditFakultetet = lazy(() => import ('./admin-pages/fakultetet/EditFakultetet'));
+const RegjistroFakultetin = lazy(() => import ('./components/admin-pages/fakultetet/RegjistroFakultetin'));
+const ListaFakulteteve = lazy(() => import ('./components/admin-pages/fakultetet/ListaFakulteteve'));
+const EditFakultetet = lazy(() => import ('./components/admin-pages/fakultetet/EditFakultetet'));
 
-const RegjistroLendet = lazy(() => import ('./admin-pages/lendet/RegjistroLendet'));
-const ListaLendeve = lazy(() => import ('./admin-pages/lendet/Lendet'));
-const EditLendet = lazy(() => import ('./admin-pages/lendet/EditLendet'));
+const RegjistroLendet = lazy(() => import ('./components/admin-pages/lendet/RegjistroLendet'));
+const ListaLendeve = lazy(() => import ('./components/admin-pages/lendet/Lendet'));
+const EditLendet = lazy(() => import ('./components/admin-pages/lendet/EditLendet'));
 
-const RegjistroProfesoret = lazy(() => import ('./admin-pages/profesoret/RegjistroProfesoret'));
+const RegjistroProfesoret = lazy(() => import ('./components/admin-pages/profesoret/RegjistroProfesoret'));
 import axiosInstance from './services/axiosInstance';
-const ListaProfesoreve = lazy(() => import ('./admin-pages/profesoret/ListaProfesoreve'));
-const EditProfesoret = lazy(() => import ('./admin-pages/profesoret/EditProfesoret'));
-const CaktoLendetProfesoret = lazy(() => import ('./admin-pages/profesoret/CaktoLendetProfesoret'));
+const ListaProfesoreve = lazy(() => import ('./components/admin-pages/profesoret/ListaProfesoreve'));
+const EditProfesoret = lazy(() => import ('./components/admin-pages/profesoret/EditProfesoret'));
+const CaktoLendetProfesoret = lazy(() => import ('./components/admin-pages/profesoret/CaktoLendetProfesoret'));
+const LendetProfesoret = lazy(() => import ('./components/admin-pages/profesoret/ListaLendetProfesoret'));
 
-import RegjistroAdmin from './admin-pages/adminet/RegjistroAdmin';
-const ListoAdminet = lazy(() => import ('./admin-pages/adminet/ListoAdminet'));
-const EditAdminet = lazy(() => import ('./admin-pages/adminet/EditAdminet'));
+import RegjistroAdmin from './components/admin-pages/adminet/RegjistroAdmin';
+const ListoAdminet = lazy(() => import ('./components/admin-pages/adminet/ListoAdminet'));
+const EditAdminet = lazy(() => import ('./components/admin-pages/adminet/EditAdminet'));
+
+// IMPORTET PER PROFESOR //
+
+const Profile = lazy(() => import ('./components/professor-pages/Profile'));
+
+
+function RoleBasedRedirect({ userRole }) {
+  if (userRole === 'profesor') {
+    return <Navigate to="/profile" replace />;
+  }
+  if (userRole === 'admin' || userRole === 'superadmin') {
+    return <HomeAdmin />;
+  }
+  return <Navigate to="/login" replace />;
+}
 
 function AppContent() {
 
   const navigate = useNavigate();
 
-  const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState([]);
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
 
 useEffect(() => {
+
+  if(isLoginPage){ return;}
+  
   const fetchRole = async () => {
     try {
       const res = await axiosInstance.get("admin/check-authentication" );
@@ -77,6 +96,7 @@ useEffect(() => {
         <nav>
         <li> <Link id='homeLink' className='customLink' to="/"><Home>Home</Home></Link></li>
         
+        {['admin', 'superadmin'].includes(userRole) && (
            <DropDownMenu
            titulli={( <> <School sx={{marginRight: "7px", marginTop:"-4px"}}/>Studentët </>)}
            data={[
@@ -84,7 +104,9 @@ useEffect(() => {
             { label: 'Lista e Studentëve', path: '/studentet' },
            ]}
            />
+          )}
 
+          {['admin', 'superadmin'].includes(userRole) && (
            <DropDownMenu
            titulli={( <> <AccountBalance sx={{marginRight: "7px", marginTop:"-4px"}}/>Fakultetet </>)} 
            data={[
@@ -92,16 +114,21 @@ useEffect(() => {
             { label: 'Lista e Fakulteteve', path: '/fakultetet' },
            ]}
         />
+          )}
 
+          {['admin', 'superadmin'].includes(userRole) && (
           <DropDownMenu
            titulli={(<> <PeopleAlt sx={{marginRight: "7px", marginTop:"-4px"}}/>Profesorët </>)} 
            data={[
             { label: 'Regjistro Profesor', path: '/register/profesoret' },
             { label: 'Lista e Profesorëve', path: '/profesoret' },
-            { label: 'Cakto Lëndët & Profesorët', path: '/lendet/profesoret/assign'}
+            { label: 'Cakto Lëndët & Profesorët', path: '/lendet/profesoret/assign'},
+            { label: 'Lista e Lëndëve & Profesorëve', path: '/profesoret-lendet' }
            ]}
         />
+          )}
 
+        {['admin', 'superadmin'].includes(userRole) && (
         <DropDownMenu
            titulli={( <> <LibraryBooks sx={{marginRight: "7px", marginTop:"-4px"}}/>Lëndët </>)} 
            data={[
@@ -109,6 +136,7 @@ useEffect(() => {
             { label: 'Lista e Lëndëve', path: '/lendet' },
            ]}
         />
+          )}
   
         {userRole === 'superadmin' && (
         <DropDownMenu
@@ -149,7 +177,7 @@ useEffect(() => {
 
                     try{
 
-                    const module = await import('./admin-pages/login-register/Logout');
+                    const module = await import('./components/admin-pages/login-register/Logout');
                     module.default(navigate);
                     }catch(err){
                       console.error(err);
@@ -169,7 +197,16 @@ useEffect(() => {
         <Routes>
 
           <Route path='/login' element={<Login/>} />
-          <Route path='/' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><HomeAdmin/></RequireAuth>} />
+
+          <Route
+          path="/"
+          element={(
+              <RequireAuth allowedRoles={['admin', 'superadmin', 'profesor']}>
+                {userRole === 'profesor' ? <Navigate to="/profile" /> : <HomeAdmin />}
+              </RequireAuth>
+            )
+          }
+        />
 
           <Route path="/register/student" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><Register/></RequireAuth>} />
           <Route path="/studentet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <StudentList /> </RequireAuth>} />
@@ -187,10 +224,15 @@ useEffect(() => {
           <Route path="/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaProfesoreve /></RequireAuth>} />
           <Route path="/edit/profesori/:ProfesoriID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditProfesoret /></RequireAuth>} />
           <Route path='/lendet/profesoret/assign' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoLendetProfesoret /></RequireAuth>} />
+          <Route path='/profesoret-lendet' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><LendetProfesoret /></RequireAuth>} />
        
           <Route path='/register/admin' element={<RequireAuth allowedRoles={['superadmin']}><RegjistroAdmin /></RequireAuth>} />
           <Route path='/adminet' element={<RequireAuth allowedRoles={['superadmin']}><ListoAdminet /></RequireAuth>} />
           <Route path='/edit/admin/:AdminID' element={<RequireAuth allowedRoles={['superadmin']}><EditAdminet /></RequireAuth>} />
+
+          {/* ROUTES PER PROFESOR */}
+
+          <Route path='/profile' element={<RequireAuth allowedRoles={['profesor']}> <Profile/></RequireAuth>}/>
         </Routes>
         </Suspense>
         </>
