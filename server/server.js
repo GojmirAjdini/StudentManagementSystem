@@ -26,8 +26,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors(corsOptions));
 app.use(compression());
-app.use("/studentet", studentiRoutes);  
-app.use("/profesori", profesoriRoutes);
+app.use("/student", studentiRoutes);  
+app.use("/profesor", profesoriRoutes);
 app.use("/admin",adminRoutes); 
 
 app.listen(port, () => {

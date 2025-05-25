@@ -7,8 +7,11 @@ class Studenti{
 
         const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.uKrijua
-    FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID`;
+    ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    FROM Studenti s 
+    INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+    INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+    INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID`;
 
         db.query(sql,(err, results) =>{
          
@@ -23,14 +26,14 @@ class Studenti{
     }
 
     static createStudent(Emri, Mbiemri, Gjinia, EmailStudentor, EmailPrivat, Password, 
-        Vendlindja, Data_Lindjes, Adresa, Nr_Tel, FakultetiID, Statusi, StudentiID,Gjenerata, callback){
+        Vendlindja, Data_Lindjes, Adresa, Nr_Tel , Statusi, StudentiID,Gjenerata, GjenerataID, callback){
 
         const sql = `INSERT INTO studenti(Emri, Mbiemri, Gjinia, EmailStudentor,EmailPrivat, Password, 
-        Vendlindja,Data_Lindjes, Adresa, Nr_Tel, FakultetiID, Statusi, StudentiID, Gjenerata) 
+        Vendlindja,Data_Lindjes, Adresa, Nr_Tel , Statusi, StudentiID, Gjenerata, GjenerataID) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
        
         const values = [Emri, Mbiemri, Gjinia, EmailStudentor, EmailPrivat, Password, Vendlindja, 
-            Data_Lindjes, Adresa, Nr_Tel, FakultetiID, Statusi, StudentiID, Gjenerata];
+            Data_Lindjes, Adresa, Nr_Tel, Statusi, StudentiID, Gjenerata, GjenerataID];
 
         if (!EmailStudentor || !Password) {
             return callback("EmailStudentor dhe Password nuk duhet të jenë bosh.");
@@ -91,8 +94,12 @@ class Studenti{
 
         const sql = `SELECT s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata
-    FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID 
+    ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    FROM Studenti s 
+    INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+    INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+    INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
+
     WHERE s.EmailStudentor = ?`;
 
         db.query(sql, EmailStudentor, (err, results) =>{
@@ -122,10 +129,12 @@ class Studenti{
     static readStudentById(ID, callback){
 
     const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
-s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, s.FakultetiID, 
-f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata
-FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID
-WHERE ID = ?`;
+    s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
+    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    FROM Studenti s 
+    INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+    INNER JOIN fakulteti f on gj.FakultetiID = gj.FakultetiID
+    WHERE s.ID = ?`;
 
     db.query(sql, [ID], (err, results) =>{
      
@@ -142,9 +151,11 @@ static readStudentByName(Emri, callback){
 
     const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.uKrijua
-    FROM Studenti s INNER JOIN fakulteti f on f.FakultetiID = s.FakultetiID
-WHERE s.Emri LIKE CONCAT("%", ? , "%")`;
+    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    FROM Studenti s 
+    INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+    INNER JOIN fakulteti f on gj.FakultetiID = gj.FakultetiID
+    WHERE s.Emri LIKE CONCAT("%", ? , "%")`;
 
     db.query(sql, [Emri], (err, results) =>{
      
@@ -156,5 +167,27 @@ WHERE s.Emri LIKE CONCAT("%", ? , "%")`;
         callback(null, results);
     })
 }
+    static readStudentByEmail(Email, callback){
+
+        const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
+    s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
+    ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    FROM Studenti s 
+    INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+    INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+    INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
+    WHERE s.EmailStudentor = ?`;
+
+        db.query(sql, Email, (err, results) =>{
+         
+            if(err){
+               return callback(err, null);
+            }
+            console.log(results);
+            
+            callback(null, results);
+        })
+
+    }
 }
 export default Studenti;

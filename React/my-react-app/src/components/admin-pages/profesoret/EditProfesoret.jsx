@@ -7,6 +7,7 @@ import './assets/RegisterProfesoret.css';
 import Alert from '@mui/material/Alert';
 import Button from "@mui/material/Button";
 import axiosInstance from '../../../services/axiosInstance';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 function EditProfesoret() {
@@ -16,6 +17,7 @@ function EditProfesoret() {
     const [successMessage,setSuccessMessage] = useState('');
     const [orgProfesori, setOrgProfesori] = useState({});
     const [fakultet, setFakultetet] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [profesori, setProfesori] = useState({
 
         Emri : '',
@@ -130,18 +132,27 @@ function EditProfesoret() {
         });
         
         if(result.isConfirmed){
-
+          setLoading(true);
             try{
 
                 const response = await axiosInstance.patch(`admin/profesoret/edit/${ProfesoriID}`,profesori,);
             
+                setTimeout(() => {
                 setSuccessMessage(response.data.message);
+                setOrgProfesori(profesori);
 
                 setTimeout(() => { setSuccessMessage('')},5000);
+                },1000);
+
             }catch(err){
 
                 console.error(err);
                 console.log(err.response.data.message);
+            }
+            finally{
+              setTimeout(() => {
+                setLoading(false);
+              }, 1000);
             }
         }
     
@@ -214,19 +225,6 @@ function EditProfesoret() {
     </div>
 
     <div className="input-label">
-    <label htmlFor="">Fakulteti <span>*</span></label>
-
-    <select id="select" required className="form-select" name='FakultetiID' value={profesori.FakultetiID || ''} onChange={handleChange}>
-      <option disabled value="">Zgjedh Fakultetin</option>
-      {fakultet.map((fk) => (
-        <option key={fk.FakultetiID} value={fk.FakultetiID}>
-          {fk.Emri}
-        </option>
-      ))}
-    </select>
-    </div>
-
-    <div className="input-label">
     <label htmlFor="">Data e Punësimit <span>*</span></label>
     <input className="form-control" required type="date" name='Data_Punesimit' placeholder="Data e Punesimit" value={profesori.Data_Punesimit ? formatLocalDate(profesori.Data_Punesimit) : ''} onChange={handleChange} />
     </div>
@@ -257,7 +255,9 @@ function EditProfesoret() {
         <Link className="kthehuLinkProf" to={`/profesoret`}>  
           <Button variant='contained' color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>
           
-          <Button variant='contained' id="updateBtnProf" type="submit">Ruaj Ndryshimet</Button>         
+          <Button variant='contained' 
+          loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>}
+          loading={loading} id="updateBtnProf" type="submit">Ruaj Ndryshimet</Button>         
         </div>
         </form>
     </div>

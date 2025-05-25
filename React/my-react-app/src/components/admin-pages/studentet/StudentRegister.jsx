@@ -1,27 +1,35 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import './assets/Register.css';
 import Swal from "sweetalert2";
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputLabel  from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";  
+import Autocomplete  from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import Loading from "../login-register/utils/Loading";
+
 
 import axiosInstance from "../../../services/axiosInstance";
 
 function Register(){
 
-    const [fakultetet, setFakultetet] = useState([]);
+    const [gjeneratatAkademike, setGjeneratatAkademike] = useState([]);
+
     const [successMessage, setSuccessMessage] = useState('');
     const [successEmail, setSuccessEmail] = useState('');
     const [emri, setEmri] = useState('');
     const [mbiemri, setMbiemri] = useState('');
     const [gjinia, setGjinia] = useState('');
+    const [loading, setLoading] = useState(false);
     const [emailprivat, setEmailPrivat] = useState('');
     const [vendlindja, setVendlindja] = useState('');
     const [data_lindjes, setData_Lindjes] = useState('');
     const [adresa, setAdresa] = useState('');
     const [nr_tel, setNr_Tel] = useState('');
-    const [fakultetiID, setFakultetiID] = useState('');
-    const [niveli, setNiveli] = useState('');
+    const [gjenerataID, setGjenerataID] = useState('');
     const [statusi, setStatusi] = useState('');
 
     const handleReset = () => {
@@ -33,30 +41,30 @@ function Register(){
         setData_Lindjes('');
         setAdresa('');
         setNr_Tel('');
-        setFakultetiID('');
         setStatusi('');
-        setNiveli('');
+        setGjenerataID('');
     };
-    
 
-    const fakultetetDisponueshme = async() =>{
+    const fetchGjeneratatFakultetet = async () =>{
 
-        try{
-        const response = await axiosInstance.get(`admin/fakultetet/all`);
+      try{
+        const response = await axiosInstance.get("admin/gjeneratat");
 
-        setFakultetet(response.data);
-    }catch(err){
-        console.error("Error fetching fakultetet",err); 
+        console.log(response.data.gjenerata);
+        setGjeneratatAkademike(response.data.gjenerata);
+      }catch(err){
+
+        console.error(err);
+      }
     }
-}
-
+    
     const submitStudenti = async(e) =>{
 
         e.preventDefault();
 
       if(!emri && !mbiemri && !gjinia && !emailprivat && 
         !vendlindja &&!data_lindjes && !adresa && !nr_tel && 
-        !fakultetiID && !statusi && !niveli ){
+        !statusi && !niveli ){
 
       await Swal.fire({
       title: 'Fushat e zbrazura!',
@@ -76,23 +84,29 @@ function Register(){
 
     return; 
     }
-
+    setLoading(true);
     try{
 
         const response = await axiosInstance.post(`admin/studentet/register/`,{
 
             Emri: emri, Mbiemri: mbiemri, Gjinia: gjinia, EmailPrivat: emailprivat,
             Vendlindja: vendlindja, Data_Lindjes: data_lindjes, Adresa: adresa, Nr_Tel: nr_tel,
-            FakultetiID: fakultetiID, Statusi: statusi 
+            GjenerataID : gjenerataID,
+            Statusi: statusi 
         });
 
-        setSuccessMessage(response.data.message);
-        setSuccessEmail(response.data.emailNotification);
+        
+        setTimeout(() => {
+            setSuccessMessage(response.data.message);
+            setSuccessEmail(response.data.emailNotification);
 
-        console.log(response.data.emailNotification);
+        setTimeout(() => {
+             setSuccessMessage('');
+             setSuccessEmail('');
+           
+        },5000);
 
-        setTimeout(() => setSuccessMessage(''),5000);
-        setTimeout(() => setSuccessEmail(''),5000);
+        },1000);
 
     } catch(err){
         console.error(err);
@@ -114,13 +128,17 @@ function Register(){
           }
       });
   }
+}finally{
+  setTimeout(() =>{
+    setLoading(false);
+  },1000);
 }
     }
     
 
 useEffect(() =>{
 
-    fakultetetDisponueshme();
+    fetchGjeneratatFakultetet();
 
 },[]);
 
@@ -147,32 +165,32 @@ return (
        
         <div id="gjinia" className="form-check ">
         <label className="form-check-label" htmlFor="flexRadioDefault1">
-    <input
-      className="form-check-input"
-      type="radio"
-      name="gjinia"
-      value="M"
-      checked={gjinia === "M"}
-      onChange={(e) => setGjinia(e.target.value)}
-      id="flexRadioDefault1"
-    />
-    Mashkull
-    </label>
+        <input
+          className="form-check-input"
+          type="radio"
+          name="gjinia"
+          value="M"
+          checked={gjinia === "M"}
+          onChange={(e) => setGjinia(e.target.value)}
+          id="flexRadioDefault1"
+        />
+        Mashkull
+        </label>
 
-    <label className="form-check-label" htmlFor="flexRadioDefault2">
-    <input
-      className="form-check-input"
-      type="radio"
-      name="gjinia"
-      value="F"
-      checked={gjinia === "F"}
-      onChange={(e) => setGjinia(e.target.value)}
-      id="flexRadioDefault2"
-    />
-    Femër
-  </label>
-  </div>
-</div>
+        <label className="form-check-label" htmlFor="flexRadioDefault2">
+        <input
+          className="form-check-input"
+          type="radio"
+          name="gjinia"
+          value="F"
+          checked={gjinia === "F"}
+          onChange={(e) => setGjinia(e.target.value)}
+          id="flexRadioDefault2"
+        />
+        Femër
+      </label>
+      </div>
+    </div>
 
         <div className="input-label">
         <label htmlFor="">Email Privat <span>*</span></label>
@@ -202,40 +220,101 @@ return (
         <div className="input-label">
         <label htmlFor="">Fakulteti <span>*</span></label>
 
-        <select id="select" className="form-select" value={fakultetiID} onChange={(e) => setFakultetiID(e.target.value)}>
-          <option disabled value="">Zgjedh Fakultetin</option>
-          {fakultetet.map((fk) => (
-            <option key={fk.FakultetiID} value={fk.FakultetiID}>
-              {fk.Emri}
-            </option>
-          ))}
-        </select>
-        </div>
+        <Autocomplete
+          style={{fontFamily:"Montserrat"}}
+          fullWidth
+          options={gjeneratatAkademike}
+          getOptionLabel={(gjen) =>
+            `${gjen.Fakulteti} - ${gjen.NiveliStudimit} - ${gjen.viti_akademik}`
+          }
+          sx={{
+            fontFamily: "Montserrat",
+            ".MuiInputBase-root": {
+              borderRadius: "10px",
+              height:"40px",
+              fontFamily: "Montserrat",
+            },
+          }}
+           ListboxProps={{
+  
+            style: {
+              maxHeight: "200px",
+              overflowY:"auto"
+            }
+           }}
+        
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Zgjedh Fakultetin/Gjeneratën"
+              required
+              sx={{ 
+                marginTop:"-5px",
+                paddingTop:'6px',
+                fontFamily: "Montserrat",
+                '& .MuiInputBase-input::placeholder': {
+                fontFamily: 'Montserrat',
+              },
+              '& .MuiInputLabel-root': {
+                fontFamily: 'Montserrat',
+              },
+               }}
+            />
+          )}
+          value={gjeneratatAkademike.find((g) => g.GjenerataID === gjenerataID) || null}
+          onChange={(e, newValue) => {
+            setGjenerataID(newValue ? newValue.GjenerataID : '');
+          }}
+          isOptionEqualToValue={(option, value) => option.GjenerataID === value.GjenerataID}
+        />
+       </div>   
 
         <div className="input-label">
-        <label htmlFor="">Niveli<span> *</span></label>
-        <select className="form-select" required value={niveli} onChange={(e) => setNiveli(e.target.value)} aria-label="Default select example">
-        <option disabled value="">Niveli</option>
-        <option value="Bachelor">Bachelor</option>
-        <option value="Master">Master</option>
-        <option value="PhD">PhD</option>
-        </select>
-        </div>
+        <label htmlFor="">Statusi <span>*</span></label>
 
-        <div className="input-label">
-        <label htmlFor="">Statusi<span> *</span></label>
-        <select required onChange={(e) => setStatusi(e.target.value)} className="form-select" aria-label="Default select example">
-        <option disabled selected>Statusi</option>
-        <option value="Aktiv">Aktiv</option>
-        <option value="Deaktiv">Deaktiv</option>
-        </select>
-        </div>
+        <FormControl sx={{paddingTop:'5px', marginTop:'-5px'}} fullWidth required>
+         <InputLabel sx={{fontFamily:"Montserrat"}} id="statusi-label">Zgjedh Statusin </InputLabel>
+         <Select
+      
+           labelId="StatusiStudent-label"
+           id="select-StatusiStudent"
+           value={statusi}
+           label="Zgjedh Statusi"
+           sx={{
+            fontFamily:"Montserrat", 
+            borderRadius:'10px', 
+            height:'75%', 
+           }}
+           onChange={(e) => setStatusi(e.target.value)}
+    
+           MenuProps={{
+             PaperProps: {
+               style: {
+                 maxHeight: 200,
+                 overflowY: 'auto'
+               },
+             },
+           }}
+         >
+           <MenuItem sx={{fontFamily:"Montserrat"}} disabled>
+             Zgjedh Statusin
+           </MenuItem>
+             <MenuItem  value="Aktiv" sx={{fontFamily:'Montserrat'}} >
+             Aktiv 
+             </MenuItem>
+             <MenuItem  value="Deaktiv" sx={{fontFamily:'Montserrat'}} >
+             Deaktiv 
+             </MenuItem>
+         </Select>
+       </FormControl>
+       </div>   
 
-        <div className="input-label">
-        <Button id="primaryBtn" variant="contained"  type="submit">Regjistro</Button>
-        <Button id="resetBtn" variant="contained" type="button" onClick={handleReset}>Reset</Button>
+        <div className="input-labelBtnStd">
+        <Button id="primaryBtn" variant="contained" disabled={loading} type="submit">Regjistro</Button>
+        <Button id="resetBtn" variant="contained" disable={loading} type="button" onClick={handleReset}>Reset</Button>
         </div>
         </form>
+        {loading && <Loading/>}
         {successMessage && (
         <div id="successMsg" className="fade-in" role="alert">
           <Alert severity="success">{successMessage} </Alert>

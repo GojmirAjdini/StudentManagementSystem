@@ -18,7 +18,7 @@ span{
 #formLenda{
 
     display: grid;
-    grid-template-columns: auto auto; ;
+    grid-template-columns: 1fr 1fr ;
     margin-top: 60px;
 }
 
@@ -50,13 +50,13 @@ span{
 .input-labelLnt{
 
   display: flex;
-  width: 100%;
+  width: 200%;
   justify-content: center;
 }
 #primaryBtnLnt{
 
   background-color: rgb(101, 64, 235);
-  width: 30%;
+  width: 20%;
   height: 40px;
   border-radius: 10px;
   margin: 15px;
@@ -70,8 +70,7 @@ span{
     color: black;
     border-radius: 10px;
     height: 40px;
-    width: 30%;
-    width: 30%;
+    width: 20%;
     margin: 15px; 
     margin-top: 37px;
     border: none;
@@ -195,7 +194,7 @@ span{
 }
 input{
 
-  border: 1px solid gray;
+  border: 1px solid rgb(197, 197, 197);
   border-radius: 10px;
   
 }
@@ -216,26 +215,15 @@ input{
   
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: 200%;
 
-}
-#updateBtnFkt{
-
-  justify-content: center;
-  margin-top: 10px;
-  width: 30%;
-  background-color: rgb(101, 64, 235);
-  border-radius: 10px;
-  height: 40px;
-  transition: 0.2s ease-in-out;
-  margin-top: 37px;
 }
 
 #updateBtnLenda{
 
   justify-content: center;
   margin-top: 10px;
-  width: 40%;
+  width: 25%;
   background-color: rgb(101, 64, 235);
   border-radius: 10px;
   height: 40px;
@@ -264,4 +252,8 @@ input{
 .kthehuLinkLenda:hover{
 
   transition: 0.2s ease-in-out;
+}
+
+.form-control{
+  border: 1px solid rgb(185, 185, 185);
 }

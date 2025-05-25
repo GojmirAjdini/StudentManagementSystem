@@ -36,7 +36,7 @@ const registerProfesoret = async (req, res) =>{
 
     try{
 
-        const {FakultetiID, Emri, Mbiemri, Gjinia, NrTel, 
+        const {Emri, Mbiemri, Gjinia, NrTel, 
             EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik} = req.body;
 
             const emailCheckQuery = `
@@ -61,7 +61,7 @@ const registerProfesoret = async (req, res) =>{
 
         const hashedPassword = await bcrypt.hash(Password, salts);
 
-        Profesori.regjistroProfesorin(FakultetiID, upCEmri.trim(), upCMbiemri.trim(), Gjinia, EmailAkademik, NrTel, 
+        Profesori.regjistroProfesorin(upCEmri.trim(), upCMbiemri.trim(), Gjinia, EmailAkademik, NrTel, 
             hashedPassword, EmailPrivat.trim(), Data_Punesimit, Statusi, Titulli_Akademik, (err, results) =>{
 
             if(err){
@@ -370,6 +370,28 @@ const lexoProfesoretLendet = async(req, res)=>{
     }
 }
 
+const lexoLendetPerProfesorinSipasEmail = async(req, res)=>{
+
+    try{
+        const email = req.user.email;
+
+        Profesori.lexoLendetPerProfesorinSipasEmail([email], (err, results) =>{
+
+            if(err){
+                return res.status(500).json({message:"Server error", err});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message: "Nuk ka të dhëna!"});
+            }
+
+            return res.status(200).json(results);
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+    }
+}
+
 const deleteProfesoretLendetSipasID = async (req, res) =>{
 
     try{
@@ -442,9 +464,101 @@ const lexoProfesorinSipasEmail = async (req, res) =>{
     }
 }
 
+const caktoFakultetinProfesori = async (req, res) =>{
+
+    try{
+
+        const {FakultetiID, ProfesoriID} = req.body;
+
+        Profesori.caktoFakultetinProfesori(FakultetiID, ProfesoriID,(err, results) =>{
+
+            if(err){
+                return res.status(500).json({message:err});            
+            }
+        
+            if(results.affectedRows === 0){
+                return res.status(404).json({message:"Diqka ndodhi gabim!"});
+            }
+            
+            res.status(200).json({message:"Të dhënat u regjistruan me sukses!"});
+        })
+    }
+    catch(err){
+
+         return res.status(500).json({message:err});            
+    }
+}
+
+const lexoFakultetetSipasProfesoritID = async (req, res) =>{ 
+
+    try{
+
+        const ProfesoriID = req.params.ProfesoriID;
+
+        Profesori.lexoFakultetetSipasProfesorit(ProfesoriID, (err, results) =>{
+
+            if(err){
+                return res.status(500).json({message:"Server error", err});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message: "Nuk ka të dhëna!"});
+            }
+
+            return res.status(200).json(results);
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+}
+}
+
+const lexoProfesoretFakultetet = async(req, res)=>{
+
+    try{
+
+        Profesori.lexoProfesoretFakultetet((err, results) =>{
+
+            if(err){
+                return res.status(500).json({message:"Server error", err});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message: "Nuk ka të dhëna!"});
+            }
+
+            return res.status(200).json(results);
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+    }
+}
+
+const deleteProfesoretFakultetetSipasID = async (req, res) =>{
+
+    try{
+        const {FakultetiID, ProfesoriID} = req.params;
+
+
+        Profesori.deleteProfesoretFakultetet(FakultetiID,ProfesoriID,(err, results) =>{
+
+            if(err){
+                return res.status(500).json({message:"Server error", err});
+            }
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Të dhënat nuk u fshinë!"});
+            }
+
+            return res.status(200).json({message: "Të dhënat u fshinë me sukses!"});
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+    }
+}
 
 export default {readProfesoret, registerProfesoret,deleteProfesorSipasId, 
     loginProfessor, updatePassword, patchProfesorin, 
     lexoProfesorinSipasId, caktoProfiLenda, lexoProfesorinSipasEmrit,
     lexoProfesoretLendet, deleteProfesoretLendetSipasID, lexoLendetSipasProfesoriID,
-    lexoProfesorinSipasEmail};
+    lexoProfesorinSipasEmail, caktoFakultetinProfesori, lexoFakultetetSipasProfesoritID,
+    lexoProfesoretFakultetet, deleteProfesoretFakultetetSipasID, lexoLendetPerProfesorinSipasEmail};

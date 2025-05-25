@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Loading from "./Loading";
 import axiosInstance from "../../../../services/axiosInstance";
 
-const RequireAuth = ({children, allowedRoles =['admin', 'superadmin', 'profesor']}) => {
+const RequireAuth = ({children, allowedRoles =['admin', 'superadmin', 'profesor', 'student']}) => {
 
   const [authState, setAuthState] = useState({isAuthenticated:null, role:null});
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const RequireAuth = ({children, allowedRoles =['admin', 'superadmin', 'profesor'
               isAuthenticated:null,
               role: null,
             })
-        navigate('/login'); 
+        navigate('/staff/login'); 
       };
     };
 
@@ -40,7 +40,7 @@ const RequireAuth = ({children, allowedRoles =['admin', 'superadmin', 'profesor'
   }
 
    if (!allowedRoles.includes(authState.role)) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/staff/login" />;
   }
 
   return children;

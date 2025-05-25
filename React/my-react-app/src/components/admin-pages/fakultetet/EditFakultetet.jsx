@@ -6,12 +6,15 @@ import './assets/FakultetiRegister.css';
 import Button from "@mui/material/Button";
 import Alert from '@mui/material/Alert';
 import axiosInstance from "../../../services/axiosInstance";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function EditFakultetet() {
 
     const { FakultetiID } = useParams();
     
+    const [nivelet, setNivelet] = useState([]);
     const [orgFakulteti, setOrgFakulteti] = useState({});
+    const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [fakulteti, setFakulteti] = useState({
         
@@ -21,10 +24,18 @@ function EditFakultetet() {
         Kodi_Fakultetit: ''
     });
 
-    useEffect(() => {
-        fetchFakulteti();
+    const fetchNivelet = async () =>{
+
+        try{
+
+            const response = await axiosInstance.get("admin/nivelet-studimit");
+
+            console.log(response.data.nivelet);
+            setNivelet(response.data.nivelet);
+        }catch(err){
+            console.error(err);
+        }
     }
-    , []);
 
     const fetchFakulteti = async () => {
 
@@ -94,25 +105,40 @@ function EditFakultetet() {
             });
         
         if(result.isConfirmed){
-            
+            setLoading(true);
         try{
 
             const response = await axiosInstance.patch(`admin/fakultetet/edit/${FakultetiID}`, fakulteti);
             
             console.log("Fakulteti updated:", response.data);
             console.log(response.data.message);
-
+            setOrgFakulteti(fakulteti);
+            
+            setTimeout(() => {
             setSuccessMessage(response.data.message);
             
             setTimeout(() => {
-               setSuccessMessage('')}, 3000);
-            }
+               setSuccessMessage('')
+            }, 3000);
+        },1000);
+    }
             catch(err){
                 console.error("Error updating fakulteti", err);
                 setSuccessMessage(err.response.data.message);
+            }finally{
+
+                setTimeout(() =>{
+                    setLoading(false);
+                },1000)
             }
         }
     }
+
+     useEffect(() => {
+        fetchFakulteti();
+        fetchNivelet();
+    }
+    , []);
 
     return(
         <div id="fadeInPage" className="container">
@@ -132,13 +158,17 @@ function EditFakultetet() {
             <input className="form-control" name="Emri" required type="text" placeholder="Emri i Fakultetit" value={fakulteti.Emri || ''} onChange={handleChange} />
             </div> 
 
-                <div className="input-label">
-                 <label htmlFor="">Niveli<span> *</span></label>
-                <select className="form-select" name="Niveli" required value={fakulteti.Niveli || ''} onChange={handleChange} aria-label="Default select example">
-                <option disabled value="">Niveli</option>
-                <option value="Bachelor">Bachelor</option>
-                <option value="Master">Master</option>
-                <option value="PhD">PhD</option>
+        
+            <div className="input-label">
+             <label htmlFor="">Niveli<span> *</span></label>
+            <select className="form-select" name="Niveli" required value={fakulteti.Niveli} onChange={handleChange}>
+            <option value="" disabled>Zgjedh Nivelin</option>
+            {nivelet.map((nv) => (
+            <option key={nv.NiveliID} value={nv.NiveliID}>
+                {nv.Emri_Nivelit}
+            
+            </option>
+            ))}
                 </select>
                     </div>
 
@@ -155,13 +185,15 @@ function EditFakultetet() {
                 </div>
 
                 <div className="input">
-                <Button id="updateBtnFkt" variant="contained" type="submit">Ruaj Ndryshimet</Button>
+                <Button  id="updateBtnFkt" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+                 loading={loading} variant="contained" type="submit">Ruaj Ndryshimet</Button>
     
                 </div>
                 <div className="input-label">
 
                 <Link className="kthehuLinkFkt" to={`/fakultetet`}>  
-                <Button variant='contained' color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>                    
+                <Button variant='contained' 
+                 color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>                    
                     </div>
             </form>
         </div>

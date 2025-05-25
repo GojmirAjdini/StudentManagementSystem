@@ -13,8 +13,8 @@ const readAllSemestrat = async (req, res) => {
 
 const regjistroSemestrin = async (req, res) => {
     try {
-        const { AfatiSemestrit, Nr_Semestrit } = req.body;
-        Semestri.regjistroSemestrin(AfatiSemestrit, Nr_Semestrit, (err, results) => {
+        const { AfatiSemestrit, Nr_Semestrit, GjenerataID } = req.body;
+        Semestri.regjistroSemestrin(AfatiSemestrit, Nr_Semestrit,GjenerataID, (err, results) => {
             if (err) {
                 return res.status(404).json(err);
             }

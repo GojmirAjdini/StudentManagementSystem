@@ -98,13 +98,13 @@ form{
 
   display: flex;
   flex-direction: row;
-  width: 300%;
+  width: 100%;
   justify-content: center;
 }
 
 #primaryBtnProf{
   background-color: rgb(101, 64, 235);
-  width: 15%;
+  width: 35%;
   height: 40px;
   border-radius: 10px;
   margin: 15px;
@@ -113,7 +113,7 @@ form{
 }
 #resetBtnProf{
 
-  width: 15%;
+  width: 35%;
   height: 40px;
   border-radius: 10px;
   margin: 15px;
@@ -137,7 +137,7 @@ form{
 
 #successEmail{
   position: absolute;
-  bottom: 0px;
+  bottom: -100px;
   width: fit-content;
   text-align: center;
   font-size: 15px;
@@ -179,7 +179,6 @@ form{
   border-radius: 10px;
   text-decoration: none;
   color: rgb(0, 0, 0);
-  margin-right: auto;
   margin-top: 25px;
 }
 .textSwal{
@@ -195,21 +194,18 @@ form{
 .inputProf{
 
   display: flex;
-  flex-direction: column;
-  width: 300%;
+  flex-direction: row;
   justify-content: center;
-  align-items: center;
+
 }
 
 #updateBtnProf{
 
   border-radius: 10px;
-  text-align: center;
-  z-index: 1;
-  margin-top: -50px;
+  margin-top: 30px;
   height: 40px;
-  width: 25%;
   background-color: rgb(101, 64, 235);
+
 }
 
 #updateBtnProf:hover{

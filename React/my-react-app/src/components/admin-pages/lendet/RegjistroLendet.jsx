@@ -6,35 +6,26 @@ import { useParams } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import Button from "@mui/material/Button";
 import axiosInstance from "../../../services/axiosInstance";
+import Loading from "../login-register/utils/Loading";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import { CircularProgress } from "@mui/material";
 
 function RegjistroLendet() {
 
     const [EmriLendes, setEmriLendes] = useState('');
     const [KodiLendes, setKodiLendes] = useState('');
-    const [FakultetiID, setFakultetiID] = useState('');
     const [ECTS, setECTS] = useState('');
     const [SemestriID, setSemestriID] = useState('');
+    const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    const [fakultetet, setFakultetet] = useState([]);
     const [semestrat, setSemestrat] = useState([]);
 
     const handleReset = () => {
         setEmriLendes('');
         setKodiLendes('');
-        setFakultetiID('');
         setECTS('');
-    }
-
-    const fakultetetDisponueshme = async() =>{
-
-        try{
-            const response = await axiosInstance.get(`admin/fakultetet/all`);
-            setFakultetet(response.data);
-            console.log(response.data);
-
-        }catch(err){
-            console.error("Error fetching fakultetet",err); 
-        }
+        setSemestriID('');
     }
 
     const semestratDisponueshme = async() =>{
@@ -51,29 +42,28 @@ function RegjistroLendet() {
 
         e.preventDefault();
 
-        if(!EmriLendes || !KodiLendes || !FakultetiID || !ECTS || !SemestriID){
+        if(!EmriLendes || !KodiLendes || !ECTS || !SemestriID){
             
         await Swal.fire({
         title: 'Fushat e zbrazura!',
-      text: 'Ju lutem plotësoni të gjithë fushat. ',
-      icon: 'info',
-      confirmButtonText: 'OK',
-      confirmButtonColor:'#3085d6',
-      timer:5000,
-      customClass: {
-      confirmButton: 'swal-confirmBtn',
-      popup: 'popupDesign',
-      htmlContainer: 'textSwal',
+        text: 'Ju lutem plotësoni të gjithë fushat. ',
+        icon: 'info',
+        confirmButtonText: 'OK',
+        confirmButtonColor:'#3085d6',
+        timer:5000,
+        customClass: {
+        confirmButton: 'swal-confirmBtn',
+        popup: 'popupDesign',
+        htmlContainer: 'textSwal',
             
         }
             })  
             return;
         }
-
+        setLoading(true);
         try{
             const response = await axiosInstance.post(`admin/lendet/submit`,{
                 
-                FakultetiID: FakultetiID,
                 Emri_Lendes: EmriLendes,
                 ECTS: ECTS,
                 Kodi_Lendes: KodiLendes,
@@ -81,23 +71,35 @@ function RegjistroLendet() {
         });
             
             console.log(response.data);
-            setSuccessMessage(response.data.message);
 
             setTimeout(() => {
+                setSuccessMessage(response.data.message);
+                setTimeout(() =>{
                 setSuccessMessage('');
-            }, 5000);              
+                }, 5000);  
+
+            },1000);
+                     
         }
         catch(err){
             console.error("Error krijimi i lendes", err);
+            setTimeout(() => {
+              
             setSuccessMessage('Ka ndodhur nje gabim!');
 
             setTimeout(() => {
                 setSuccessMessage('');
             }, 5000);
-        }
+          },1000);
+
+        }finally{
+         setTimeout(() => {
+         setLoading(false);
+        },1000);
+}
     }
     useEffect(() => {   
-        fakultetetDisponueshme();
+        
         semestratDisponueshme();
     }
     ,[]);
@@ -118,19 +120,6 @@ function RegjistroLendet() {
         <label htmlFor="">Kodi i Lëndës <span>*</span></label>
         <input className="form-control" required type="text" placeholder="Kodi i Lëndës" value={KodiLendes} onChange={(e) => setKodiLendes(e.target.value)} />
         </div>
-        
-        <div className="input-label">
-        <label htmlFor="">Fakulteti <span>*</span></label>
-
-        <select id="select" className="form-select" value={FakultetiID} onChange={(e) => setFakultetiID(e.target.value)}>
-          <option disabled value="">Zgjedh Fakultetin</option>
-          {fakultetet.map((fk) => (
-            <option key={fk.FakultetiID} value={fk.FakultetiID}>
-              {fk.Emri}
-            </option>
-          ))}
-        </select>
-        </div>
 
         <div className="input-label">
         <label htmlFor="">ECTS <span>*</span></label>
@@ -138,25 +127,64 @@ function RegjistroLendet() {
         </div>
 
         <div className="input-label">
-        <label htmlFor="">Semestri <span>*</span></label>
+        <br />
 
-        <select id="select" className="form-select" value={SemestriID} onChange={(e) => setSemestriID(e.target.value)}>
-          <option disabled value="">Zgjedh Semestrin</option>
-          {semestrat.map((sms) => (
-            <option key={sms.Semestri_ID} value={sms.Semestri_ID}>
-              {sms.NrSemestrit + " - " + sms.Afati_Semestrit}
-            </option>
-          ))}
-        </select>
-        </div>
+        <Autocomplete
+        style={{fontFamily:"Montserrat"}}
+        fullWidth
+        options={semestrat}
+        getOptionLabel={(sms) =>
+          `${sms.Afati_Semestrit.split(' ')[0]} ${sms.NrSemestrit} - ${sms.Fakulteti} - ${sms.Niveli} - ${sms.Viti_Akademik}`
+        }
+        sx={{
+          fontFamily: "Montserrat",
+          ".MuiInputBase-root": {
+            borderRadius: "10px",
+            height:"40px",
+            fontFamily: "Montserrat",
+          },
+        }}
+         ListboxProps={{
+
+          style: {
+            maxHeight: "200px",
+            overflowY:"auto"
+          }
+         }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Zgjedh Semestrin/Fakultetin"
+            required
+            sx={{ 
+              marginTop:"-5px",
+              paddingTop:'6px',
+              fontFamily: "Montserrat",
+              '& .MuiInputBase-input::placeholder': {
+              fontFamily: 'Montserrat',
+            },
+            '& .MuiInputLabel-root': {
+              fontFamily: 'Montserrat',
+            },
+             }}
+          />
+        )}
+        value={semestrat.find((s) => s.Semestri_ID === SemestriID) || null}
+        onChange={(e, newValue) => {
+          setSemestriID(newValue ? newValue.Semestri_ID : '');
+        }}
+        isOptionEqualToValue={(option, value) => option.Semestri_ID === value.Semestri_ID}
+      />
+      </div>
 
         <div className="input-labelLnt">
-        <Button variant="contained" id="primaryBtnLnt" className="btn btn-primary" type="submit">Regjistro</Button>
+        <Button variant="contained" loading={loading} loadingIndicator={<CircularProgress sx={{color:'white'}} size={25} />}
+        id="primaryBtnLnt" className="btn btn-primary" type="submit">Regjistro</Button>
         <Button variant="contained" id="resetBtnLnt" className="btn btn-secondary" type="button" onClick={handleReset}>Reset</Button>
         </div>
 
         </form>
-
+    
         {successMessage && (
         <div id="successMsgLenda" className="fade-in" role="alert">
          <Alert severity="success">{successMessage}</Alert> 

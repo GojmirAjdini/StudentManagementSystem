@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import Swal from "sweetalert2";
 import './assets/LendaRegister.css'; 
 import { FaArrowLeft } from "react-icons/fa";
 import Alert from '@mui/material/Alert';
 import Button from "@mui/material/Button";
-import axiosInstance from "../../../services/axiosInstance";  
+import axiosInstance from "../../../services/axiosInstance";
+import FormControl from '@mui/material/FormControl';
+import InputLabel  from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";  
+import CircularProgress from "@mui/material/CircularProgress";
 
 function EditLendet() {
   const { LendaID } = useParams();
 
   const [lenda, setLenda] = useState({
     Emri_Lendes: '',
-    FakultetiID: '',
     ECTS: '',
     Kodi_Lendes: '',
     SemestriID: ''
@@ -22,12 +25,11 @@ function EditLendet() {
   const [orgLenda, setOrgLenda] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [semestrat, setSemestrat] = useState([]);
-  const [fakultetet, setFakultetet] = useState([]); 
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchLenda();
     fetchSemestrat();
-    fakultetetDisponueshme();
   }, []);
 
   const fetchLenda = async () => {
@@ -40,18 +42,6 @@ function EditLendet() {
       setSuccessMessage('Gabim gjatë ngarkimit të të dhënave.');
     }
   };
-
-  const fakultetetDisponueshme = async() =>{
-
-    try{
-        const response = await axiosInstance.get(`admin/fakultetet/all`);
-        setFakultetet(response.data);
-        console.log(response.data);
-
-    }catch(err){
-        console.error("Error fetching fakultetet",err); 
-    }
-}
 
   const fetchSemestrat = async() =>{
     try{
@@ -114,14 +104,29 @@ function EditLendet() {
     });
 
     if (result.isConfirmed) {
+
+      setLoading(true);
       try {
         const response = await axiosInstance.patch(`admin/lendet/edit/${LendaID}`, lenda);
-        setSuccessMessage(response.data.message);
-        setTimeout(() => setSuccessMessage(''), 3000);
+       
+        setOrgLenda(lenda);
+
+       setTimeout(() => {
+       setSuccessMessage(response.data.message);
+       
+       setTimeout(() => {
+          setSuccessMessage('')
+       }, 3000);
+    },1000);
+
       } catch (err) {
         console.error("Gabim gjatë përditësimit të lëndës", err);
         setSuccessMessage(err.response?.data?.message || 'Gabim gjatë përditësimit.');
-      }
+      }finally{
+     setTimeout(() => {
+     setLoading(false);
+     },1000);
+    }
     }
   };
 
@@ -142,19 +147,6 @@ function EditLendet() {
         </div>
 
         <div className="input-label">
-        <label htmlFor="">Fakulteti <span>*</span></label>
-
-        <select id="select" className="form-select" name="FakultetiID" value={lenda.FakultetiID || ''} onChange={handleChange}>
-          <option disabled value="">Zgjedh Fakultetin</option>
-          {fakultetet.map((fk) => (
-            <option key={fk.FakultetiID} value={fk.FakultetiID}>
-              {fk.Emri}
-            </option>
-          ))}
-        </select>
-        </div>
-
-        <div className="input-label">
           <label htmlFor="">ECTS <span>*</span></label>
           <input className="form-control" name="ECTS" required type="number" placeholder="ECTS" value={lenda.ECTS || ''} onChange={handleChange} />
         </div>
@@ -165,20 +157,47 @@ function EditLendet() {
         </div>
 
         <div className="input-label">
-        <label htmlFor="">Semestri <span>*</span></label>
+        <br />
 
-        <select id="select" name="SemestriID" className="form-select" value={lenda.SemestriID || ''} onChange={handleChange}>
-          <option disabled value="">Zgjedh Semestrin</option>
-          {semestrat.map((sms) => (
-            <option key={sms.Semestri_ID} value={sms.Semestri_ID}>
-              {sms.NrSemestrit + " - " + sms.Afati_Semestrit}
-            </option>
-          ))}
-        </select>
+         <FormControl fullWidth required>
+          <InputLabel sx={{fontFamily:"Montserrat"}} id="lenda-label">Zgjedh Semestrin/Fakultetin </InputLabel>
+          <Select
+
+            name="SemestriID"
+            labelId="lenda-label"
+            id="select-lenda"
+            value={lenda.SemestriID || ''}
+            label="Zgjedh Semestrin/Fakultetin"
+            sx={{fontFamily:"Montserrat", 
+              borderRadius:'10px', 
+              height:'75%',
+               }}
+            onChange={handleChange}
+      
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 200,
+                  overflowY: 'auto'
+                },
+              },
+            }}
+          >
+            <MenuItem sx={{fontFamily:"Montserrat"}} disabled>
+              Zgjedh Semestrin/Fakultetin
+            </MenuItem>
+            {semestrat.map((sms) => (
+              <MenuItem  sx={{fontFamily:'Montserrat'}} key={sms.Semestri_ID} value={sms.Semestri_ID}>
+                {sms.NrSemestrit + " - " + sms.Afati_Semestrit + " - " + sms.Fakulteti + " - " + sms.Niveli}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         </div>
 
         <div className="inputLenda">
-          <Button variant="contained" id="updateBtnLenda" type="submit">Ruaj Ndryshimet</Button>
+          <Button loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+           loading={loading} variant="contained" id="updateBtnLenda" type="submit">Ruaj Ndryshimet</Button>
         </div>
 
         <div className="input-label">

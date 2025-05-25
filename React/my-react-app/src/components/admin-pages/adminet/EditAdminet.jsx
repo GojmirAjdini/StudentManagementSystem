@@ -5,12 +5,14 @@ import Swal from "sweetalert2";
 import {Alert, Button} from '@mui/material';
 import "./assets/RegjistroAdmin.css";
 import { FaArrowLeft } from "react-icons/fa";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function EditAdminet() {
 
     const { AdminID } = useParams();
     const [orgAdmini, setOrgAdmini] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false);
     const [fakultetet, setFakulteti] = useState([]);
     const [admini, setAdmini] = useState({});
 
@@ -72,23 +74,53 @@ function EditAdminet() {
          }
        });
        return; 
-     }
+    }
 
+       const result = await Swal.fire({
+             background: "#F5F5F5",
+             position: "center",
+             title: "Dëshironi t'i ruani të dhënat?",
+             icon: 'question',
+             showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+             cancelButtonColor: '#d33',
+             confirmButtonText: 'Po, ruaj!',
+             cancelButtonText: 'Jo, anulo',
+             timer: 5000,
+             customClass: {
+               confirmButton: 'swal-confirmBtn',
+               cancelButton: 'swal-confirmBtn',
+               popup: 'popupDesign'
+             }
+           });
+       
+           if (result.isConfirmed) {
+     
+        setLoading(true);
         try{
             const response = await axiosInstance.patch(`admin/edit/${AdminID}`, admini);
             
             console.log("Admini updated:", response.data);
-            setSuccessMessage(response.data.message);   
+            setOrgAdmini(admini);
 
             setTimeout(() => {
-                setSuccessMessage('');
-            },3000);
+            setSuccessMessage(response.data.message);
+            
+            setTimeout(() => {
+               setSuccessMessage('')
+            }, 3000);
+        },1000);
 
         }catch(err){
             console.error("Error updating admini", err);
             setSuccessMessage(err.response.data.message);
-        }
+        }finally{
+            setTimeout(() => {
+            setLoading(false);
+            },1000);
     }
+}
+}
 
     return (
 
@@ -150,7 +182,8 @@ function EditAdminet() {
           
           <Link className="kthehuLinkAdmins" to={`/adminet`}>  
           <Button variant='contained' sx={{color:'black'}} color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>                    
-           <Button id="updateBtnAdm" variant="contained" type="submit">Përditëso</Button>
+           <Button loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+            loading={loading} id="updateBtnAdm" variant="contained" type="submit">Përditëso</Button>
            </div>
 
           <div className="input-label">

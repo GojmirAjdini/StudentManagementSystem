@@ -37,16 +37,9 @@ span{
   display: flex;
   flex-direction: row;
   justify-content: center ;
-  gap: 25px;
-}
+  width:800pt;
+  gap: 30px;
 
-#select-lenda{
-
-    width: 300px;
-}
-#select-profesori{
-
-  width: 300px;
 }
 @keyframes fadeInPage {
     from {

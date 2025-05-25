@@ -8,7 +8,8 @@ const router = express.Router();
 router.patch("/updatePassword/:ProfesoriID", auth.verifyToken, 
     auth.eshteProfesor, controllerProfesori.updatePassword);
 
-router.get("/profile", auth.verifyToken, controllerProfesori.lexoProfesorinSipasEmail);
+router.get("/profile", auth.verifyToken, auth.eshteProfesor, controllerProfesori.lexoProfesorinSipasEmail);
+router.get("/MY/lendet", auth.verifyToken, auth.eshteProfesor, controllerProfesori.lexoLendetPerProfesorinSipasEmail);
 
 
 export default router;

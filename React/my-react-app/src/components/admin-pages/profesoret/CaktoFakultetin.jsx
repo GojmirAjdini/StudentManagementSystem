@@ -8,12 +8,11 @@ import axiosInstance from "../../../services/axiosInstance";
 import FormControl from '@mui/material/FormControl';
 import MenuItem from "@mui/material/MenuItem";
 import Cancel from "@mui/icons-material/Cancel";
-import CircularProgress from "@mui/material/CircularProgress";
 
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
-function CaktoLendetProf() {
+function CaktoFakultetin() {
     
   
   const text =<p><span style={{marginLeft:'5px'
@@ -22,59 +21,51 @@ function CaktoLendetProf() {
 
     const [successMessage, setSuccessMessage] = useState('');
     const [infoMessage, setInfoMessage] = useState(text);
-    const [loading, setLoading] = useState(false);
 
-    const [lendet, setLendet] = useState([]);
+    const [fakultetet, setFakultetet] = useState([]);
     const [profesoret, setProfesoret] = useState([]);
-    const [LendaID, setLendaID] = useState('');
+    const [FakultetiID, setFakultetiID] = useState('');
     const [ProfesoriID, setProfesoriID] = useState('');
     const [selectedProfesori, setSelectedProfesori] = useState('');
-    const [selectedFakulteti, setSelectedFakulteti] = useState('');
-    const [assignedLendet, setAssignedLendet] = useState([]);
+    const [assignedFakultetet, setAssignedFakultetet] = useState([]);
 
     const handleReset = () => {
 
-        setLendaID('');
+        setFakultetiID('');
         setProfesoriID('');
-        setAssignedLendet([]);
+        setAssignedFakultetet([]);
         setSelectedProfesori('');
-        setSelectedFakulteti('');
+       
     }
     const handleClose = () => {
         setInfoMessage('');
     }
 
-    const fakultetiOptions = selectedProfesori && selectedProfesori.Fakulteti?
-    selectedProfesori.Fakulteti.split(',').map(f => f.trim())
-    : [];
-
-    const skaFakultet = fakultetiOptions.length === 0;
-
     useEffect (() =>{
         
-        fetchLendet();
+        fetchFakultetet();
         fetchProfesoret();
         
     },[]);
 
-    const fetchAssignedLendet = async (ProfesoriID) => {
+    const fetchAssignedFakultetet = async (ProfesoriID) => {
         try {
-            const response = await axiosInstance.get(`admin/profesoret-lendet/read/${ProfesoriID}`);
+            const response = await axiosInstance.get(`admin/profesoret-fakultetet/read/${ProfesoriID}`);
             console.log(response.data);
-            setAssignedLendet(response.data);
+            setAssignedFakultetet(response.data);
         } catch (err) {
             console.error(err);
 }
 }
     
-    const fetchLendet = async() =>{
+    const fetchFakultetet = async() =>{
 
         try{
 
-            const response = await axiosInstance.get(`admin/lendet/all`);
+            const response = await axiosInstance.get(`admin/fakultetet/all`);
 
            console.log(response.data);
-           setLendet(response.data);
+           setFakultetet(response.data);
         
         }catch(err){
             console.error(err);
@@ -99,7 +90,7 @@ function CaktoLendetProf() {
     const handleSubmit = async(e) =>{
         e.preventDefault();
 
-        if(!LendaID || !ProfesoriID){
+        if(!FakultetiID || !ProfesoriID){
 
             await Swal.fire ({
             title: 'Fushat e zbrazura!',
@@ -115,25 +106,21 @@ function CaktoLendetProf() {
             }
         })
     return;
-}   setLoading(true);
+}
         try{
-            const response = await axiosInstance.post(`admin/profesoret/assign`,{
-                LendaID: LendaID,
+            const response = await axiosInstance.post(`admin/profesoret/cakto-fakultetin`,{
+                FakultetiID: FakultetiID,
                 ProfesoriID: ProfesoriID,
 
                 });
 
         console.log(response.data.message);
 
-        setTimeout(() => {
         setSuccessMessage(response.data.message);
 
-        setTimeout(() => {
-          setSuccessMessage('')
-        },5000);
+        setTimeout(() => {setSuccessMessage('')},5000);
 
-        },1000);
-      }catch(err){
+        }catch(err){
 
             console.error(err);
             if (err.response && err.response.data && err.response.data.message) {
@@ -153,10 +140,6 @@ function CaktoLendetProf() {
                  }
              });
          }
-    }finally{
-      setTimeout(() =>{
-        setLoading(false);
-      },1000);
     }
 }
 
@@ -164,7 +147,7 @@ function CaktoLendetProf() {
 
         <div className="containerProfLnd" id="fadeInPage">
 
-        <h1 id="profLndH1">CAKTO LËNDËT DHE PROFESORËT</h1>
+        <h1 id="profLndH1">CAKTO FAKULTETIN PËR PROFESORËT</h1>
 
         <form className="formProfLnd" onSubmit={handleSubmit}>
 
@@ -182,18 +165,17 @@ function CaktoLendetProf() {
       },
     }}
 
-      getOptionLabel={(option) => `Prof. ${option.Emri} ${option.Mbiemri} - ${option.Titulli_Akademik}`}
+      getOptionLabel={(option) => `Prof. ${option.Emri} ${option.Mbiemri} - ${option.Titulli_Akademik} - ${option.Fakulteti ? option.Fakulteti : ''}`}
       value={selectedProfesori || null}
       onChange={(event, newValue) => {
         setSelectedProfesori(newValue);
         setProfesoriID(newValue ? newValue.ProfesoriID : '');
-       
         if(newValue) {
-          fetchAssignedLendet(newValue.ProfesoriID);
-          setLendaID(''); 
+          fetchAssignedFakultetet(newValue.ProfesoriID);
+          setFakultetiID(''); 
         } else {
           setAssignedLendet([]);
-          setLendaID('');
+          setFakultetiID('');
         }
       }}
       renderInput={(params) => (
@@ -219,42 +201,6 @@ function CaktoLendetProf() {
   </FormControl>
 
   <FormControl fullWidth required>
-            <Autocomplete
-              options={fakultetiOptions}
-              sx={{
-                fontFamily: "Montserrat",
-                ".MuiInputBase-root": {
-                  borderRadius: "10px",
-                  fontFamily: "Montserrat",
-                },
-              }}
-              value={selectedFakulteti || null}
-              onChange={(event, newValue) => {
-                setSelectedFakulteti(newValue || '');
-                setLendaID(null); 
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Zgjedh Fakultetin"
-                  variant="outlined"
-                  required
-                
-                  helperText={skaFakultet ? "Profesori duhet të jetë të paktën në një fakultet!" : ''}
-                  sx={{
-                    fontFamily: "Montserrat",
-                    '& .MuiInputBase-input::placeholder': { fontFamily: 'Montserrat' },
-                    '& .MuiInputLabel-root': { fontFamily: 'Montserrat' },
-                  }}
-                />
-              )}
-              disableClearable={false}
-              clearOnEscape
-              disabled={!selectedProfesori || skaFakultet}
-            />
-          </FormControl>
-
-  <FormControl fullWidth required>
         <Autocomplete
 
         sx={{
@@ -265,31 +211,22 @@ function CaktoLendetProf() {
       },
     }}
         options={
-          selectedProfesori
-            ? lendet.filter(lnd => lnd.Fakulteti === selectedFakulteti)
-          : []
-      }
-        getOptionLabel={(option) => `${option.Emri_Lendes} - Semestri ${option.Semestri}`}
-        value={lendet.find(lnd => lnd.LendaID === LendaID) || null}
+        selectedProfesori
+    ? fakultetet.filter(fkt => 
+        !assignedFakultetet.some(assigned => assigned.FakultetiID === fkt.FakultetiID)
+      )
+    : []
+}
+        getOptionLabel={(option) => `${option.Emri} Niveli - ${option.Niveli}`}
+        value={fakultetet.find(fkt => fkt.FakultetiID === FakultetiID) || null}
         onChange={(event, newValue) => {
-          setLendaID(newValue ? newValue.LendaID : '');
+          setFakultetiID(newValue ? newValue.FakultetiID : '');
         }}
-        renderOption={(props, option) => {
-          const isAssigned = assignedLendet.some(assigned => assigned.LendaID === option.LendaID);
-
-          
-          return (
-            <MenuItem {...props} key={option.LendaID} 
-            style={{ fontFamily: 'Montserrat' ,color: isAssigned ? 'red' : 'inherit' }} 
-            disabled={isAssigned}>
-              {option.Emri_Lendes} - Semestri {option.Semestri} {isAssigned ? "(Ligjëron tashmë)" : ""}
-            </MenuItem>
-        );
-        }}
+        
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Zgjedh Lëndën"
+            label="Zgjedh Fakultetin"
             variant="outlined"
             required
             sx={{ fontFamily: "Montserrat",
@@ -302,9 +239,9 @@ function CaktoLendetProf() {
              }}
           />
         )}
-        disabled={!selectedFakulteti}
+        disabled={!selectedProfesori}
         disableClearable={false}
-        isOptionEqualToValue={(option, value) => option.LendaID === value.LendaID}
+        isOptionEqualToValue={(option, value) => option.FakultetiID === value.FakultetiID}
         clearOnEscape
       />
     </FormControl>
@@ -312,13 +249,11 @@ function CaktoLendetProf() {
 </div>
 
     <div className="input-labelProfLnd">
-        <Button variant="contained" id="primaryBtnProfLenda" 
-        loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-        loading={loading} type="submit">Cakto</Button>
-        <Button variant="contained" id="resetBtnProfLenda" type='button' onClick={handleReset}>Reset</Button>
+        <Button variant="contained" id="primaryBtnProfLenda"  type="submit">Cakto</Button>
+        <Button variant="contained" id="resetBtnProfLenda"  type='button' onClick={handleReset}>Reset</Button>
         </div>
         </form>
-  
+
         {successMessage && (
         <div id="successMsgLndProf" className="fade-in" role="alert">
          <Alert severity="success">{successMessage} </Alert>
@@ -340,4 +275,4 @@ function CaktoLendetProf() {
     )
 }
 
-export default CaktoLendetProf; 
+export default CaktoFakultetin; 

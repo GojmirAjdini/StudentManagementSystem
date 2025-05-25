@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import {Alert, Button} from '@mui/material';
 import "./assets/RegjistroAdmin.css";
 import axiosInstance from "../../../services/axiosInstance";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function RegjistroAdmin() {
     
@@ -12,6 +12,7 @@ function RegjistroAdmin() {
     const [emri, setEmri] = useState("");
     const [mbiemri, setMbiemri] = useState("");
     const [role, setRole] = useState("");
+    const [loading, setLoading] = useState(false);
     const [fakultetet, setFakultetet] = useState([]);
     const [fakultetiID, setFakultetiID] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
@@ -57,6 +58,7 @@ function RegjistroAdmin() {
             
         return; 
                 }
+        setLoading(true);
         try {
             const response = await axiosInstance.post(`admin/register`, {
                 FakultetiID: fakultetiID,
@@ -68,10 +70,13 @@ function RegjistroAdmin() {
                 
             });
             
-            setSuccessMessage(response.data.message);
-            console.log(response.data.emailNotification);
-            
-             setTimeout(() => setSuccessMessage(''),5000);
+          setTimeout(() => {
+                setSuccessMessage(response.data.message);
+                setTimeout(() =>{
+                setSuccessMessage('');
+                }, 5000);  
+
+            },1000);
             
          } catch(err){
              console.error(err);
@@ -92,7 +97,11 @@ function RegjistroAdmin() {
                    htmlContainer: 'textSwal',
                }
            });
-    }
+        }
+    }finally{
+         setTimeout(() => {
+         setLoading(false);
+        },1000);
 }
     }
 
@@ -153,10 +162,15 @@ return (
         </div>
 
          <div className="input-labelAdmButtons">
-          <Button id="primaryBtnAdmin" variant="contained" type="submit">Regjistro</Button>
-          <Button id="resetBtnAdmin" variant="contained" type="button" onClick={handleReset}>Reset</Button>
+          <Button id="primaryBtnAdmin" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+        loading={loading} variant="contained" type="submit">Regjistro</Button>
+          <Button id="resetBtnAdmin" variant="contained" type="button" onClick={handleReset} 
+          >Reset
+          </Button>
+          
           </div>
           </form>
+          
           {successMessage && (
           <div id="successMsg" className="fade-in" role="alert">
             <Alert severity="success">{successMessage} </Alert>

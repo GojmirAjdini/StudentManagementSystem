@@ -18,7 +18,7 @@ span{
 form{
 
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 1fr 1fr 1fr;
     margin-top: 60px;
     
 }
@@ -43,18 +43,15 @@ form{
 
 .form-control{
   
-  border: 1px solid gray;
+  border: 1px solid rgb(168, 168, 168);
   padding: 8px;
   border-radius: 10px;
 }
 #primaryBtn{
 
-  position: relative;
   background-color: rgb(101, 64, 235);
-  left: 80px;
-  top: 25px;
   height: 40px;
-  width: 120px;
+  width: 25%;
   border-radius: 10px;
 }
 #gjinia{
@@ -95,7 +92,7 @@ form{
 
 .form-select{
 
-  border: 1px solid gray;
+  border: 1px solid rgb(203, 203, 203);
   padding: 8px;
   border-radius: 10px;
 }
@@ -110,13 +107,21 @@ form{
     flex-direction: column;
     margin: 12px;
 }
+
+.input-labelBtnStd{
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 200%;
+  align-items: center;
+  gap:40px;
+
+}
 #resetBtn{
 
-  position: relative;
-  left: 210px;
-  bottom: 15px;
   height: 40px;
-  width: 120px;
+  width: 25%;
   border-radius: 10px;
   border: none;
   color: black;
@@ -153,11 +158,10 @@ form{
 #updateBtn{
 
   border-radius: 10px;
-  margin-top: 28px;
-  text-align: center;
-  margin-left: 60px;
-  width: 70%;
+  margin-top: 10px;
+  width: 35%;
   background-color: rgb(101, 64, 235);
+  margin-left: 30%;
 }
 
 .fade-in{
@@ -181,10 +185,12 @@ form{
 
   width: fit-content;
   padding: 7px;
-  border-radius: 10px;
+  border-radius: 15px;
+  margin-top: 10px;
   text-decoration: none;
   color: rgb(0, 0, 0);
   transition: 0.2s ease-in-out;
+  margin-left: auto;
 }
 .textSwal{
   font-size: 15px;
@@ -203,7 +209,18 @@ form{
 }
 input{
 
-  border: 1px solid gray;
+  border: 1px solid rgb(255, 0, 0);
   border-radius: 10px;
   
+}
+
+.input-labelBtnStdEdit{
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 200%;
+  align-items: center;
+  margin-right: auto;
+
 }

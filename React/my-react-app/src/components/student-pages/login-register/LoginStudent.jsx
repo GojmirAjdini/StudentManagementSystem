@@ -5,17 +5,17 @@ import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import "./assets/login.css";
+import "./assets/LoginStudent.css";
 import CircularProgress from "@mui/material/CircularProgress";
 
-function Login(){
+function LoginStudent(){
 
     const API_URL = 'http://localhost:3000/';
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [message, setSuccessMessage] = useState('');
     const [showPassword, setShowPassword] = useState('');
 
     const togglePassword = () =>{
@@ -37,15 +37,16 @@ function Login(){
         setLoading(true);
         try{
 
-            const response = await axios.post(`${API_URL}admin/profesor/login`,{
-                Email: email,
+            const response = await axios.post(`${API_URL}student/login`,{
+                EmailStudentor: email,
                 Password: password
             }, {
                 withCredentials:true
         }
     )   
     setTimeout(() => {
-            navigate('/');
+
+            navigate('/dashboard');
     },500);
 
             console.log(response.data.loginMessage);
@@ -61,6 +62,7 @@ function Login(){
             setSuccessMessage(''); 
         },3000);
     },1000);
+
         }finally{
             setTimeout(() =>{
                 setLoading(false);
@@ -80,7 +82,7 @@ function Login(){
       )} 
 
         <form id="loginForm" onSubmit={handleSubmit} className="fade-in">
-            <h1 id="adminLoginH1">STAFF - LOGIN</h1>
+            <h1 id="adminLoginH1">STUDENT - LOGIN</h1>
         <div className="input-label">
     <label htmlFor="Email">Email <span>*</span></label>
     <input className="form-control" required type="email" name="Email" 
@@ -102,15 +104,16 @@ function Login(){
    
     </div>
     <div className="input-labelButtons">
-        <Button id="loginLoginAdm" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-                loading={loading} variant="contained" type="submit" color="primary">
-                    Login</Button>
+        <Button loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+        loading={loading} id="loginLoginAdm" variant="contained" type="submit" color="primary">
+            Login</Button>
 
         <Button id="loginResAdm"  variant="contained" onClick={handleReset} color="inherit">Reset</Button>
         </div>
         </form>
+       
         </div>  
     )
 }
 
-export default Login;
+export default LoginStudent;

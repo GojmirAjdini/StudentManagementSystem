@@ -58,10 +58,13 @@ class StafiAdministrativ {
         FROM stafiadministrativ
         WHERE Email = ?`;
 
-        const sqlProf = `SELECT FakultetiID, Emri, Mbiemri, Gjinia, 
-        Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik
-        FROM Profesori
-        WHERE Email = ?`;
+        const sqlProf = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
+        p.Email, f.Emri Fakulteti, p.NrTel, 
+        p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, p.Titulli_Akademik  
+        FROM Profesori p 
+        LEFT JOIN profesori_fakulteti pf on p.ProfesoriID = pf.ProfesoriID
+        LEFT JOIN Fakulteti f on pf.FakultetiID = f.FakultetiID
+        WHERE p.Email = ?`;
 
         db.query(sqlAdmin, Email,(err, results) =>{
             

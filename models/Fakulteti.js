@@ -15,7 +15,9 @@ class Fakulteti{
     static readFakultetet(callback){
 
 
-        const sql = "SELECT * FROM Fakulteti";
+        const sql = `SELECT f.*, ns.Emri_Nivelit Niveli
+        FROM Fakulteti f
+        INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID`;
 
          db.query(sql, (err, results) =>{
 
@@ -132,6 +134,37 @@ class Fakulteti{
             const fakultetet = results.map((row) => new Fakulteti(row.FakultetiID, row.Emri, row.Niveli, 
                 row.Lokacioni, row.Kodi_Fakultetit, row.uKrijua));
             callback(null, fakultetet);
+        })
+    }
+
+    static lexoNiveletEStudimit(callback){
+
+        const sql = `SELECT * FROM niveli_studimit`;
+
+        db.query(sql,(err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+        
+        callback(null, results);
+        })
+    }
+
+    static lexoGjeneratat(callback){
+
+        const sql = `SELECT gj.*, f.Emri Fakulteti, ns.Emri_Nivelit NiveliStudimit 
+        FROM gjenerata gj
+        INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+        INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID`
+        
+        db.query(sql,(err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+        
+        callback(null, results);
         })
     }
 }

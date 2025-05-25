@@ -9,14 +9,16 @@ import Button from '@mui/material/Button';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
+import Loading from '../login-register/utils/Loading';
 import { DataGrid, GridToolbar} from '@mui/x-data-grid';
 import axiosInstance from '../../../services/axiosInstance';
+import CircularProgress  from '@mui/material/CircularProgress';
 
 function ListaProfesoreve() {
 
     const [profesoret, setProfesoret] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(null);
 
     const fetchProfesoret = async () =>{
 
@@ -56,22 +58,29 @@ function ListaProfesoreve() {
             });
 
             if(result.isConfirmed){
-
+              setLoading(ID);
         try{
 
             const response = await axiosInstance.delete(`admin/profesoret/delete/${ID}`);
 
+            setTimeout(() => {
+            setSuccessMessage(response.data.message);
             setProfesoret(prev => prev.filter(prof => prof.ProfesoriID !== ID));
 
-            setSuccessMessage(response.data.message);
+          setTimeout(() => {
+          setSuccessMessage('')
+        },5000);
 
-            setTimeout(() => { 
-                setSuccessMessage ('')}, 5000);
+        },1000);
 
         }catch(err){
             console.error(err);
+        }finally{
+          setTimeout(() =>{
+            setLoading(false);
+          },1000);
         }
-    }
+      }
     }
 
     useEffect(() =>{
@@ -105,13 +114,30 @@ function ListaProfesoreve() {
         field: 'Edit',
         headerName:'Përditëso',
         width:120,
-        renderCell: (params) =>(
-          <Link to={`/edit/profesori/${params.row.ProfesoriID}`}>
-          <Button id="editBtn" color="primary" variant="contained"
-          startIcon={<EditIcon sx={{color:"white"}}/>}>Edit</Button>
-          </Link>
+        renderCell: (params) =>{
+
+          const [editLoading, setEditLoading] = useState(false);
+          
+          const handleEditClick = (e) =>{
+            e.preventDefault();
+            setEditLoading(true);
+
+            setTimeout(() =>{
+              setEditLoading(false);
+              window.location.href = `/edit/profesori/${params.row.ProfesoriID}`; 
+            },500);
+        }
+          return (
+          <Button id="editBtn" color="primary" variant="contained" 
+          loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>}
+          loading={editLoading}
+          onClick={handleEditClick}
+          startIcon={<EditIcon sx={{color:"white"}}/>}>
+            Edit</Button>
+          
         )
-      },
+      }
+    },
 
       {
 
@@ -120,6 +146,8 @@ function ListaProfesoreve() {
         width:120,
         renderCell: (params) =>(
           <Button color='error' sx={{width:'100%'}} 
+          loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+          loading={loading === params.row.ProfesoriID}
           variant='contained' startIcon={<DeleteIcon sx={{color:"white"}}/>}
           onClick={ () => deleteProfesorById(params.row.ProfesoriID)}>Delete</Button>
 
@@ -131,6 +159,7 @@ function ListaProfesoreve() {
 
       id:index + 1,
       ...prof,
+      Fakulteti: prof.Fakulteti ? prof.Fakulteti : 'null',
       Data_Punesimit: new Date(prof.Data_Punesimit).toLocaleDateString(),
       uKrijua: new Date(prof.uKrijua).toLocaleString()
 
@@ -143,6 +172,7 @@ function ListaProfesoreve() {
 
             <h1>LISTA E PROFESORËVE</h1>
         
+      {loading && <Loading/>}  
       {successMessage && (
         <div id="successMessageProf" className="fade-in" role="alert">
           <Alert severity="success">  {successMessage}</Alert>
@@ -164,7 +194,7 @@ function ListaProfesoreve() {
               },
             },
           }}
-          
+          showToolbar
           slots={{ toolbar: GridToolbar }}
           slotProps={{
             toolbar: {

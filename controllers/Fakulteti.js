@@ -166,6 +166,39 @@ const lexoFakultetinByName = async (req, res) =>{
     }
 }
 
+const lexoNiveletEStudimit = async (req, res) =>{
+
+    try{
+
+        Fakulteti.lexoNiveletEStudimit((err, nivelet) =>{
+               
+            return res.status(200).json({nivelet});
+
+        })
+    }catch(error){
+        console.error(error);
+        res.json(500).send("Server error");
+    }
+}
+
+const lexoGjeneratat = async(req, res) =>{
+
+    try{
+
+        Fakulteti.lexoGjeneratat((err, gjenerata) =>{
+               
+            if(err){
+                return res.status(500).json({error:err})
+            }
+            return res.status(200).json({gjenerata});
+
+        })
+    }catch(error){
+        console.error(error);
+        res.json(500).send("Server error");
+    }
+}
+
 export default {lexojFakultetet, shtoFakultet, fshijFakultetin, 
     updateFakultetin, lexoFakultetinId, patchFakulteti,
-    lexoFakultetinByName};
+    lexoFakultetinByName, lexoNiveletEStudimit, lexoGjeneratat};

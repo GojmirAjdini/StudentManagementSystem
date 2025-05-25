@@ -12,11 +12,13 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axiosInstance from "../../../services/axiosInstance";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Students() {
  
   const [studentet , setStudentet] = useState([]);
   const [successMessage, setSuccessMessage ] = useState('');
+  const [loading, setLoading] = useState(null);
 
   const fetchStudentet = async () =>{
     try{
@@ -55,19 +57,26 @@ function Students() {
 
     if(result.isConfirmed){
 
-
+      setLoading(ID);
     try{
       
       const response = await axiosInstance.delete(`studentet/delete/${ID}`);
 
-      const message = response.data.message;
-
+      setTimeout(() => {
+      
       setStudentet(prev => prev.filter(student => student.ID !==  ID));
-      setSuccessMessage(message);
-      console.log(message);
-      setTimeout(() => setSuccessMessage (''),4000);
+      setSuccessMessage(response.data.message);
+      
+      setTimeout(() => setSuccessMessage (''),3000);
+      },1000)
+
     } catch(err){
       console.error("Gabim gjate fshirjes!", err);
+    }
+    finally{
+      setTimeout(() =>{
+        setLoading(null);
+      })
     }
   }
   }
@@ -78,7 +87,7 @@ function Students() {
 
     const interval = setInterval(() => {
       fetchStudentet();
-    }, 5000);
+    }, 60000);
 
     return () => clearInterval(interval);
 
@@ -103,13 +112,31 @@ function Students() {
         field: 'Edit',
         headerName:'Përditëso',
         width:120,
-        renderCell: (params) =>(
-          <Link to={`/edit/studenti/${params.row.ID}`}>
-          <Button id="editBtn" color="primary" variant="contained"
+        renderCell: (params) => {
+
+          const [editLoading, setEditLoading] = useState(false);
+          
+          const handleEditClick = (e) => {
+              e.preventDefault();
+              setEditLoading(true);
+             
+              setTimeout(() => {
+              setEditLoading(false);
+              window.location.href = `/edit/studenti/${params.row.ID}`;
+              }, 500);
+          };
+
+         return(
+          <Button id="editBtn" color="primary" 
+          loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>}
+          loading={editLoading}
+          variant="contained"
+          onClick={handleEditClick}
           startIcon={<EditIcon sx={{color:"white"}}/>}>Edit</Button>
-          </Link>
-        )
-      },
+          
+         )
+      }
+    },
 
       {
 
@@ -118,7 +145,8 @@ function Students() {
         width:120,
         renderCell: (params) =>(
           <Button color='error' sx={{width:'100%'}} 
-          variant='contained' startIcon={<DeleteIcon sx={{color:"white"}}/>}
+          variant='contained' loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+          loading={loading === params.row.ID} startIcon={<DeleteIcon sx={{color:"white"}}/>}
           onClick={ () => deleteStudent(params.row.ID)}>Delete</Button>
 
         )

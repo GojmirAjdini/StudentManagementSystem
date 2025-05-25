@@ -7,13 +7,21 @@ import { FaArrowLeft } from "react-icons/fa";
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import axiosInstance from "../../../services/axiosInstance";
+import FormControl from '@mui/material/FormControl';
+import InputLabel  from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";  
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function StudentsEdit() {
   const { ID } = useParams();
 
   const [originalStudenti, setOriginalStudenti] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
-  const [fakultetet, setFakultetet] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [gjeneratatAkademike, setGjeneratatAkademike] = useState([]);
   const [studenti, setStudenti] = useState({
     Emri: '',
     Mbiemri: '',
@@ -26,12 +34,13 @@ function StudentsEdit() {
     FakultetiID: '',
     Niveli: '',
     Statusi: '',
+    GjenerataID: '',
   });
 
   useEffect(() => {
     
     fetchStudenti();
-    fetchFakultetet();
+    fetchGjeneratatFakultetet();
 
 }, []);
 
@@ -48,15 +57,18 @@ function StudentsEdit() {
     }
   };
 
-  const fetchFakultetet = async () => {
-    try {
-      const res = await axiosInstance.get(`admin/fakultetet/all`);
-      console.log(res.data);
-      setFakultetet(res.data);
-    } catch (err) {
-      console.error("Error fetching fakultetet", err);
-    }
-  };
+ const fetchGjeneratatFakultetet = async () =>{
+ 
+       try{
+         const response = await axiosInstance.get("admin/gjeneratat");
+ 
+         console.log(response.data.gjenerata);
+         setGjeneratatAkademike(response.data.gjenerata);
+       }catch(err){
+ 
+         console.error(err);
+       }
+     }
 
   
 const handleChange = (e) => {
@@ -119,16 +131,23 @@ const handleChange = (e) => {
     });
 
     if(result.isConfirmed){
-
+setLoading(true);
     try {
 
       const response  = await axiosInstance.patch(`admin/studentet/edit/${ID}`, studenti);
 
+      setTimeout(() => {
       setSuccessMessage(response.data.message);
+      setOriginalStudenti(studenti);
 
       setTimeout(() => setSuccessMessage(''), 3000);
+      },1000);
     } catch (err) {
       console.error("Error updating studenti", err);
+    }finally{
+      setTimeout(() => {
+        setLoading(false);
+      },1000);
     }
   };
   }
@@ -200,45 +219,115 @@ const handleChange = (e) => {
         </div>
 
         <div className="input-label">
-          <label>Fakulteti <span>*</span></label>
-          <select className="form-select" name="FakultetiID" value={studenti.FakultetiID || ''} onChange={handleChange} required>
-            <option value='' disabled >Zgjedh Fakultetin</option>
-            {fakultetet.map((fk) => (
-              <option key={fk.FakultetiID} value={fk.FakultetiID}>
-                {fk.Emri}
-              </option>
-            ))}
-          </select>
-          {console.log(studenti.FakultetiID)}
+          <br />
+
+        <Autocomplete
+          style={{fontFamily:"Montserrat"}}
+          fullWidth
+          options={gjeneratatAkademike}
+          getOptionLabel={(gjen) =>
+            `${gjen.Fakulteti} - ${gjen.NiveliStudimit} - ${gjen.viti_akademik}`
+          }
+          sx={{
+            fontFamily: "Montserrat",
+            ".MuiInputBase-root": {
+              borderRadius: "10px",
+              height:"40px",
+              fontFamily: "Montserrat",
+            },
+          }}
+           ListboxProps={{
+          
+            style: {
+              maxHeight: "200px",
+              overflowY:"auto"
+            }
+           }}
+         
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Zgjedh Fakultetin"
+              required
+              sx={{ 
+                marginTop:"-5px",
+                paddingTop:'6px',
+                fontFamily: "Montserrat",
+                '& .MuiInputBase-input::placeholder': {
+                fontFamily: 'Montserrat',
+              },
+              '& .MuiInputLabel-root': {
+                fontFamily: 'Montserrat',
+              },
+               }}
+            />
+          )}
+          value={gjeneratatAkademike.find((g) => g.GjenerataID === studenti.GjenerataID) || null}
+          onChange={(e, newValue) => {
+
+            handleChange ({
+              target:{
+                name: "GjenerataID",
+                value: newValue ? newValue.GjenerataID : '',
+              },
+            });
+          }}
+          isOptionEqualToValue={(option, value) => option.GjenerataID === value.GjenerataID}
+        />
+
         </div>
 
         <div className="input-label">
-          <label>Niveli <span>*</span></label>
-          <select disabled className="form-select" name="Niveli" value={studenti.Niveli || ''} onChange={handleChange} required>
-            <option disabled>Niveli</option>
-            <option value="Bachelor">Bachelor</option>
-            <option value="Master">Master</option>
-            <option value="PhD">PhD</option>
-          </select>
-        </div>
+          <br />
+        
+         <FormControl sx={{paddingTop:'5px', marginTop:'-5px'}} fullWidth required>
+          <InputLabel sx={{fontFamily:"Montserrat"}} id="statusi-label">Zgjedh Statusin </InputLabel>
+          <Select
 
-        <div className="input-label">
-          <label>Statusi <span>*</span></label>
-          <select className="form-select" name="Statusi" value={studenti.Statusi|| ''} onChange={handleChange} required>
-            <option disabled>Statusi</option>
-            <option value="Aktiv">Aktiv</option>
-            <option value="Deaktiv">Deaktiv</option>
-          </select>
-        </div>
+            name="Statusi"
+            labelId="StatusiStudent-label"
+            id="select-StatusiStudent"
+            value={studenti.Statusi || ''}
+            label="Zgjedh Statusi"
+            sx={{
+             fontFamily:"Montserrat", 
+             borderRadius:'10px', 
+             height:'75%', 
+            }}
+            
+            onChange={handleChange}
+    
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 200,
+                  overflowY: 'auto'
+                },
+              },
+            }}
+          >
+            <MenuItem sx={{fontFamily:"Montserrat"}} disabled>
+              Zgjedh Statusin
+            </MenuItem>
+              <MenuItem value="Aktiv" sx={{fontFamily:'Montserrat'}} >
+              Aktiv 
+              </MenuItem>
+              <MenuItem  value="Deaktiv" sx={{fontFamily:'Montserrat'}} >
+              Deaktiv 
+              </MenuItem>
+          </Select>
+        </FormControl>
+        </div>   
 
-        <div className="input-label">
-          <Button variant="contained" id="updateBtn" type="submit">Ruaj Ndryshimet</Button>
-        </div>
-
-        <div className="input-label">
-
-         <Link className="kthehuLinkStd" to={`/studentet`}>  
-        <Button variant="contained" color="inherit"> <FaArrowLeft className="leftArrow"/>Kthehu</Button> </Link>
+        <div className="input-labelBtnStdEdit">
+          
+          <Button variant="contained"
+           loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} loading={loading}
+           id="updateBtn" type="submit">Ruaj Ndryshimet</Button>
+          
+          <Link className="kthehuLinkStd" to={`/studentet`}>  
+          <Button variant="contained" color="inherit"> <FaArrowLeft className="leftArrow"/>Kthehu</Button> </Link>          
+         
         </div>
 
       </form>

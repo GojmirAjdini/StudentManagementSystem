@@ -13,11 +13,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axiosInstance from "../../../services/axiosInstance";
 
+import CircularProgress from "@mui/material/CircularProgress";
+import { useTimeout } from "@mui/x-data-grid/internals";
+
 function ListaFakulteteve() {
 
     const [fakultetet, setFakultetet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
-    const [searchFakulteti, setSearchFakulteti] = useState('');
+    const [loading, setLoading] = useState(null);
 
     const fetchFakultetet = async () => {
 
@@ -56,20 +59,27 @@ function ListaFakulteteve() {
 
         if(result.isConfirmed){
 
+          setLoading(FakultetiID);
             try{
 
                 const response = await axiosInstance.delete(`admin/fakultetet/delete/${FakultetiID}`);
                 
-                const message = response.data.message;
-                setFakultetet(prev => prev.filter(fakultet => fakultet.FakultetiID !==  FakultetiID));
-                setSuccessMessage(message);
+                 setTimeout(() => {
+            setSuccessMessage(response.data.message);
+            setFakultetet(prev => prev.filter(fkt => fkt.FakultetiID !== FakultetiID));
 
-                setTimeout(() => {
-                    setSuccessMessage('');
-                }, 3000);   
+          setTimeout(() => {
+          setSuccessMessage('')
+        },3000);
+
+        },1000);  
                 
             }catch(err){
                 console.error("Error deleting fakultetin:", err);
+            }finally{
+              useTimeout(() =>{
+                setLoading(null);
+              },1000);
             }
         }
     }
@@ -99,20 +109,38 @@ useEffect (() => {
             field:'Edit',
             headerName:'Përditëso',
             width:120,
-            renderCell: (params) =>(
-                <Link to={`/edit/fakulteti/${params.row.FakultetiID}`}>
+            renderCell: (params) => {
+
+               const [editLoading, setEditLoading] = useState(false);
+              
+              const handleEditClick = (e) => {
+                  e.preventDefault();
+                  setEditLoading(true);
+                  setTimeout(() => {
+                  setEditLoading(false);
+              
+                      window.location.href = `/edit/fakulteti/${params.row.FakultetiID}`;
+                  }, 500);
+              };
+              return (
+              
                 <Button id="editBtn" color="primary" variant="contained"
-                startIcon={<EditIcon sx={{color:"white"}}/>}>Edit</Button>
-                </Link>
-        )
-    }, 
+                startIcon={<EditIcon sx={{color:"white"}}/>} 
+                onClick={handleEditClick}
+                loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+                loading={editLoading}>Edit</Button>
+                
+              );
+    }
+  },
     {
          field:'Delete',
             headerName:'Fshij',
             width:120,
             renderCell : (params) => (
                 <Button 
-                color="error"
+                color="error" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+                loading={loading === params.row.FakultetiID}
                 variant="contained" sx={{width:'100%'}}
                 startIcon={<DeleteIcon sx={{color:'white'}}/>}
                 onClick={() => deleteFakultet(params.row.FakultetiID)}>

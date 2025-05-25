@@ -5,20 +5,19 @@ import './assets/RegisterProfesoret.css';
 import Alert from '@mui/material/Alert';
 import Button from "@mui/material/Button";
 import axiosInstance from '../../../services/axiosInstance';
-
+import Loading from '../login-register/utils/Loading';
 
 function RegjistroProfesoret() {
   
-    const [fakultetet, setFakultetet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const [successEmail, setSuccessEmail] = useState('');
     
-    const [FakultetiID, setFakultetiID] = useState('');
     const [Emri, setEmri] = useState('');
     const [Mbiemri, setMbiemri] = useState('');
     const [Gjinia, setGjinia] = useState('');
     const [EmailPrivat, setEmailPrivat] = useState('');
     const [Nr_Tel, setNr_Tel] = useState('');
+    const [loading, setLoading] = useState(false);
     const [Data_Punesimit, setData_Punesimit] = useState('');
     const [Statusi, setStatusi] = useState('');
     const [Titulli_Akademik, setTitulli_Akademik] = useState('');
@@ -30,26 +29,15 @@ function RegjistroProfesoret() {
         setEmailPrivat('');
         setNr_Tel('');
         setData_Punesimit('');
-        setFakultetiID('');
         setStatusi('');
         setTitulli_Akademik('');
     };
-
-    const fetchFakultetet = async() =>{
-        try{
-            const response = await axiosInstance.get(`admin/fakultetet/all`);
-            console.log(response.data);
-            setFakultetet(response.data);
-        }catch(err){
-            console.error("Error fetching fakultetet",err); 
-        }
-    }
 
     const submitProfesori = async(e) =>{
         e.preventDefault();
 
         if(!Emri || !Mbiemri || !Gjinia || !EmailPrivat ||
-            !Nr_Tel || !Data_Punesimit || !FakultetiID || !Statusi || !Titulli_Akademik){
+            !Nr_Tel || !Data_Punesimit || !Statusi || !Titulli_Akademik){
             
                 await Swal.fire({
                     title: 'Fushat e zbrazura!',
@@ -66,10 +54,10 @@ function RegjistroProfesoret() {
                 }    });
             return;
         }
-
+        setLoading(true);
         try{
             const response = await axiosInstance.post(`admin/profesoret/register`, {
-                FakultetiID : FakultetiID,   
+                  
                 Emri: Emri,
                 Mbiemri: Mbiemri,
                 Gjinia : Gjinia,
@@ -80,14 +68,19 @@ function RegjistroProfesoret() {
                 Titulli_Akademik: Titulli_Akademik
             });
 
-        setSuccessMessage(response.data.message);
-        setSuccessEmail(response.data.emailNotification);
 
-        console.log(response.data.emailNotification);
+        setTimeout(() => {
+            setSuccessMessage(response.data.message);
+            setSuccessEmail(response.data.emailNotification);
 
-        setTimeout(() => setSuccessMessage(''),5000);
-        setTimeout(() => setSuccessEmail(''),5000);
-    
+        setTimeout(() => {
+             setSuccessMessage('');
+             setSuccessEmail('');
+           
+        },5000);
+
+        },1000);
+
         }catch(err){
             console.error("Error adding profesori",err); 
         
@@ -108,16 +101,12 @@ function RegjistroProfesoret() {
                     }
                 });
             }
-        }
+        }finally {
+            setTimeout(()=>{
+                setLoading(false);
+            },1000);
+            }
     }
-
-
-    useEffect(() => {
-        fetchFakultetet();
-        
-    }, []);
-
-
 
     return (
     <div className='container' id="fadeInPage">
@@ -179,19 +168,6 @@ function RegjistroProfesoret() {
     </div>
 
     <div className="input-label">
-    <label htmlFor="">Fakulteti <span>*</span></label>
-
-    <select id="select"  required className="form-select" value={FakultetiID} onChange={(e) => setFakultetiID(e.target.value)}>
-      <option disabled value="">Zgjedh Fakultetin</option>
-      {fakultetet.map((fk) => (
-        <option key={fk.FakultetiID} value={fk.FakultetiID}>
-          {fk.Emri}
-        </option>
-      ))}
-    </select>
-    </div>
-
-    <div className="input-label">
     <label htmlFor="">Data e Punësimit <span>*</span></label>
     <input className="form-control" required type="date" placeholder="Data e Punesimit" value={Data_Punesimit} onChange={(e) => setData_Punesimit(e.target.value)} />
     </div>
@@ -218,11 +194,14 @@ function RegjistroProfesoret() {
     </div>
 
     <div className="input-labelProf">
-        <Button variant='contained' id="primaryBtnProf" type="submit">Regjistro</Button>
-        <Button variant='contained' id="resetBtnProf" type='button' onClick={handleReset}>Reset</Button>
+        <Button variant='contained' id="primaryBtnProf" type="submit" disabled={loading}>Regjistro</Button>
+        <Button variant='contained' id="resetBtnProf" type='button' disabled={loading} 
+        onClick={handleReset}>
+            Reset
+            </Button>
         </div>
         </form>
-
+        {loading && <Loading/>}
         {successMessage && (
         <div id="successMsg" className="fade-in" role="alert">
          <Alert  severity="success">  {successMessage}</Alert>

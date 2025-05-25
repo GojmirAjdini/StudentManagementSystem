@@ -1,0 +1,65 @@
+#dashboardH1{
+
+    margin-top: 32%;
+    font-size: 36px;
+}
+.dashboardPageContainer{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px; 
+    height: 80vh;
+    width: 100%;
+}
+
+#containerFormDashboard{
+
+    display: flex;
+    flex-direction: column;
+   align-items: center;
+    width: 100%;
+    height: fit-content;
+}
+
+#loginStudentDashboardData{
+
+    display: grid;
+    grid-template-columns: auto auto auto;
+    width: 80%;
+    margin: 40px;
+    border-radius: 10px; 
+    padding: 50px;
+    border: 1px solid rgb(222, 222, 222);
+    gap: 20px;
+
+}
+
+#loginStudentDashboardData input{
+
+    border: 1px solid rgb(192, 192, 192);
+    cursor: not-allowed;
+    background-color: rgb(240, 240, 240);
+    
+}
+
+#h3StudentiInfo{
+
+    margin-top: 30px;
+    margin-bottom: -30px;
+    align-self: flex-start;
+    margin-left: 150px;
+    color: rgb(126, 126, 126);
+    
+}
+
+#h3StudentiInfo2{
+
+    margin-top: 10px;
+    margin-bottom: -30px;
+    align-self: flex-start;
+    margin-left: 150px;
+    color: rgb(126, 126, 126);
+    
+}

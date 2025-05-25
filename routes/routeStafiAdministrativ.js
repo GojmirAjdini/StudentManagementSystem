@@ -5,7 +5,7 @@ import controllersLenda from "../controllers/Lenda.js";
 import controllerFakulteti from "../controllers/Fakulteti.js";
 import kontrollerSemestri from '../controllers/Semestri.js';
 
-import express from "express";
+import express, { Router } from "express";
 
 import auth from "../middlewares/Authentication.js";
 import refreshAccessToken from "../middlewares/RefreshToken.js";
@@ -13,16 +13,16 @@ import refreshAccessToken from "../middlewares/RefreshToken.js";
 const router = express.Router();
 
 //ADMIN//
-  router.get("/all",auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminet);
-  router.post("/register", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.registerAdmin);
-  router.post("/profesor/login", kontrollerAdmin.loginAdmin);
-  router.patch("/update/:AdminID",auth.verifyToken, auth.eshteSuperAdmin,kontrollerAdmin.updatePassword);
-  router.get("/admin/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminById);
-  router.get("/search", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminByName);
-  router.get("/getAdminByEmail", auth.verifyToken, auth.eshteAdmin, kontrollerAdmin.getAdminByEmail);
-  router.delete("/delete/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.deleteAdminById);
-  router.delete("/deleteAll", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.deleteAllAdminet);
-  router.patch("/edit/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.patchAdmin);
+router.get("/all",auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminet);
+router.post("/register", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.registerAdmin);
+router.post("/profesor/login", kontrollerAdmin.loginAdmin);
+router.patch("/update/:AdminID",auth.verifyToken, auth.eshteSuperAdmin,kontrollerAdmin.updatePassword);
+router.get("/admin/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminById);
+router.get("/search", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.readAdminByName);
+router.get("/getAdminByEmail", auth.verifyToken, auth.eshteAdmin, kontrollerAdmin.getAdminByEmail);
+router.delete("/delete/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.deleteAdminById);
+router.delete("/deleteAll", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.deleteAllAdminet);
+router.patch("/edit/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrollerAdmin.patchAdmin);
 
 //login
 router.get('/check-authentication', auth.verifyToken, (req, res) => {
@@ -53,8 +53,7 @@ router.post("/logout",(req, res) => {
       path: '/'
     });
 
-    
-
+  
     return res.status(200).json({ message: "Ç'kyçja e suksesshme!" });
   } catch(err) {
     console.error(err);
@@ -76,6 +75,10 @@ router.get("/profesoret/profesori/search", auth.verifyToken, auth.eshteAdmin, co
 router.get("/profesoret-lendet/all", auth.verifyToken, auth.eshteAdmin, controllerProfesori.lexoProfesoretLendet);
 router.delete("/profesoret-lendet/delete/:LendaID/:ProfesoriID", auth.verifyToken, auth.eshteAdmin, controllerProfesori.deleteProfesoretLendetSipasID);
 router.get("/profesoret-lendet/read/:ProfesoriID", auth.verifyToken, auth.eshteAdmin, controllerProfesori.lexoLendetSipasProfesoriID);
+router.post("/profesoret/cakto-fakultetin", auth.verifyToken, auth.eshteAdmin, controllerProfesori.caktoFakultetinProfesori);
+router.get("/profesoret-fakultetet/read/:ProfesoriID", auth.verifyToken, auth.eshteAdmin, controllerProfesori.lexoFakultetetSipasProfesoritID);
+router.get("/profesoret-fakultetet/all",auth.verifyToken, auth.eshteAdmin, controllerProfesori.lexoProfesoretFakultetet);
+router.delete("/profesoret-fakultetet/deletesipas/:FakultetiID/:ProfesoriID",auth.verifyToken, auth.eshteAdmin,controllerProfesori.deleteProfesoretFakultetetSipasID);
 
 //STUDENTET // 
 
@@ -106,6 +109,8 @@ router.put("/fakultetet/update/:FakultetiID",auth.verifyToken, auth.eshteAdmin, 
 router.get("/fakultetet/:FakultetiID",auth.verifyToken, auth.eshteAdmin, controllerFakulteti.lexoFakultetinId);
 router.patch("/fakultetet/edit/:FakultetiID", auth.verifyToken, auth.eshteAdmin,controllerFakulteti.patchFakulteti);
 router.get("/fakultetet/fakulteti/search",auth.verifyToken, auth.eshteAdmin,controllerFakulteti.lexoFakultetinByName);
+router.get("/nivelet-studimit", auth.verifyToken, auth.eshteAdmin, controllerFakulteti.lexoNiveletEStudimit);
+router.get("/gjeneratat", auth.verifyToken, auth.eshteAdmin, controllerFakulteti.lexoGjeneratat);
 
 //SEMESTRI //
 

@@ -19,9 +19,9 @@ const lexoLendet = async (req, res)=>{
 const createLenden = async (req, res) => {
 
     try{
-        const {FakultetiID, Emri_Lendes, ECTS, Kodi_Lendes, SemestriID} = req.body;
+        const {Emri_Lendes, ECTS, Kodi_Lendes, SemestriID} = req.body;
 
-        Lenda.regjistroLenden(FakultetiID, Emri_Lendes.trim(), ECTS, Kodi_Lendes, SemestriID, (err, results) =>{
+        Lenda.regjistroLenden(Emri_Lendes.trim(), ECTS, Kodi_Lendes, SemestriID, (err, results) =>{
 
             if(err){
                 return res.status(500).json("Gabim ne query!");
@@ -95,13 +95,12 @@ const patchLenden = async (req, res) =>{
 
     try{
     const id = req.params.LendaID;
-    const {FakultetiID, Emri_Lendes, ECTS, Kodi_Lendes, SemestriID} = req.body;
+    const {Emri_Lendes, ECTS, Kodi_Lendes, SemestriID} = req.body;
     const fushat = [];
     const values = [];
 
     const Emri = Emri_Lendes.charAt(0).toUpperCase(0) + Emri_Lendes.slice(1);
 
-    if(FakultetiID){ fushat.push("FakultetiID = ?"); values.push(FakultetiID);}
     if(Emri){ fushat.push("Emri_Lendes = ?"); values.push(Emri.trim());}
     if(ECTS){ fushat.push("ECTS = ?"); values.push(ECTS);}
     if(Kodi_Lendes){ fushat.push("Kodi_Lendes = ?"); values.push(Kodi_Lendes.trim());}

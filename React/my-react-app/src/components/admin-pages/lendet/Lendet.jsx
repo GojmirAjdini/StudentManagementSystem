@@ -11,6 +11,8 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { DataGrid, GridToolbar} from '@mui/x-data-grid';
 import axiosInstance from "../../../services/axiosInstance";
+import CircularProgress  from "@mui/material/CircularProgress";
+import { useTimeout } from "@mui/x-data-grid/internals";
 
 
 function Lendet() {
@@ -18,7 +20,7 @@ function Lendet() {
     const [lendet, setLendet] = useState([]);
     const [orgLendet, setOrgLendet] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
-    const [searchLenda, setSearchLenda] = useState('');
+    const [loading, setLoading] = useState(null);
 
     const fetchLendet = async () =>{
 
@@ -58,18 +60,26 @@ function Lendet() {
 
         if(result.isConfirmed){
 
+            setLoading(LendaID);
             try{
                 const response = await axiosInstance.delete(`admin/lendet/delete/${LendaID}`);
-                const message = response.data.message;
-                setLendet(prev => prev.filter(lenda => lenda.LendaID !==  LendaID));
-                setSuccessMessage(message);
-
+                
                 setTimeout(() => {
-                    setSuccessMessage('');
-                }, 3000);   
+                setSuccessMessage(response.data.message);
+                setLendet(prev => prev.filter(lnd => lnd.LendaID !== LendaID));
+
+              setTimeout(() => {
+              setSuccessMessage('')
+            },3000);
+
+            },1000);   
 
             } catch(err){
                 console.error("Error deleting lenda", err); 
+            }finally{
+                useTimeout(() =>{
+                    setLoading(null);
+                },1000);
             }
         }
     }
@@ -99,12 +109,33 @@ function Lendet() {
             field:'Edit',
             headerName:'Përditëso',
             width:120,
-            renderCell : (params) => (
-                <Link to={`/edit/lenda/${params.row.LendaID}`}>
-                <Button id="editBtnLenda" color="primary" variant="contained"
-                startIcon={<EditIcon sx={{color:"white"}}/>}>Edit</Button>
-                </Link>
-            )
+            renderCell : (params) => {
+                const [editLoading, setEditLoading] = useState(false);
+
+                const handleEditClick = (e) => {
+                    e.preventDefault();
+                    setEditLoading(true);
+                    setTimeout(() => {
+                        setEditLoading(false);
+
+                        window.location.href = `/edit/lenda/${params.row.LendaID}`;
+                    }, 500);
+                };
+
+                return (
+                    <Button
+                        id="editBtnLenda"
+                        color="primary"
+                        loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>}
+                        loading={editLoading}
+                        variant="contained"
+                        startIcon={<EditIcon sx={{color:"white"}}/>}
+                        onClick={handleEditClick}
+                    >
+                        Edit
+                    </Button>
+                );
+            }
         },
 
         {
@@ -115,7 +146,8 @@ function Lendet() {
             renderCell : (params) => (
                 <Button 
                 color="error"
-                variant="contained" sx={{width:'100%'}}
+                variant="contained" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+                loading={loading === params.row.LendaID} sx={{width:'100%'}}
                 startIcon={<DeleteIcon sx={{color:'white'}}/>}
                 onClick={() => deleteLenda(params.row.LendaID)}>
                 Delete

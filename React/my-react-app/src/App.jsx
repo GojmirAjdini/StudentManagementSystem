@@ -3,6 +3,8 @@ import {Suspense, lazy, useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
+import axiosInstance from './services/axiosInstance';
+
 import PersonRounded  from '@mui/icons-material/PersonRounded';
 import Home from '@mui/icons-material/Home';
 import LibraryBooks from '@mui/icons-material/LibraryBooks';
@@ -16,6 +18,7 @@ import Swal from 'sweetalert2';
 import Loading from './components/admin-pages/login-register/utils/Loading';
 
 import Login from "./components/admin-pages/login-register/Login";
+import LoginStudent from './components/student-pages/login-register/LoginStudent';
 import RequireAuth from './components/admin-pages/login-register/utils/RequireAuth';
 
 const Register = lazy(() => import ('./components/admin-pages/studentet/StudentRegister'));
@@ -35,7 +38,8 @@ const ListaLendeve = lazy(() => import ('./components/admin-pages/lendet/Lendet'
 const EditLendet = lazy(() => import ('./components/admin-pages/lendet/EditLendet'));
 
 const RegjistroProfesoret = lazy(() => import ('./components/admin-pages/profesoret/RegjistroProfesoret'));
-import axiosInstance from './services/axiosInstance';
+const CaktoFakultetinProfesorit = lazy(() => import ('./components/admin-pages/profesoret/CaktoFakultetin'));
+const ProfesoretFakultetet = lazy(() => import ('./components/admin-pages/profesoret/ListaEProfesoreveFakulteteve'))
 const ListaProfesoreve = lazy(() => import ('./components/admin-pages/profesoret/ListaProfesoreve'));
 const EditProfesoret = lazy(() => import ('./components/admin-pages/profesoret/EditProfesoret'));
 const CaktoLendetProfesoret = lazy(() => import ('./components/admin-pages/profesoret/CaktoLendetProfesoret'));
@@ -48,17 +52,11 @@ const EditAdminet = lazy(() => import ('./components/admin-pages/adminet/EditAdm
 // IMPORTET PER PROFESOR //
 
 const Profile = lazy(() => import ('./components/professor-pages/Profile'));
+const LendetSipasProfit = lazy (() => import ('./components/professor-pages/LendetEMija'));
 
+// IMPORTET PER STUDENT //
 
-function RoleBasedRedirect({ userRole }) {
-  if (userRole === 'profesor') {
-    return <Navigate to="/profile" replace />;
-  }
-  if (userRole === 'admin' || userRole === 'superadmin') {
-    return <HomeAdmin />;
-  }
-  return <Navigate to="/login" replace />;
-}
+const Dashboard = lazy(() => import ('./components/student-pages/Dashboard'));
 
 function AppContent() {
 
@@ -66,11 +64,14 @@ function AppContent() {
 
   const [userRole, setUserRole] = useState([]);
   const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
+  const isLoginPage = location.pathname === '/staff/login';
+  const isStudentLoginPage = location.pathname === '/student/login';
 
 useEffect(() => {
 
-  if(isLoginPage){ return;}
+  if(isLoginPage || isStudentLoginPage){ 
+    setUserRole(null);
+    return;}
   
   const fetchRole = async () => {
     try {
@@ -91,11 +92,45 @@ useEffect(() => {
 
   return (
     <>
-      {!isLoginPage && (
+      {!isLoginPage && !isStudentLoginPage && (
       <div className="navContainer">
         <nav>
-        <li> <Link id='homeLink' className='customLink' to="/"><Home>Home</Home></Link></li>
+         
+        <li> <Link id='homeLink' className='customLink' to={userRole === 'student' ? '/dashboard' : '/'}><Home></Home></Link></li>
+      {userRole === 'student' && ( 
+        <li> <Link id='homeLink' className='customLink' 
+        to={'/transkripta-notave'}>Transkripta</Link></li>)}
         
+      {userRole === 'student' && ( <li> 
+        <Link id='homeLink' className='customLink' 
+        to={'/paraqit-provimin'}>Paraqit provimet</Link></li>)}
+
+      {userRole === 'student' && (  
+        <li> <Link id='homeLink' className='customLink' 
+        to={'/provimet/paraqitura'}>Provimet e paraqitura</Link></li>)}
+
+        {userRole === 'student' && ( 
+        <li> <Link id='homeLink' className='customLink' 
+        to={'/semester/register'}>Regjistro semestrin</Link></li> )}
+      
+        {/* PROFESOR */}  
+
+        {userRole === 'profesor' && ( 
+        <li> <Link id='homeLink' className='customLink' 
+        to={'/MY/lendet'}> Lëndët</Link></li> )}
+
+        {userRole === 'profesor' && ( 
+        <li> <Link id='homeLink' className='customLink' 
+        to={'/register/nota'}> Regjistro notën</Link></li> )}
+        
+        {userRole === 'profesor' && ( 
+        <li> <Link id='homeLink' className='customLink' 
+        to={'/delete/nota'}> Fshij notën</Link></li> )}
+
+        {userRole === 'profesor' && ( 
+        <li> <Link id='homeLink' className='customLink' 
+        to={'/procesverbal'}> Procesverbali</Link></li> )}
+
         {['admin', 'superadmin'].includes(userRole) && (
            <DropDownMenu
            titulli={( <> <School sx={{marginRight: "7px", marginTop:"-4px"}}/>Studentët </>)}
@@ -112,6 +147,8 @@ useEffect(() => {
            data={[
             { label: 'Regjistro Fakultet', path: '/register/fakutetet' },
             { label: 'Lista e Fakulteteve', path: '/fakultetet' },
+            { label: 'Regjistro Gjeneratë të re Akademike', path: '/register/semester-generation' },
+            { label: 'Regjistro Semestër të ri', path: '/register/semester-generation' },
            ]}
         />
           )}
@@ -121,7 +158,9 @@ useEffect(() => {
            titulli={(<> <PeopleAlt sx={{marginRight: "7px", marginTop:"-4px"}}/>Profesorët </>)} 
            data={[
             { label: 'Regjistro Profesor', path: '/register/profesoret' },
-            { label: 'Lista e Profesorëve', path: '/profesoret' },
+            { label: 'Cakto Fakultetin për Profesor', path:'/assign/profesoret-fakultetin'},
+            { label: 'Lista e Fakulteteve & Profesorëve', path: '/profesoret-fakultetet' },
+            { label: 'Lista e të gjithë Profesorëve', path: '/profesoret' },
             { label: 'Cakto Lëndët & Profesorët', path: '/lendet/profesoret/assign'},
             { label: 'Lista e Lëndëve & Profesorëve', path: '/profesoret-lendet' }
            ]}
@@ -147,11 +186,13 @@ useEffect(() => {
            ]}
         />
         )}
-  
+
         <DropDownMenu
            titulli={( <> <AccountBox sx={{marginRight: "5px", marginTop:"-4px"}}/>Llogaria </>)} 
            data={[
-            {label: ( <> <PersonRounded sx={{marginRight: "5px", marginTop:"-2px"}}/>Profili im </>), path:'/' },
+            
+            {label: ( <> <PersonRounded sx={{marginRight: "5px", marginTop:"-2px"}}/>Profili im </>), 
+            path: userRole === 'student' ? '/dashboard' : '/' },
             { label: "Ç'kyçu", 
               onClick: () => {
                 Swal.fire({
@@ -196,7 +237,8 @@ useEffect(() => {
       <Suspense fallback={<Loading/>}>
         <Routes>
 
-          <Route path='/login' element={<Login/>} />
+          <Route path='/staff/login' element={<Login/>} />
+          <Route path="/student/login" element={<LoginStudent/>} />
 
           <Route
           path="/"
@@ -221,6 +263,8 @@ useEffect(() => {
           <Route path="/edit/lenda/:LendaID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditLendet /></RequireAuth>} />
 
           <Route path="/register/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroProfesoret /></RequireAuth>} />
+          <Route path ="/assign/profesoret-fakultetin" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <CaktoFakultetinProfesorit/>  </RequireAuth>} />
+          <Route path='/profesoret-fakultetet' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ProfesoretFakultetet /></RequireAuth>} />
           <Route path="/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaProfesoreve /></RequireAuth>} />
           <Route path="/edit/profesori/:ProfesoriID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditProfesoret /></RequireAuth>} />
           <Route path='/lendet/profesoret/assign' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoLendetProfesoret /></RequireAuth>} />
@@ -233,6 +277,16 @@ useEffect(() => {
           {/* ROUTES PER PROFESOR */}
 
           <Route path='/profile' element={<RequireAuth allowedRoles={['profesor']}> <Profile/></RequireAuth>}/>
+          <Route path='/MY/lendet' element={<RequireAuth allowedRoles={['profesor']}> <LendetSipasProfit/></RequireAuth>}/>
+
+        { /* ROUTES PER STUDENT */}
+
+          <Route path='/dashboard' element={<RequireAuth allowedRoles={['student']}> <Dashboard/></RequireAuth>}/>
+        
+        
+        
+        
+        
         </Routes>
         </Suspense>
         </>

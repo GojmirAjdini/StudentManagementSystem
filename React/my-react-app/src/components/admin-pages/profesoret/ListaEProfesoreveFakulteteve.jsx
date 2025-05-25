@@ -5,25 +5,23 @@ import './assets/ListaLendeveProfeve.css';
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Swal from "sweetalert2"; 
-import CircularProgress  from "@mui/material/CircularProgress";
 
-function LendetProfesoret(){
+function FakultetetProfesoret(){
 
-    const [lendetProfesoret, setLendetProfesoret] = useState([]);
+    const [fakultetetProfesoret, setFakultetetProfesoret] = useState([]);
     const [successMessage, setSuccessMessage] = useState("");
-    const [loading, setLoading] = useState(null);
 
-    const fetchLendetProfesoret = async () => {
+    const fetchFakultetetProfesoret = async () => {
         try {
-            const response = await axiosInstance.get(`admin/profesoret-lendet/all`);
+            const response = await axiosInstance.get(`admin/profesoret-fakultetet/all`);
             console.log(response.data);
-            setLendetProfesoret(response.data);
+            setFakultetetProfesoret(response.data);
         } catch (err) {
             console.error(err);
         }
     };
 
-    const deleteLendetProfesoret = async (LendaID, ProfesoriID) => {
+    const deleteFakultetetProfesoret = async (FakultetiID, ProfesoriID) => {
         
         const result = await Swal.fire({
                     
@@ -46,34 +44,30 @@ function LendetProfesoret(){
               }
             });
             if(result.isConfirmed){
-        setLoading({ LendaID, ProfesoriID });
+        
         try {
-            const response = await axiosInstance.delete(`admin/profesoret-lendet/delete/${LendaID}/${ProfesoriID}`);
+            const response = await axiosInstance.delete(`admin/profesoret-fakultetet/deletesipas/${FakultetiID}/${ProfesoriID}`);
             
-            setTimeout(() => {
-            setLendetProfesoret(prev => 
-            prev.filter(lenda => !(lenda.LendaID === LendaID && lenda.ProfesoriID === ProfesoriID)));
+            setFakultetetProfesoret(prev => 
+            prev.filter(fkt => !(fkt.FakultetiID === FakultetiID && fkt.ProfesoriID === ProfesoriID)));
             
-            setSuccessMessage(response.data.message);
+            console.log(response.data); 
+            setSuccessMessage("Caktimi u fshi me sukses!");
 
             setTimeout(() => {
                 setSuccessMessage("");  
             }, 3000);
-          },1000);
+
         } catch (err) {
             console.error(err);
-        }finally{
-          setTimeout(() =>{
-            setLoading(null);
-          },1000);
         }
     };
 }
     useEffect(() => {
-        fetchLendetProfesoret();
+        fetchFakultetetProfesoret();
     
         const interval = setInterval(() => {
-            fetchLendetProfesoret();
+            fetchFakultetetProfesoret();
         }, 60000);
         
         return () => clearInterval(interval);
@@ -81,27 +75,23 @@ function LendetProfesoret(){
 
     const columns = [
         { field: "id", headerName: "#", width: 20 },
-        { field: "Emri", headerName: "Emri", width: 120 },
+        { field: "EmriProfit", headerName: "Emri", width: 120 },
         { field: "Mbiemri", headerName: "Mbiemri", width: 120 },
-        { field: "Gjinia", headerName: "Gjinia", width: 70 },
-        { field: "Email", headerName: "Email", width: 210 },
-        { field: "Titulli_Akademik", headerName: "Titulli", width: 70 },
-        { field: "Fakulteti", headerName: "Fakulteti", width: 200},
-        { field: "Emri_Lendes", headerName: "Emri Lëndës", width:220 },
-        { field: "Kodi_Lendes", headerName: "Kodi Lëndës", width: 110 },
-        { field: "NrSemestrit", headerName: "Semestri", width: 85 },
-        { field: "Viti_Akademik", headerName:"Viti Akademik", width:120},
+        { field: "Gjinia", headerName: "Gjinia", width: 80 },
+        { field: "Titulli_Akademik", headerName: "Titulli", width: 80 },
+        { field: "Emri", headerName: "Fakulteti", width: 220 },
+        { field: "NiveliStudimit", headerName: "Niveli", width: 100 },
+        { field: "Lokacioni", headerName: "Lokacioni", width: 110 },
+        { field: "Kodi_Fakultetit", headerName: "Kodi i Fakultetit", width: 140 },
 
         {
             field: "Delete",
             headerName: "Largo caktimin",
-            width: 125,
+            width: 135,
             renderCell: (params) => (
                 <Button variant="contained" color="error"
-                    className="deleteBtn" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-                    loading={loading && loading.LendaID === params.row.LendaID && loading.ProfesoriID === params.row.ProfesoriID} 
-                    sx={{width:'100%'}}
-                    onClick={() => deleteLendetProfesoret(params.row.LendaID, params.row.ProfesoriID)}
+                    className="deleteBtn" sx={{width:'100%'}}
+                    onClick={() => deleteFakultetetProfesoret(params.row.FakultetiID, params.row.ProfesoriID)}
                 >
                     Remove
                 </Button>
@@ -109,16 +99,16 @@ function LendetProfesoret(){
         }
     ]
 
-    const rows = useMemo(() => lendetProfesoret.map((lenda, index) => ({
+    const rows = useMemo(() => fakultetetProfesoret.map((fakultet, index) => ({
         id: index + 1,
-        ...lenda,
+        ...fakultet,
     })),
-    [lendetProfesoret]);
+    [fakultetetProfesoret]);
 
     return (
         <div className="containerLendetProfet" id="fadeInPage">
 
-            <h1 id="h1ProfeveLendve">LISTA E PROFESORËVE DHE LËNDËVE</h1>
+            <h1 id="h1ProfeveLendve">LISTA E PROFESORËVE DHE FAKULTETEVE</h1>
 
             {successMessage && (
         <div id="successMessageProfLenda" className="fade-in" role="alert">
@@ -193,4 +183,4 @@ function LendetProfesoret(){
     )
 }
 
-export default LendetProfesoret;
+export default FakultetetProfesoret;

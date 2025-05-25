@@ -6,8 +6,9 @@ class Lenda{
 
         const sql = `SELECT l.LendaID, f.Emri Fakulteti, l.Emri_Lendes, 
         l.ECTS, l.Kodi_Lendes, l.uKrijua, s.NrSemestrit Semestri FROM Lenda l 
-        INNER JOIN Fakulteti f ON l.FakultetiID = f.FakultetiID
         INNER JOIN Semestri s ON l.SemestriID = s.Semestri_ID
+        INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+        INNER JOIN Fakulteti f on gj.FakultetiID = f.FakultetiID
         `;
 
         db.query(sql, (err, results) =>{
@@ -22,10 +23,10 @@ class Lenda{
         )
     }
 
-    static regjistroLenden(FakultetiID, Emri_Lendes, ECTS, Kodi_Lendes, SemestriID, callback){
+    static regjistroLenden(Emri_Lendes, ECTS, Kodi_Lendes, SemestriID, callback){
 
-        const sql = "INSERT INTO Lenda(FakultetiID, Emri_Lendes, ECTS, Kodi_Lendes, SemestriID) VALUES (?, ?, ?, ?, ?)";
-        const values = [FakultetiID, Emri_Lendes, ECTS, Kodi_Lendes, SemestriID];
+        const sql = "INSERT INTO Lenda(Emri_Lendes, ECTS, Kodi_Lendes, SemestriID) VALUES (?, ?, ?, ?)";
+        const values = [Emri_Lendes, ECTS, Kodi_Lendes, SemestriID];
 
         db.query(sql,values, (err, results) =>{
 

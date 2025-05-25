@@ -37,7 +37,7 @@ const regjistroStudent = async (req, res) =>{
     try{   
         
         const {Emri, Mbiemri, Gjinia, EmailPrivat, Vendlindja, 
-            Data_Lindjes, Adresa, Nr_Tel, FakultetiID, Statusi} = req.body;
+            Data_Lindjes, Adresa, Nr_Tel, Statusi, GjenerataID} = req.body;
 
             const emailCheckQuery = `
             SELECT EmailPrivat FROM profesori WHERE EmailPrivat = ? 
@@ -80,7 +80,7 @@ const regjistroStudent = async (req, res) =>{
         Studenti.createStudent( upCEmri.trim(), upCMbiemri.trim(), Gjinia, emailstudentor.trim(), EmailPrivat.trim(), 
             hashedPassword, Vendlindja.charAt(0).toUpperCase() + Vendlindja.slice(1), 
             Data_Lindjes, Adresa.charAt(0).toUpperCase() + Vendlindja.slice(1), Nr_Tel, 
-            FakultetiID, Statusi, studentiID, gjenerata, (err, results) =>{
+            Statusi, studentiID, gjenerata, GjenerataID, (err, results) =>{
 
             if(err){
                 console.log("Gabim gjate regjistrimit", err);
@@ -261,7 +261,7 @@ const loginStudenti = async(req, res) =>{
                 }
 
                 const tokenPayLoad = {
-                    Email: EmailStudentor,
+                    email: EmailStudentor,
                     role: "student"
                 } 
 
@@ -305,7 +305,7 @@ const patchStudentin = async (req, res) => {
 
         const id = req.params.ID;
         const {Emri, Mbiemri, Gjinia, EmailPrivat, Vendlindja, Data_Lindjes, 
-            Adresa, Nr_Tel, FakultetiID, Statusi, Gjenerata} = req.body;
+            Adresa, Nr_Tel, Statusi, GjenerataID} = req.body;
 
         const upCEmri = Emri.charAt(0).toUpperCase() + Emri.slice(1);
         const upCMbiemri = Mbiemri.charAt(0).toUpperCase() + Mbiemri.slice(1);
@@ -317,8 +317,7 @@ const patchStudentin = async (req, res) => {
         if(Gjinia){ fushat.push('Gjinia = ?'); values.push(Gjinia);} if(EmailPrivat){ fushat.push('EmailPrivat = ?'); values.push(EmailPrivat.trim());} 
         if(Vendlindja.charAt(0).toUpperCase() + Vendlindja.slice(1)){ fushat.push('Vendlindja = ?'); values.push(Vendlindja.trim());} if(Data_Lindjes){ fushat.push('Data_Lindjes = ?'); values.push(Data_Lindjes);} 
         if(Adresa.charAt(0).toUpperCase() + Adresa.slice(1)){ fushat.push('Adresa = ?'); values.push(Adresa.trim());} if(Nr_Tel){ fushat.push('Nr_Tel = ?'); values.push(Nr_Tel.trim());} 
-        if(FakultetiID){ fushat.push('FakultetiID = ?'); values.push(FakultetiID);} if(Statusi){ fushat.push('Statusi = ?'); values.push(Statusi);} 
-        if(Gjenerata){ fushat.push('Gjenerata = ?'); values.push(Gjenerata);} 
+        if(Statusi){ fushat.push('Statusi = ?'); values.push(Statusi);} if(GjenerataID){ fushat.push('GjenerataID = ?'); values.push(GjenerataID);} 
 
         if(fushat.length === 0){
 
@@ -387,9 +386,37 @@ const patchStudentin = async (req, res) => {
                 return res.status(500).json({error: "Server error"})
             }  
         }
+
+    const lexoStudentinByEmail = async (req, res) =>{
+
+    try{
+
+        const email = req.user.email;
+
+        console.log(email);
+
+        Studenti.readStudentByEmail([email], (err, results) =>{
+            
+            if(err){
+                return res.status(500).json({message:"Error",error:err});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message:"Studenti nuk ekziston!"});
+            }
+
+            return res.status(200).json(results);
+        })
+        
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({message:"Error",err});
+
+    }
+}
         
     
 
 export default {lexoStudentet, regjistroStudent, fshijStudent, 
     fshijAllStudentet, updatePassword, loginStudenti, 
-    patchStudentin, lexoStudentetByID, lexoStudentetByName};
+    patchStudentin, lexoStudentetByID, lexoStudentetByName,
+    lexoStudentinByEmail};

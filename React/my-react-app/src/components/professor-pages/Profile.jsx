@@ -30,7 +30,7 @@ function Profile(){
 
         try{
 
-            const response = await axiosInstance.get("profesori/profile");
+            const response = await axiosInstance.get("profesor/profile");
 
             console.log(response.data[0])
             setProfesori(response.data[0]);
@@ -92,7 +92,7 @@ function Profile(){
         <div className="input-label">
         <label htmlFor="">Fakulteti</label>
         <input className="form-control" disabled 
-        type="text" placeholder="Fakulteti" value={profesori.Fakulteti} />
+        type="text" value={profesori.Fakulteti ? profesori.Fakulteti : ''} />
         </div>
         
         <div className="input-label">

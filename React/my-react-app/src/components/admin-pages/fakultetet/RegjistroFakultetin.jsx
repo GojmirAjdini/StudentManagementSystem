@@ -5,6 +5,7 @@ import './assets/FakultetiRegister.css';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import axiosInstance from "../../../services/axiosInstance";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function RegjistroFakultetin() {
     
@@ -12,14 +13,35 @@ function RegjistroFakultetin() {
     const [Emri, setEmri] = useState('');
     const [Niveli, setNiveli] = useState('');
     const [Lokacioni, setLokacioni] = useState('');
+    const [loading, setLoading] = useState(false);
     const [Kodi_Fakultetit, setKodi_Fakultetit] = useState('');
+    const [nivelet, setNivelet] = useState([]);
 
     const handleReset = () => {
         setEmri('');
         setNiveli('');
         setLokacioni('');
         setKodi_Fakultetit('');
+        setNivelet([]);
     };  
+
+    useEffect(() =>{
+
+        fetchNivelet();
+    },[])
+
+    const fetchNivelet = async () =>{
+
+        try{
+
+            const response = await axiosInstance.get("admin/nivelet-studimit");
+
+            console.log(response.data.nivelet);
+            setNivelet(response.data.nivelet);
+        }catch(err){
+            console.error(err);
+        }
+    }
 
 
     const submitFakulteti = async(e) =>{
@@ -36,21 +58,24 @@ function RegjistroFakultetin() {
             return;
         }
         
+        setLoading(true);
             try{
                 const response = await axiosInstance.post(`admin/fakultetet/submit`,{
                     Emri: Emri,
                     Niveli: Niveli,
                     Lokacioni: Lokacioni,
-                    Kodi_Fakultetit: Kodi_Fakultetit
+                    Kodi_Fakultetit: Kodi_Fakultetit,
             }, );
             
                 console.log(response.data);
-                setSuccessMessage(response.data.message);
-                
-                
+
                 setTimeout(() => {
-                    setSuccessMessage('');
-                }, 5000);              
+                setSuccessMessage(response.data.message);
+                setTimeout(() =>{
+                setSuccessMessage('');
+                }, 5000);  
+
+            },1000);      
             }
             catch(err){
                 console.error("Error krijimi i fakultetit", err);
@@ -59,9 +84,14 @@ function RegjistroFakultetin() {
                 setTimeout(() => {
                     setSuccessMessage('');
                 }, 5000);
+            }finally{
+                setTimeout(() => {
+                setLoading(false);
+                },1000);
+                
             }
         }
-    
+
     return (
 
         <div id="fadeInPage" className="container">
@@ -75,13 +105,16 @@ function RegjistroFakultetin() {
             <input className="form-control" required type="text" placeholder="Emri i Fakultetit" value={Emri} onChange={(e) => setEmri(e.target.value)} />
             </div> 
 
-                <div className="input-label">
-                 <label htmlFor="">Niveli<span> *</span></label>
-                <select className="form-select" required value={Niveli} onChange={(e) => setNiveli(e.target.value)} aria-label="Default select example">
-                <option disabled value="">Niveli</option>
-                <option value="Bachelor">Bachelor</option>
-                <option value="Master">Master</option>
-                <option value="PhD">PhD</option>
+            <div className="input-label">
+             <label htmlFor="">Niveli<span> *</span></label>
+            <select className="form-select" required value={Niveli} onChange={(e) => setNiveli(e.target.value)}>
+            <option value="" disabled>Zgjedh Nivelin</option>
+            {nivelet.map((nv) => (
+            <option key={nv.NiveliID} value={nv.NiveliID}>
+                {nv.Emri_Nivelit}
+            
+            </option>
+            ))}
                 </select>
                     </div>
 
@@ -96,11 +129,16 @@ function RegjistroFakultetin() {
                 </div>
 
                 <div className="input-labelBtn">
-                <Button variant="contained" id="primaryBtnFkt" type="submit">Regjistro</Button>
-                <Button variant="contained" id="resetBtnFkt" type='button' onClick={handleReset}>Reset</Button>
+                <Button variant="contained" id="primaryBtnFkt" type="submit" 
+                loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+                loading={loading} >
+                    Regjistro
+                </Button>
+                <Button variant="contained" id="resetBtnFkt" type='button'  onClick={handleReset}>Reset</Button>
                 </div>
 
             </form>
+
             {successMessage && (
         <div id="successMsgFakulteti" className="fade-in" role="alert">
           <Alert severity="success">{successMessage}</Alert>
