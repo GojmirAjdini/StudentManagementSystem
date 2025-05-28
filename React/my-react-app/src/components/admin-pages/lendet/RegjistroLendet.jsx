@@ -11,6 +11,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { CircularProgress } from "@mui/material";
 
+
 function RegjistroLendet() {
 
     const [EmriLendes, setEmriLendes] = useState('');
@@ -19,6 +20,7 @@ function RegjistroLendet() {
     const [SemestriID, setSemestriID] = useState('');
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
+    const [warningMessage, setWarningMessage] = useState('');
     const [semestrat, setSemestrat] = useState([]);
 
     const handleReset = () => {
@@ -26,6 +28,7 @@ function RegjistroLendet() {
         setKodiLendes('');
         setECTS('');
         setSemestriID('');
+
     }
 
     const semestratDisponueshme = async() =>{
@@ -67,7 +70,7 @@ function RegjistroLendet() {
                 Emri_Lendes: EmriLendes,
                 ECTS: ECTS,
                 Kodi_Lendes: KodiLendes,
-                SemestriID: SemestriID
+                SemestriID: SemestriID,
         });
             
             console.log(response.data);
@@ -85,11 +88,11 @@ function RegjistroLendet() {
             console.error("Error krijimi i lendes", err);
             setTimeout(() => {
               
-            setSuccessMessage('Ka ndodhur nje gabim!');
+            setWarningMessage(err.response.data.message);
 
             setTimeout(() => {
-                setSuccessMessage('');
-            }, 5000);
+                setWarningMessage('');
+            }, 3000);
           },1000);
 
         }finally{
@@ -101,6 +104,7 @@ function RegjistroLendet() {
     useEffect(() => {   
         
         semestratDisponueshme();
+        
     }
     ,[]);
 
@@ -126,7 +130,7 @@ function RegjistroLendet() {
         <input className="form-control" required type="text" placeholder="Kredi" value={ECTS} onChange={(e) => setECTS(e.target.value)} />
         </div>
 
-        <div className="input-label">
+      <div className="input-label">
         <br />
 
         <Autocomplete
@@ -134,7 +138,7 @@ function RegjistroLendet() {
         fullWidth
         options={semestrat}
         getOptionLabel={(sms) =>
-          `${sms.Afati_Semestrit.split(' ')[0]} ${sms.NrSemestrit} - ${sms.Fakulteti} - ${sms.Niveli} - ${sms.Viti_Akademik}`
+          `${sms.Fakulteti} - ${sms.Afati_Semestrit.split(' ')[0]} ${sms.NrSemestrit} - ${sms.NiveliStudimit} - ${sms.Viti_Gjenerates}`
         }
         sx={{
           fontFamily: "Montserrat",
@@ -154,7 +158,7 @@ function RegjistroLendet() {
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Zgjedh Semestrin/Fakultetin"
+            label="Zgjedh Fakultetin/Semestrin"
             required
             sx={{ 
               marginTop:"-5px",
@@ -176,7 +180,6 @@ function RegjistroLendet() {
         isOptionEqualToValue={(option, value) => option.Semestri_ID === value.Semestri_ID}
       />
       </div>
-
         <div className="input-labelLnt">
         <Button variant="contained" loading={loading} loadingIndicator={<CircularProgress sx={{color:'white'}} size={25} />}
         id="primaryBtnLnt" className="btn btn-primary" type="submit">Regjistro</Button>
@@ -185,9 +188,9 @@ function RegjistroLendet() {
 
         </form>
     
-        {successMessage && (
+        {(successMessage || warningMessage) && (
         <div id="successMsgLenda" className="fade-in" role="alert">
-         <Alert severity="success">{successMessage}</Alert> 
+         <Alert severity={successMessage ? "success" : 'warning'}>{successMessage || warningMessage}</Alert> 
             </div>
         )}
         </div>

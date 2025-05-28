@@ -2,17 +2,17 @@
   font-family: 'Montserrat';
 }
 
-#profLndH1{
+#semesterH1{
 
     text-align: center;
-    margin-top: 140px;
+    margin-top: 130px;
     font-size: 36px;
 }
 span{
 
     color: red;
 }
-.containerProfLnd{
+.containerSemestri{
 
     display: flex;
     flex-direction: column;
@@ -22,26 +22,24 @@ span{
     
 }
 
-.formProfLnd{
+.formSemestri{
 
     display: flex;
     flex-direction: column;
-    margin-top: 80px;
+    margin-top: 30px;
     justify-content: center;
+    width: 50%;
     
 }
 
-.selectForProfesoretLendet{
+.selectForSemestri{
 
   margin-top: 50px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center ;
-  width:500px;
-  gap: 30px;
 
 }
-
 @keyframes fadeInPage {
     from {
         opacity: 0;
@@ -59,7 +57,7 @@ span{
 
 }
 
-.input-labelProfLnd{
+.input-labelSemestri{
 
   display: flex;
   flex-direction: row;
@@ -67,11 +65,10 @@ span{
   justify-content: center;
   gap: 25px;
   align-items: center;
-  margin-top: 60px;
+  margin-top: 30px;
 }
 
-
-#primaryBtnProfLenda{
+#primaryBtnSemestri{
   background-color: rgb(101, 64, 235);
   width: 30%;
   height: 40px;
@@ -79,7 +76,7 @@ span{
   border: none;
 }
 
-#resetBtnProfLenda{
+#resetBtnSemestri{
 
   width: 30%;
   height: 40px;
@@ -91,17 +88,8 @@ span{
 
 #successMsgLndProf{
   position: absolute;
-  top: 210px;
+  top: 170px;
   left: 220px;
-  width: fit-content;
-  text-align: center;
-  font-size: 15px;
-}
-
-#infoMessageLndProf{
-
-  position: absolute;
-  top: 210px;
   width: fit-content;
   text-align: center;
   font-size: 15px;

@@ -32,6 +32,7 @@ const DropDownMenu = lazy(() => import ('./components/admin-pages/navigation/Nav
 const RegjistroFakultetin = lazy(() => import ('./components/admin-pages/fakultetet/RegjistroFakultetin'));
 const ListaFakulteteve = lazy(() => import ('./components/admin-pages/fakultetet/ListaFakulteteve'));
 const EditFakultetet = lazy(() => import ('./components/admin-pages/fakultetet/EditFakultetet'));
+const CaktoSemestrin = lazy (() => import ('./components/admin-pages/fakultetet/CaktoSemestrin'));
 
 const RegjistroLendet = lazy(() => import ('./components/admin-pages/lendet/RegjistroLendet'));
 const ListaLendeve = lazy(() => import ('./components/admin-pages/lendet/Lendet'));
@@ -57,12 +58,14 @@ const LendetSipasProfit = lazy (() => import ('./components/professor-pages/Lend
 // IMPORTET PER STUDENT //
 
 const Dashboard = lazy(() => import ('./components/student-pages/Dashboard'));
+const RegjistrimiSemestrit = lazy(() => import ('./components/student-pages/RegjistroSemestrinStudent'));
 
 function AppContent() {
 
   const navigate = useNavigate();
 
   const [userRole, setUserRole] = useState([]);
+  const [userEmail, setUserEmail] = useState([]);
   const location = useLocation();
   const isLoginPage = location.pathname === '/staff/login';
   const isStudentLoginPage = location.pathname === '/student/login';
@@ -71,13 +74,14 @@ useEffect(() => {
 
   if(isLoginPage || isStudentLoginPage){ 
     setUserRole(null);
+    setUserEmail(null);
     return;}
   
   const fetchRole = async () => {
     try {
       const res = await axiosInstance.get("admin/check-authentication" );
-      console.log(res.data.role)
       
+      setUserEmail(res.data.email);
       setUserRole(res.data.role);
       
     } catch (err) {
@@ -146,9 +150,11 @@ useEffect(() => {
            titulli={( <> <AccountBalance sx={{marginRight: "7px", marginTop:"-4px"}}/>Fakultetet </>)} 
            data={[
             { label: 'Regjistro Fakultet', path: '/register/fakutetet' },
+            { label: 'Regjistro Vitin akademik', path: '/register/academic-year' },
+            { label: 'Regjistro Gjeneratë të re akademike', path: '/register/academic-generation' },
+            { label: 'Regjistro Semestër të ri', path: '/register/semester' },
             { label: 'Lista e Fakulteteve', path: '/fakultetet' },
-            { label: 'Regjistro Gjeneratë të re Akademike', path: '/register/semester-generation' },
-            { label: 'Regjistro Semestër të ri', path: '/register/semester-generation' },
+            
            ]}
         />
           )}
@@ -159,9 +165,9 @@ useEffect(() => {
            data={[
             { label: 'Regjistro Profesor', path: '/register/profesoret' },
             { label: 'Cakto Fakultetin për Profesor', path:'/assign/profesoret-fakultetin'},
-            { label: 'Lista e Fakulteteve & Profesorëve', path: '/profesoret-fakultetet' },
-            { label: 'Lista e të gjithë Profesorëve', path: '/profesoret' },
             { label: 'Cakto Lëndët & Profesorët', path: '/lendet/profesoret/assign'},
+            { label: 'Lista e të gjithë Profesorëve', path: '/profesoret' },
+            { label: 'Lista e Fakulteteve & Profesorëve', path: '/profesoret-fakultetet' },
             { label: 'Lista e Lëndëve & Profesorëve', path: '/profesoret-lendet' }
            ]}
         />
@@ -188,7 +194,7 @@ useEffect(() => {
         )}
 
         <DropDownMenu
-           titulli={( <> <AccountBox sx={{marginRight: "5px", marginTop:"-4px"}}/>Llogaria </>)} 
+           titulli={( <> <AccountBox sx={{marginRight: "5px", marginTop:"-4px"}}/>{userEmail} </>)} 
            data={[
             
             {label: ( <> <PersonRounded sx={{marginRight: "5px", marginTop:"-2px"}}/>Profili im </>), 
@@ -250,46 +256,48 @@ useEffect(() => {
           }
         />
 
-          <Route path="/register/student" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><Register/></RequireAuth>} />
-          <Route path="/studentet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <StudentList /> </RequireAuth>} />
-          <Route path='/edit/studenti/:ID' element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <StudentsEdit /> </RequireAuth>} />
+      <Route path="/register/student" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><Register/></RequireAuth>} />
+      <Route path="/studentet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <StudentList /> </RequireAuth>} />
+      <Route path='/edit/studenti/:ID' element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <StudentsEdit /> </RequireAuth>} />
 
-          <Route path="/register/fakutetet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <RegjistroFakultetin />  </RequireAuth>} />
-          <Route path="/fakultetet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaFakulteteve/></RequireAuth>} />
-          <Route path="/edit/fakulteti/:FakultetiID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditFakultetet /></RequireAuth>} />
+      <Route path="/register/fakutetet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <RegjistroFakultetin />  </RequireAuth>} />
+      <Route path="/fakultetet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaFakulteteve/></RequireAuth>} />
+      <Route path="/edit/fakulteti/:FakultetiID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditFakultetet /></RequireAuth>} />
+      <Route path="/register/semester" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoSemestrin /></RequireAuth>} />
 
-          <Route path="/register/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroLendet /></RequireAuth>} />
-          <Route path="/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaLendeve /></RequireAuth>} />
-          <Route path="/edit/lenda/:LendaID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditLendet /></RequireAuth>} />
+      <Route path="/register/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroLendet /></RequireAuth>} />
+      <Route path="/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaLendeve /></RequireAuth>} />
+      <Route path="/edit/lenda/:LendaID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditLendet /></RequireAuth>} />
 
-          <Route path="/register/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroProfesoret /></RequireAuth>} />
-          <Route path ="/assign/profesoret-fakultetin" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <CaktoFakultetinProfesorit/>  </RequireAuth>} />
-          <Route path='/profesoret-fakultetet' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ProfesoretFakultetet /></RequireAuth>} />
-          <Route path="/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaProfesoreve /></RequireAuth>} />
-          <Route path="/edit/profesori/:ProfesoriID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditProfesoret /></RequireAuth>} />
-          <Route path='/lendet/profesoret/assign' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoLendetProfesoret /></RequireAuth>} />
-          <Route path='/profesoret-lendet' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><LendetProfesoret /></RequireAuth>} />
-       
-          <Route path='/register/admin' element={<RequireAuth allowedRoles={['superadmin']}><RegjistroAdmin /></RequireAuth>} />
-          <Route path='/adminet' element={<RequireAuth allowedRoles={['superadmin']}><ListoAdminet /></RequireAuth>} />
-          <Route path='/edit/admin/:AdminID' element={<RequireAuth allowedRoles={['superadmin']}><EditAdminet /></RequireAuth>} />
+      <Route path="/register/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroProfesoret /></RequireAuth>} />
+      <Route path ="/assign/profesoret-fakultetin" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <CaktoFakultetinProfesorit/>  </RequireAuth>} />
+      <Route path='/profesoret-fakultetet' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ProfesoretFakultetet /></RequireAuth>} />
+      <Route path="/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaProfesoreve /></RequireAuth>} />
+      <Route path="/edit/profesori/:ProfesoriID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditProfesoret /></RequireAuth>} />
+      <Route path='/lendet/profesoret/assign' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoLendetProfesoret /></RequireAuth>} />
+      <Route path='/profesoret-lendet' element={<RequireAuth allowedRoles={['admin', 'superadmin']}><LendetProfesoret /></RequireAuth>} />
+  
+      <Route path='/register/admin' element={<RequireAuth allowedRoles={['superadmin']}><RegjistroAdmin /></RequireAuth>} />
+      <Route path='/adminet' element={<RequireAuth allowedRoles={['superadmin']}><ListoAdminet /></RequireAuth>} />
+      <Route path='/edit/admin/:AdminID' element={<RequireAuth allowedRoles={['superadmin']}><EditAdminet /></RequireAuth>} />
 
-          {/* ROUTES PER PROFESOR */}
+      {/* ROUTES PER PROFESOR */}
 
-          <Route path='/profile' element={<RequireAuth allowedRoles={['profesor']}> <Profile/></RequireAuth>}/>
-          <Route path='/MY/lendet' element={<RequireAuth allowedRoles={['profesor']}> <LendetSipasProfit/></RequireAuth>}/>
+      <Route path='/profile' element={<RequireAuth allowedRoles={['profesor']}> <Profile/></RequireAuth>}/>
+      <Route path='/MY/lendet' element={<RequireAuth allowedRoles={['profesor']}> <LendetSipasProfit/></RequireAuth>}/>
 
-        { /* ROUTES PER STUDENT */}
+    { /* ROUTES PER STUDENT */}
 
-          <Route path='/dashboard' element={<RequireAuth allowedRoles={['student']}> <Dashboard/></RequireAuth>}/>
-        
-        
-        
-        
-        
-        </Routes>
-        </Suspense>
-        </>
+      <Route path='/dashboard' element={<RequireAuth allowedRoles={['student']}> <Dashboard/></RequireAuth>}/>
+      <Route path='/semester/register' element={<RequireAuth allowedRoles={['student']}> <RegjistrimiSemestrit/> </RequireAuth>}/>
+
+    
+    
+    
+    
+    </Routes>
+    </Suspense>
+    </>
         
   );
 }

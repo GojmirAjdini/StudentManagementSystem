@@ -208,7 +208,7 @@ input{
 .input{
   display: flex;
   justify-content: center;
-  width: 200%;
+  width: 100%;
 }
 
 .inputLenda{

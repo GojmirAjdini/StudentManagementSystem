@@ -8,7 +8,9 @@ const router = express.Router();
 router.patch("/update/:ID",studentKontroller.updatePassword);
 router.post("/login",studentKontroller.loginStudenti);
 router.get("/dashboard", auth.verifyToken, auth.eshteStudent, studentKontroller.lexoStudentinByEmail);
-
+router.post("/register/semester", auth.verifyToken, auth.eshteStudent, studentKontroller.regjistroSemestrinPerStudent )
+router.get("/semestrat", auth.verifyToken, auth.eshteStudent, studentKontroller.lexoSemestratSipasFakultetit);
+router.get("/lista-semestrave/registered",auth.verifyToken, auth.eshteStudent, studentKontroller.listaSemestraveTeRegjistruar);
 
 router.post("/logout",(req, res) => {
    try {

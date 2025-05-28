@@ -7,6 +7,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./assets/LoginStudent.css";
 import CircularProgress from "@mui/material/CircularProgress";
+import axiosInstance from "../../../services/axiosInstance";
 
 function LoginStudent(){
 
@@ -21,6 +22,24 @@ function LoginStudent(){
     const togglePassword = () =>{
         setShowPassword(!showPassword);
     }
+
+    useEffect(() =>{
+
+        const checkAuth = async () =>{
+            try{
+
+                const res = await axiosInstance.get("admin/check-authentication");
+
+                if(res.data.message === 'Authenticated'){
+                    navigate('/dashboard');
+                }
+            }catch(err){
+                console.log("User nuk eshte autentifikuar");
+            }   
+        };
+
+        checkAuth();
+    },[])
 
     const navigate = useNavigate();
 

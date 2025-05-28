@@ -28,7 +28,7 @@ router.patch("/edit/:AdminID", auth.verifyToken, auth.eshteSuperAdmin, kontrolle
 router.get('/check-authentication', auth.verifyToken, (req, res) => {
     res.status(200).json({ 
       message: "Authenticated", 
-      user: req.user, 
+      email: req.user.email, 
       role: req.user.role });
   });
 
@@ -52,7 +52,6 @@ router.post("/logout",(req, res) => {
       sameSite: 'Strict', 
       path: '/'
     });
-
   
     return res.status(200).json({ message: "Ç'kyçja e suksesshme!" });
   } catch(err) {
@@ -115,4 +114,6 @@ router.get("/gjeneratat", auth.verifyToken, auth.eshteAdmin, controllerFakulteti
 //SEMESTRI //
 
 router.get('/semestri/all', auth.verifyToken, auth.eshteAdmin, kontrollerSemestri.readAllSemestrat);
+router.post("/semestri/register",auth.verifyToken, auth.eshteAdmin, kontrollerSemestri.regjistroSemestrin);
+router.get("/vitet/akademike/all",auth.verifyToken,auth.eshteAdmin,kontrollerSemestri.lexoVitetAkademike);
 export default router;  

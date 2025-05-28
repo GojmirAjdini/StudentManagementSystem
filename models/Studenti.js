@@ -7,7 +7,7 @@ class Studenti{
 
         const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
     FROM Studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
@@ -94,7 +94,7 @@ class Studenti{
 
         const sql = `SELECT s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
     FROM Studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
@@ -130,7 +130,7 @@ class Studenti{
 
     const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
     FROM Studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = gj.FakultetiID
@@ -151,7 +151,7 @@ static readStudentByName(Emri, callback){
 
     const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
     FROM Studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = gj.FakultetiID
@@ -171,7 +171,7 @@ static readStudentByName(Emri, callback){
 
         const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.viti_akademik, s.uKrijua
+    ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
     FROM Studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
@@ -188,6 +188,62 @@ static readStudentByName(Emri, callback){
             callback(null, results);
         })
 
+    }
+
+     static regjistroSemestrinPerStudent(StudentiID, Semestri_ID, callback) {
+
+        const sql = "INSERT INTO student_semestri(StudentiID, Semestri_ID) VALUES (?, ?)";
+        const values = [StudentiID, Semestri_ID];
+
+        db.query(sql, values, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            
+            callback(null, results);
+        });
+}
+    static semestratSipasFakultetit(fakultetiID, callback){
+
+        const sql = `SELECT s.Semestri_ID, s.Afati_Semestrit, s.NrSemestrit, 
+        vk.VitiAkademik Viti_Akademik, f.Emri Fakulteti , gj.Viti_Gjenerates, ns.Emri_Nivelit NiveliStudimit 
+        FROM Semestri s
+        INNER JOIN viti_akademik vk on s.VitiAkademikID = vk.VitiAkademikID
+        INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+        INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+        INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
+        WHERE f.FakultetiID = ?`;
+
+        db.query(sql, [fakultetiID],(err, results) =>{
+            if(err){
+                return callback(err);
+            }
+            
+            callback(null, results);
+        })
+    }
+
+    static listaSemestraveTeRegjistruar(email, callback){
+
+        const sql = `SELECT sms.Afati_Semestrit, vk.VitiAkademik,  
+        sms.NrSemestrit, ss.Data_Regjistrimit uKrijua, ns.Emri_Nivelit Niveli
+        FROM student_semestri ss 
+        INNER JOIN studenti std on ss.StudentiID = std.ID
+        INNER JOIN semestri sms on ss.Semestri_ID = sms.Semestri_ID
+        INNER JOIN viti_akademik vk on sms.VitiAkademikID = vk.VitiAkademikID
+        INNER JOIN gjenerata gj on sms.GjenerataID = gj.GjenerataID
+        INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+        INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
+        WHERE std.EmailStudentor = ?`;
+
+        db.query(sql, [email], (err, results) =>{
+             
+            if(err){
+                return callback(err);
+            }
+            
+            callback(null, results);
+        })
     }
 }
 export default Studenti;

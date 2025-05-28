@@ -225,7 +225,7 @@ return (
           fullWidth
           options={gjeneratatAkademike}
           getOptionLabel={(gjen) =>
-            `${gjen.Fakulteti} - ${gjen.NiveliStudimit} - ${gjen.viti_akademik}`
+            `${gjen.Fakulteti} - ${gjen.NiveliStudimit} - ${gjen.Viti_Gjenerates}`
           }
           sx={{
             fontFamily: "Montserrat",

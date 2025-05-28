@@ -20,7 +20,7 @@ function Dashboard(){
     Niveli:'',
     Statusi: '',
     StudentiID: '',
-    viti_akademik: '',
+    Viti_Gjenerates: '',
     uKrijua:'',
 
     });
@@ -152,7 +152,7 @@ function Dashboard(){
          <div className="input-label">
         <label htmlFor="">Gjenerata</label>
         <input className="form-control" disabled 
-        type="text" value={studenti.viti_akademik} />
+        type="text" value={studenti.Viti_Gjenerates} />
         </div>
 
         <div className="input-label">

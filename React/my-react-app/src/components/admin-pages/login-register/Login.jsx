@@ -7,6 +7,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./assets/login.css";
 import CircularProgress from "@mui/material/CircularProgress";
+import axiosInstance from "../../../services/axiosInstance";
 
 function Login(){
 
@@ -21,6 +22,25 @@ function Login(){
     const togglePassword = () =>{
         setShowPassword(!showPassword);
     }
+
+    useEffect(() =>{
+
+         const checkAuth = async () =>{
+            try{
+        
+            const res = await axiosInstance.get("admin/check-authentication");
+        
+            if(res.data.message === 'Authenticated'){
+                 navigate('/');
+                }
+            }
+            catch(err){
+                console.log(err);
+            }   
+        };
+        
+        checkAuth();
+    },[])
 
     const navigate = useNavigate();
 

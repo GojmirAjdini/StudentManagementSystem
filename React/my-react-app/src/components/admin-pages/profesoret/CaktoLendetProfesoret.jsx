@@ -16,9 +16,9 @@ import TextField from '@mui/material/TextField';
 function CaktoLendetProf() {
     
   
-  const text =<p><span style={{marginLeft:'5px'
+  const text = <p  style={{marginLeft:'5px'
   }}>
-    Vërejtje! </span> Së pari duhet të zgjedhni Profesorin.</p>
+    <strong>Vërejtje!</strong> Së pari duhet të zgjedhni Profesorin.</p>
 
     const [successMessage, setSuccessMessage] = useState('');
     const [infoMessage, setInfoMessage] = useState(text);
@@ -136,10 +136,11 @@ function CaktoLendetProf() {
       }catch(err){
 
             console.error(err);
+            setTimeout(() => {
             if (err.response && err.response.data && err.response.data.message) {
                   
              console.log(err.response.data.message);
-        
+              
             Swal.fire({
             title: 'Gabim!',
             text: err.response.data.message,
@@ -152,7 +153,8 @@ function CaktoLendetProf() {
                 htmlContainer: 'textSwal',
                  }
              });
-         }
+         }},1000);
+        
     }finally{
       setTimeout(() =>{
         setLoading(false);
@@ -179,6 +181,7 @@ function CaktoLendetProf() {
       ".MuiInputBase-root": {
         borderRadius: "10px",
         fontFamily: "Montserrat",
+        width:'100%'
       },
     }}
 
@@ -220,7 +223,7 @@ function CaktoLendetProf() {
 
   <FormControl fullWidth required>
             <Autocomplete
-              options={fakultetiOptions}
+              options={fakultetiOptions || []}
               sx={{
                 fontFamily: "Montserrat",
                 ".MuiInputBase-root": {
@@ -228,6 +231,7 @@ function CaktoLendetProf() {
                   fontFamily: "Montserrat",
                 },
               }}
+              
               value={selectedFakulteti || null}
               onChange={(event, newValue) => {
                 setSelectedFakulteti(newValue || '');
@@ -239,7 +243,7 @@ function CaktoLendetProf() {
                   label="Zgjedh Fakultetin"
                   variant="outlined"
                   required
-                
+                  error={skaFakultet ? "Profesori duhet të jetë të paktën në një fakultet!" : ''}
                   helperText={skaFakultet ? "Profesori duhet të jetë të paktën në një fakultet!" : ''}
                   sx={{
                     fontFamily: "Montserrat",
@@ -280,10 +284,19 @@ function CaktoLendetProf() {
           
           return (
             <MenuItem {...props} key={option.LendaID} 
-            style={{ fontFamily: 'Montserrat' ,color: isAssigned ? 'red' : 'inherit' }} 
+            style={{ 
+            fontFamily: 'Montserrat',
+            color: isAssigned ? 'red' : 'inherit',
+            position:'relative',
+            width: '150%',
+            
+            }} 
             disabled={isAssigned}>
+             
               {option.Emri_Lendes} - Semestri {option.Semestri} {isAssigned ? "(Ligjëron tashmë)" : ""}
+           
             </MenuItem>
+             
         );
         }}
         renderInput={(params) => (
@@ -299,7 +312,8 @@ function CaktoLendetProf() {
               '& .MuiInputLabel-root': {
                 fontFamily: 'Montserrat',
               },
-             }}
+              
+            }}
           />
         )}
         disabled={!selectedFakulteti}

@@ -156,13 +156,14 @@ class Profesori {
     static lexoProfesoretLendet(callback){
         
         const sql = `SELECT lp.LendaID, lp.ProfesoriID, f.Emri Fakulteti, p.Emri, p.Mbiemri, p.Gjinia, p.Email, 
-        p.Titulli_Akademik, l.Emri_Lendes, l.Kodi_Lendes, l.ECTS, s.NrSemestrit, gj.viti_akademik Viti_Akademik
+        p.Titulli_Akademik, l.Emri_Lendes, l.Kodi_Lendes, l.ECTS, s.NrSemestrit, vk.VitiAkademik 
                 FROM lenda_profesori lp
                 INNER JOIN Profesori p on p.ProfesoriID = lp.ProfesoriID
                 INNER JOIN Lenda l on l.LendaID = lp.LendaID
                 INNER JOIN semestri s on s.Semestri_ID = l.SemestriID
-                INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID 
-                INNER JOIN Fakulteti f on f.FakultetiID = gj.FakultetiID`;
+                INNER JOIN viti_akademik vk on s.VitiAkademikID = vk.VitiAkademikID
+                INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+                INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID`;
 
         db.query(sql, (err, results)=>{
             if(err){
@@ -176,13 +177,14 @@ class Profesori {
     static lexoLendetPerProfesorinSipasEmail(email, callback){
         
         const sql = `SELECT lp.LendaID, lp.ProfesoriID, f.Emri Fakulteti, p.Emri, p.Mbiemri, p.Gjinia, p.Email, 
-        p.Titulli_Akademik, l.Emri_Lendes, l.Kodi_Lendes, l.ECTS, s.NrSemestrit, gj.viti_akademik Viti_Akademik
+        p.Titulli_Akademik, l.Emri_Lendes, l.Kodi_Lendes, l.ECTS, s.NrSemestrit, vk.VitiAkademik 
                 FROM lenda_profesori lp
                 INNER JOIN Profesori p on p.ProfesoriID = lp.ProfesoriID
                 INNER JOIN Lenda l on l.LendaID = lp.LendaID
                 INNER JOIN semestri s on s.Semestri_ID = l.SemestriID
-                INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID 
-                INNER JOIN Fakulteti f on f.FakultetiID = gj.FakultetiID
+                INNER JOIN viti_akademik vk on s.VitiAkademikID = vk.VitiAkademikID
+                INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+                INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
                 WHERE p.Email = ?`;
 
         db.query(sql, [email], (err, results)=>{

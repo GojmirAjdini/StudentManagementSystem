@@ -5,10 +5,11 @@ class Lenda{
     static readAllLendet(callback){
 
         const sql = `SELECT l.LendaID, f.Emri Fakulteti, l.Emri_Lendes, 
-        l.ECTS, l.Kodi_Lendes, l.uKrijua, s.NrSemestrit Semestri FROM Lenda l 
+        l.ECTS, l.Kodi_Lendes, l.uKrijua, s.NrSemestrit Semestri, gj.Viti_Gjenerates
+        FROM Lenda l 
         INNER JOIN Semestri s ON l.SemestriID = s.Semestri_ID
         INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
-        INNER JOIN Fakulteti f on gj.FakultetiID = f.FakultetiID
+        INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
         `;
 
         db.query(sql, (err, results) =>{
@@ -89,8 +90,9 @@ class Lenda{
 
         const sql = `SELECT l.LendaID, f.Emri Fakulteti, l.Emri_Lendes, 
         l.ECTS, l.Kodi_Lendes, l.uKrijua, s.NrSemestrit Semestri FROM Lenda l 
-        INNER JOIN Fakulteti f ON l.FakultetiID = f.FakultetiID
-        INNER JOIN Semestri s ON l.SemestriID = s.Semestri_ID WHERE Emri_Lendes LIKE CONCAT("%", ? , "%")`;
+        INNER JOIN Semestri s ON l.SemestriID = s.Semestri_ID  
+        INNER JOIN Fakulteti f ON s.FakultetiID = f.FakultetiID
+        WHERE Emri_Lendes LIKE CONCAT("%", ? , "%")`;
 
         db.query(sql, [Emri_Lendes], (err, results) =>{
 

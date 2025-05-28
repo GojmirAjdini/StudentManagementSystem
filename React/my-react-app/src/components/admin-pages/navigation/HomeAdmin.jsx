@@ -28,6 +28,7 @@ function Home(){
             console.log("Admin data:", response.data[0]);
         } catch (err) {
             console.error(err.response.data);
+            
     
   }
 }

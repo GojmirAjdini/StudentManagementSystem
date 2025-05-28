@@ -5,14 +5,13 @@ const lexoLendet = async (req, res)=>{
     try{
         Lenda.readAllLendet((lendet) =>{
 
-        if(lendet.length === 0){
-            return res.json({message: "Nuk ka lendë të regjistruar!"});
-        }
             return res.json(lendet);
+
+        
         })
     }
         catch(err){
-            res.status(404).json({err: "Server error"});
+            res.status(500).json({err: "Server error"});
     }
 }
 
@@ -24,12 +23,11 @@ const createLenden = async (req, res) => {
         Lenda.regjistroLenden(Emri_Lendes.trim(), ECTS, Kodi_Lendes, SemestriID, (err, results) =>{
 
             if(err){
-                return res.status(500).json("Gabim ne query!");
+            if(err.code === "ER_DUP_ENTRY"){
+                return res.status(404).json({message: "Kodi i Lëndës ekziston tashmë!"});
             }
-
-            if(results.affectedRows === 0){
-                return res.status(404).json({message: "Nuk u regjistrua lënda!"});
-            }
+        }
+            
             console.log(results);  
             return res.status(201).json({message: "Lënda u regjistrua me sukses!"})
         })

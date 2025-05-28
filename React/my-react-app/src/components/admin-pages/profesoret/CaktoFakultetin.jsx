@@ -8,6 +8,7 @@ import axiosInstance from "../../../services/axiosInstance";
 import FormControl from '@mui/material/FormControl';
 import MenuItem from "@mui/material/MenuItem";
 import Cancel from "@mui/icons-material/Cancel";
+import CircularProgress  from "@mui/material/CircularProgress";
 
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -15,12 +16,13 @@ import TextField from '@mui/material/TextField';
 function CaktoFakultetin() {
     
   
-  const text =<p><span style={{marginLeft:'5px'
+  const text =<p style={{marginLeft:'5px'
   }}>
-    Vërejtje! </span> Së pari duhet të zgjedhni Profesorin.</p>
+    <strong>Vërejtje!</strong>  Së pari duhet të zgjedhni Profesorin.</p>
 
     const [successMessage, setSuccessMessage] = useState('');
     const [infoMessage, setInfoMessage] = useState(text);
+    const [loading, setLoading] = useState(false);
 
     const [fakultetet, setFakultetet] = useState([]);
     const [profesoret, setProfesoret] = useState([]);
@@ -106,7 +108,7 @@ function CaktoFakultetin() {
             }
         })
     return;
-}
+}       setLoading(true);
         try{
             const response = await axiosInstance.post(`admin/profesoret/cakto-fakultetin`,{
                 FakultetiID: FakultetiID,
@@ -114,19 +116,18 @@ function CaktoFakultetin() {
 
                 });
 
-        console.log(response.data.message);
-
+        setTimeout(() =>{
         setSuccessMessage(response.data.message);
 
         setTimeout(() => {setSuccessMessage('')},5000);
-
+        },1000)
         }catch(err){
 
             console.error(err);
             if (err.response && err.response.data && err.response.data.message) {
                   
              console.log(err.response.data.message);
-        
+            setTimeout(() =>{
             Swal.fire({
             title: 'Gabim!',
             text: err.response.data.message,
@@ -139,8 +140,13 @@ function CaktoFakultetin() {
                 htmlContainer: 'textSwal',
                  }
              });
-         }
-    }
+         },1000)
+      }
+  }finally{
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }
 }
 
     return (
@@ -249,7 +255,8 @@ function CaktoFakultetin() {
 </div>
 
     <div className="input-labelProfLnd">
-        <Button variant="contained" id="primaryBtnProfLenda"  type="submit">Cakto</Button>
+        <Button variant="contained" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+        loading={loading} id="primaryBtnProfLenda"  type="submit">Cakto</Button>
         <Button variant="contained" id="resetBtnProfLenda"  type='button' onClick={handleReset}>Reset</Button>
         </div>
         </form>

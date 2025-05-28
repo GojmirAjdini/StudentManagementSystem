@@ -19,7 +19,8 @@ function EditLendet() {
     Emri_Lendes: '',
     ECTS: '',
     Kodi_Lendes: '',
-    SemestriID: ''
+    SemestriID: '',
+
   });
 
   const [orgLenda, setOrgLenda] = useState({});
@@ -30,6 +31,7 @@ function EditLendet() {
   useEffect(() => {
     fetchLenda();
     fetchSemestrat();
+  
   }, []);
 
   const fetchLenda = async () => {
@@ -188,12 +190,13 @@ function EditLendet() {
             </MenuItem>
             {semestrat.map((sms) => (
               <MenuItem  sx={{fontFamily:'Montserrat'}} key={sms.Semestri_ID} value={sms.Semestri_ID}>
-                {sms.NrSemestrit + " - " + sms.Afati_Semestrit + " - " + sms.Fakulteti + " - " + sms.Niveli}
+               {`${sms.Afati_Semestrit.split(' ')[0]} ${sms.NrSemestrit} - ${sms.Fakulteti} - ${sms.Viti_Akademik}`}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
         </div>
+        
 
         <div className="inputLenda">
           <Button loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 

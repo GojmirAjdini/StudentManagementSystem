@@ -13,6 +13,7 @@ import Loading from '../login-register/utils/Loading';
 import { DataGrid, GridToolbar} from '@mui/x-data-grid';
 import axiosInstance from '../../../services/axiosInstance';
 import CircularProgress  from '@mui/material/CircularProgress';
+import { write } from '@popperjs/core';
 
 function ListaProfesoreve() {
 
@@ -179,8 +180,9 @@ function ListaProfesoreve() {
         </div>
       )}   
         
-           <div className="dataGridProf" >
+           <div className="dataGridProf">
          <DataGrid
+         autoPageSize
          disableColumnResize
          showCellVerticalBorder
          showColumnVerticalBorder
@@ -216,7 +218,7 @@ function ListaProfesoreve() {
           }}
       pageSizeOptions={[25, 50, 100]}
            sx={{
-              
+               
           "& .MuiDataGrid-cell:focus": {
              outline: "none",
                   },

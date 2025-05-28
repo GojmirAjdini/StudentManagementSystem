@@ -5,11 +5,13 @@ import './assets/ListaLendeveProfeve.css';
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Swal from "sweetalert2"; 
+import CircularProgress from "@mui/material/CircularProgress";
 
 function FakultetetProfesoret(){
 
     const [fakultetetProfesoret, setFakultetetProfesoret] = useState([]);
     const [successMessage, setSuccessMessage] = useState("");
+    const [loading, setLoading] = useState(null);
 
     const fetchFakultetetProfesoret = async () => {
         try {
@@ -44,22 +46,27 @@ function FakultetetProfesoret(){
               }
             });
             if(result.isConfirmed){
-        
+              setLoading({FakultetiID, ProfesoriID});
         try {
             const response = await axiosInstance.delete(`admin/profesoret-fakultetet/deletesipas/${FakultetiID}/${ProfesoriID}`);
             
+            setTimeout(() =>{
             setFakultetetProfesoret(prev => 
             prev.filter(fkt => !(fkt.FakultetiID === FakultetiID && fkt.ProfesoriID === ProfesoriID)));
             
-            console.log(response.data); 
             setSuccessMessage("Caktimi u fshi me sukses!");
 
             setTimeout(() => {
                 setSuccessMessage("");  
             }, 3000);
+          },1000);
 
         } catch (err) {
             console.error(err);
+        }finally{
+          setTimeout(() => {
+            setLoading(null);
+          }, 1000);
         }
     };
 }
@@ -77,8 +84,9 @@ function FakultetetProfesoret(){
         { field: "id", headerName: "#", width: 20 },
         { field: "EmriProfit", headerName: "Emri", width: 120 },
         { field: "Mbiemri", headerName: "Mbiemri", width: 120 },
+        { field: "Email", headerName: "Email", width: 220 },
         { field: "Gjinia", headerName: "Gjinia", width: 80 },
-        { field: "Titulli_Akademik", headerName: "Titulli", width: 80 },
+        { field: "Titulli_Akademik", headerName: "Titulli", width: 100 },
         { field: "Emri", headerName: "Fakulteti", width: 220 },
         { field: "NiveliStudimit", headerName: "Niveli", width: 100 },
         { field: "Lokacioni", headerName: "Lokacioni", width: 110 },
@@ -90,6 +98,8 @@ function FakultetetProfesoret(){
             width: 135,
             renderCell: (params) => (
                 <Button variant="contained" color="error"
+                loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+                loading={loading && loading.FakultetiID === params.row.FakultetiID && loading.ProfesoriID === params.row.ProfesoriID}
                     className="deleteBtn" sx={{width:'100%'}}
                     onClick={() => deleteFakultetetProfesoret(params.row.FakultetiID, params.row.ProfesoriID)}
                 >

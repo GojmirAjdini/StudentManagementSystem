@@ -9,10 +9,9 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { DataGrid, GridToolbar} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar} from '@mui/x-data-grid/';
 import axiosInstance from "../../../services/axiosInstance";
 import CircularProgress  from "@mui/material/CircularProgress";
-import { useTimeout } from "@mui/x-data-grid/internals";
 
 
 function Lendet() {
@@ -26,11 +25,10 @@ function Lendet() {
 
         try{
             const response = await axiosInstance.get(`admin/lendet/all`);
-            console.log(response.data);
-
+            
             setLendet(response.data);
             setOrgLendet(response.data);
-
+        
         } catch(err){
             console.error("Error fetching lendet", err); 
         }
@@ -98,8 +96,8 @@ function Lendet() {
     const columns =  [
         
         {field: 'id', headerName:'#', width:20},
-        {field: 'Emri_Lendes', headerName:'Lënda', width:200},
-        {field: 'Fakulteti', headerName:'Fakulteti', width:180},
+        {field: 'Emri_Lendes', headerName:'Lënda', width:350},
+        {field: 'Fakulteti', headerName:'Fakulteti', width:210},
         {field: 'ECTS', headerName:'ECTS', width:80},
         {field: 'Kodi_Lendes', headerName:'Kodi i Lëndës', width:120},
         {field: 'Semestri', headerName:'Semestri', width:100},
@@ -154,7 +152,7 @@ function Lendet() {
                 </Button>
             )
         }
-    ]
+    ]   
 
     const rows = useMemo(() => lendet.map((lenda, index) => ({
 
@@ -237,7 +235,7 @@ function Lendet() {
              }}
                 
                 disableRowSelectionOnClick
-                    
+                
                 />
                 
             </div>

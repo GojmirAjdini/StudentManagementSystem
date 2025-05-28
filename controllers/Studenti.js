@@ -387,7 +387,7 @@ const patchStudentin = async (req, res) => {
             }  
         }
 
-    const lexoStudentinByEmail = async (req, res) =>{
+const lexoStudentinByEmail = async (req, res) =>{
 
     try{
 
@@ -413,10 +413,86 @@ const patchStudentin = async (req, res) => {
 
     }
 }
-        
-    
 
+
+const regjistroSemestrinPerStudent = async (req, res) => {
+    
+    try {
+        const { Semestri_ID } = req.body;
+        const email = req.user.email;
+
+        const sql = `SELECT ID FROM studenti s WHERE EmailStudentor = ?`;
+
+        const [student] = await db.promise().query(sql, [email]);
+
+        const StudentiID = student[0].ID;
+
+        Studenti.regjistroSemestrinPerStudent(StudentiID, Semestri_ID, (err, results) => {
+            if(err){
+
+                if(err.code === 'ER_DUP_ENTRY'){
+                    return res.status(409).json({message:"Semestri është i regjistruar tashmë!"})
+                }
+                return res.status(500).json({ err: err, message:"Gabim gjatë regjistrimit"});
+            }
+            return res.status(200).json({ message: "Semestri u regjistrua me sukses!" });
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ err: true, message: err });
+    }
+}
+
+const lexoSemestratSipasFakultetit = async (req, res) => {
+        
+    try{
+        
+        const email = req.user.email;
+        const sql = `SELECT f.*
+        FROM studenti s
+        INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+        INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+        WHERE s.EmailStudentor = ?`;
+
+    const [student] = await db.promise().query(sql, [email]);
+
+    const fakultetiID = student[0].FakultetiID 
+    
+        Studenti.semestratSipasFakultetit(fakultetiID, (err, results) =>{
+
+             if(err){
+                return res.status(500).json({ err: err, message:"Server error"});
+            }
+            if(results.length === 0){
+                return res.status(404).json({message:"Fakulteti nuk ka semestra të regjistruar!"})
+            }
+            return res.status(200).json(results);
+        });
+    }catch(err){
+        return res.status(500).json({ err: err, message:"Server error"});
+
+    }
+}
+
+const listaSemestraveTeRegjistruar = async(req, res) =>{
+
+    try{
+
+        const email = req.user.email;
+
+        Studenti.listaSemestraveTeRegjistruar([email],(err, results) =>{
+       
+            return res.status(200).json(results);
+        });
+    }       catch (err) {
+         console.error(err);
+         return res.status(500).json({ err: true, message: err });
+    }
+}
+
+        
 export default {lexoStudentet, regjistroStudent, fshijStudent, 
     fshijAllStudentet, updatePassword, loginStudenti, 
     patchStudentin, lexoStudentetByID, lexoStudentetByName,
-    lexoStudentinByEmail};
+    lexoStudentinByEmail, regjistroSemestrinPerStudent, lexoSemestratSipasFakultetit,
+    listaSemestraveTeRegjistruar};

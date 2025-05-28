@@ -83,14 +83,13 @@ function LendetProfesoret(){
         { field: "id", headerName: "#", width: 20 },
         { field: "Emri", headerName: "Emri", width: 120 },
         { field: "Mbiemri", headerName: "Mbiemri", width: 120 },
-        { field: "Gjinia", headerName: "Gjinia", width: 70 },
         { field: "Email", headerName: "Email", width: 210 },
         { field: "Titulli_Akademik", headerName: "Titulli", width: 70 },
         { field: "Fakulteti", headerName: "Fakulteti", width: 200},
         { field: "Emri_Lendes", headerName: "Emri Lëndës", width:220 },
         { field: "Kodi_Lendes", headerName: "Kodi Lëndës", width: 110 },
         { field: "NrSemestrit", headerName: "Semestri", width: 85 },
-        { field: "Viti_Akademik", headerName:"Viti Akademik", width:120},
+        { field: "VitiAkademik", headerName:"Viti Akademik", width:120},
 
         {
             field: "Delete",

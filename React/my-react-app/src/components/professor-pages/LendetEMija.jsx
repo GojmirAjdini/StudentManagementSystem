@@ -30,11 +30,11 @@ function LendetSipasProfit(){
     const columns = [
         
         { field: "id", headerName: "#", width: 20 },
-        { field: "Emri_Lendes", headerName: "Emri Lëndës", width:220 },
+        { field: "Emri_Lendes", headerName: "Emri Lëndës", width:330 },
         { field: "Fakulteti", headerName: "Fakulteti", width: 200},
         { field: "Kodi_Lendes", headerName: "Kodi Lëndës", width: 110 },
         { field: "NrSemestrit", headerName: "Semestri", width: 85 },
-        { field: "Viti_Akademik", headerName:"Viti Akademik", width:120},
+        { field: "VitiAkademik", headerName:"Viti Akademik", width:120},
 
     ]
 
