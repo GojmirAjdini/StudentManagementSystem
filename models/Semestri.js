@@ -5,7 +5,7 @@ class Semestri {
     static readAllSemestrat(callback) {
         const sql = `SELECT s.Semestri_ID, s.Afati_Semestrit, s.NrSemestrit, 
         vk.VitiAkademik Viti_Akademik, f.Emri Fakulteti , gj.Viti_Gjenerates, ns.Emri_Nivelit NiveliStudimit 
-        FROM Semestri s
+        FROM semestri s
         INNER JOIN viti_akademik vk on s.VitiAkademikID = vk.VitiAkademikID
         INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
         INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
@@ -20,7 +20,7 @@ class Semestri {
     }
 
     static regjistroSemestrin(Afati_Semestrit, Nr_Semestrit, VitiAkademikID, GjenerataID, callback) {
-        const sql = "INSERT INTO Semestri(Afati_Semestrit, NrSemestrit, VitiAkademikID, GjenerataID) VALUES (?, ?, ?, ?)";
+        const sql = "INSERT INTO semestri(Afati_Semestrit, NrSemestrit, VitiAkademikID, GjenerataID) VALUES (?, ?, ?, ?)";
         const values = [Afati_Semestrit, Nr_Semestrit, VitiAkademikID, GjenerataID];
 
         db.query(sql, values, (err, results) => {

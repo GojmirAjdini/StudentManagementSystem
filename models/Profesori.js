@@ -6,9 +6,9 @@ class Profesori {
 
         const sql = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
         p.Email, p.NrTel, GROUP_CONCAT(f.Emri) Fakulteti, p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, 					p.Titulli_Akademik
-        FROM Profesori p 
+        FROM profesori p 
         LEFT JOIN profesori_fakulteti pf on p.ProfesoriID = pf.ProfesoriID
-        LEFT JOIN Fakulteti f on pf.FakultetiID = f.FakultetiID
+        LEFT JOIN fakulteti f on pf.FakultetiID = f.FakultetiID
         GROUP BY p.ProfesoriID`;
 
         db.query(sql,(err, results)=>{
@@ -22,7 +22,7 @@ class Profesori {
 
     static regjistroProfesorin(Emri, Mbiemri, Gjinia, Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi,Titulli_Akademik, callback){
 
-        const sql = `INSERT INTO Profesori
+        const sql = `INSERT INTO profesori
         (Emri, Mbiemri, Gjinia, Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
@@ -41,7 +41,7 @@ class Profesori {
 
     static fshijProfesorinSipasId(ProfesoriID, callback){
 
-        const sql = "DELETE FROM Profesori WHERE ProfesoriID = ?";
+        const sql = "DELETE FROM profesori WHERE ProfesoriID = ?";
         const id = ProfesoriID;
 
         db.query(sql, [id],(err, results) =>{
@@ -57,7 +57,7 @@ class Profesori {
 
         const sql = `SELECT Emri, Mbiemri, Gjinia, 
         Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik
-        FROM Profesori
+        FROM profesori
         WHERE Email = ?`;
 
         db.query(sql, Email, (err, results) =>{
@@ -71,7 +71,7 @@ class Profesori {
     }
     static updatePassword(ID, Password, callback){
 
-        const sql = "UPDATE Profesori p SET p.Password = ? WHERE ProfesoriID = ?";
+        const sql = "UPDATE profesori p SET p.Password = ? WHERE ProfesoriID = ?";
         const values = [Password, ID];
 
         db.query(sql, values, (err, results) =>{
@@ -103,7 +103,7 @@ class Profesori {
 
     static patchProfesori(ProfesoriID, fushat, values, callback){
 
-        const sql = `UPDATE Profesori SET ${fushat.join(', ')} WHERE ProfesoriID = ?`;
+        const sql = `UPDATE profesori SET ${fushat.join(', ')} WHERE ProfesoriID = ?`;
 
         values.push(ProfesoriID);
 
@@ -139,7 +139,7 @@ class Profesori {
 
         const sql = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
         p.Email, f.Emri Fakulteti, p.NrTel, p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, p.Titulli_Akademik
-        FROM Profesori p 
+        FROM profesori p 
        
         WHERE p.Emri LIKE CONCAT("%", ? ,"%")`;
 
@@ -158,7 +158,7 @@ class Profesori {
         const sql = `SELECT lp.LendaID, lp.ProfesoriID, f.Emri Fakulteti, p.Emri, p.Mbiemri, p.Gjinia, p.Email, 
         p.Titulli_Akademik, l.Emri_Lendes, l.Kodi_Lendes, l.ECTS, s.NrSemestrit, vk.VitiAkademik 
                 FROM lenda_profesori lp
-                INNER JOIN Profesori p on p.ProfesoriID = lp.ProfesoriID
+                INNER JOIN profesori p on p.ProfesoriID = lp.ProfesoriID
                 INNER JOIN Lenda l on l.LendaID = lp.LendaID
                 INNER JOIN semestri s on s.Semestri_ID = l.SemestriID
                 INNER JOIN viti_akademik vk on s.VitiAkademikID = vk.VitiAkademikID
@@ -179,8 +179,8 @@ class Profesori {
         const sql = `SELECT lp.LendaID, lp.ProfesoriID, f.Emri Fakulteti, p.Emri, p.Mbiemri, p.Gjinia, p.Email, 
         p.Titulli_Akademik, l.Emri_Lendes, l.Kodi_Lendes, l.ECTS, s.NrSemestrit, vk.VitiAkademik 
                 FROM lenda_profesori lp
-                INNER JOIN Profesori p on p.ProfesoriID = lp.ProfesoriID
-                INNER JOIN Lenda l on l.LendaID = lp.LendaID
+                INNER JOIN profesori p on p.ProfesoriID = lp.ProfesoriID
+                INNER JOIN lenda l on l.LendaID = lp.LendaID
                 INNER JOIN semestri s on s.Semestri_ID = l.SemestriID
                 INNER JOIN viti_akademik vk on s.VitiAkademikID = vk.VitiAkademikID
                 INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
@@ -231,9 +231,9 @@ class Profesori {
         const sql = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
         p.Email, f.Emri Fakulteti, p.NrTel, 
         p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, p.Titulli_Akademik  
-        FROM Profesori p 
+        FROM profesori p 
         LEFT JOIN profesori_fakulteti pf on p.ProfesoriID = pf.ProfesoriID
-        LEFT JOIN Fakulteti f on pf.FakultetiID = f.FakultetiID
+        LEFT JOIN fakulteti f on pf.FakultetiID = f.FakultetiID
         WHERE p.Email = ?`;
 
         db.query(sql, [Email], (err, results) =>{
@@ -285,8 +285,8 @@ class Profesori {
             p.Emri EmriProfit, p.Mbiemri, p.Gjinia, p.Email, p.Titulli_Akademik, 
             ns.Emri_Nivelit  NiveliStudimit, f.*
             FROM profesori_fakulteti pf
-            INNER JOIN Fakulteti f on pf.FakultetiID = f.FakultetiID
-            INNER JOIN Profesori p on pf.ProfesoriID = p.ProfesoriID
+            INNER JOIN fakulteti f on pf.FakultetiID = f.FakultetiID
+            INNER JOIN profesori p on pf.ProfesoriID = p.ProfesoriID
             INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID`;
          
             db.query(sql, (err, results)=>{

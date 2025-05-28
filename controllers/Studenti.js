@@ -421,7 +421,7 @@ const regjistroSemestrinPerStudent = async (req, res) => {
         const { Semestri_ID } = req.body;
         const email = req.user.email;
 
-        const sql = `SELECT ID FROM studenti s WHERE EmailStudentor = ?`;
+        const sql = `SELECT ID FROM studenti s WHERE s.EmailStudentor = ?`;
 
         const [student] = await db.promise().query(sql, [email]);
 

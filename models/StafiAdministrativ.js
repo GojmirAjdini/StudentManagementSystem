@@ -19,8 +19,8 @@ class StafiAdministrativ {
 
         const sql = `SELECT sa.AdminID, sa.Email, f.Emri AS Fakulteti, sa.Password, 
                     sa.Emri_Adminit, sa.Mbiemri_Adminit, sa.role, sa.uKrijua  
-                    FROM StafiAdministrativ sa
-                    INNER JOIN Fakulteti f ON f.FakultetiID = sa.FakultetiID`;
+                    FROM stafiadministrativ sa
+                    INNER JOIN fakulteti f ON f.FakultetiID = sa.FakultetiID`;
 
         db.query(sql,(err, results) =>{
             if(err){

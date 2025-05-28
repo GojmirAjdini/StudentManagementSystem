@@ -16,7 +16,7 @@ class Fakulteti{
 
 
         const sql = `SELECT f.*, ns.Emri_Nivelit Niveli
-        FROM Fakulteti f
+        FROM fakulteti f
         INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID`;
 
          db.query(sql, (err, results) =>{
@@ -34,7 +34,7 @@ class Fakulteti{
 
     static regjistroFakultet(Emri, Niveli, Lokacioni, Kodi_Fakultetit, callback){
 
-        const sql = "INSERT INTO Fakulteti(Emri, Niveli, Lokacioni, Kodi_Fakultetit) VALUES (?, ?, ?, ?)";
+        const sql = "INSERT INTO fakulteti(Emri, Niveli, Lokacioni, Kodi_Fakultetit) VALUES (?, ?, ?, ?)";
         const values = [Emri, Niveli, Lokacioni, Kodi_Fakultetit];
 
         db.query(sql, values, (err, results) =>{
@@ -50,7 +50,7 @@ class Fakulteti{
 
     static fshijFakultet(id, callback){
 
-        const sql = "DELETE FROM Fakulteti WHERE FakultetiID = ?";
+        const sql = "DELETE FROM fakulteti WHERE FakultetiID = ?";
 
         db.query(sql,[id], (err, results)=>{
 
@@ -63,7 +63,7 @@ class Fakulteti{
 
     static perditesoFakultetin(fakulteti, callback){
 
-        const sql = `UPDATE Fakulteti SET Emri = ?, Niveli = ?, 
+        const sql = `UPDATE fakulteti SET Emri = ?, Niveli = ?, 
         Lokacioni = ?, Kodi_Fakultetit = ? WHERE FakultetiID = ?`;
         
         const values = [fakulteti.Emri, fakulteti.Niveli, 
@@ -81,7 +81,7 @@ class Fakulteti{
 
     static getFakultetiById(id, callback){
 
-        const sql = `SELECT * FROM Fakulteti
+        const sql = `SELECT * FROM fakulteti
          WHERE FakultetiID = ?`;
 
         db.query(sql, [id], (err, results) =>{
@@ -101,7 +101,7 @@ class Fakulteti{
 
     static patchFakulteti(id, fushat, values,  callback){
 
-        const sql = `UPDATE Fakulteti SET ${fushat.join(', ')} WHERE FakultetiID = ?`;
+        const sql = `UPDATE fakulteti SET ${fushat.join(', ')} WHERE FakultetiID = ?`;
 
         values.push(id);
         
@@ -118,7 +118,7 @@ class Fakulteti{
     
     static getFakultetiByName(Emri, callback){
 
-        const sql = `SELECT * FROM Fakulteti
+        const sql = `SELECT * FROM fakulteti
          WHERE Emri LIKE CONCAT("%", ?, "%")`;
 
         db.query(sql, [Emri], (err, results) =>{

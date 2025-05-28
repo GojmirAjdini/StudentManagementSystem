@@ -8,7 +8,7 @@ class Studenti{
         const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
     ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
-    FROM Studenti s 
+    FROM studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
     INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID`;
@@ -52,7 +52,7 @@ class Studenti{
 
     static deleteById(id, callback){
 
-        const sql = "DELETE FROM Studenti WHERE ID = ?";
+        const sql = "DELETE FROM studenti WHERE ID = ?";
 
         db.query(sql,[id], (err, results) =>{
 
@@ -78,7 +78,7 @@ class Studenti{
 
     static updatePassword(ID, Password,callback){
 
-        const sql = "UPDATE Studenti s SET s.Password = ? WHERE ID = ?";
+        const sql = "UPDATE studenti s SET s.Password = ? WHERE ID = ?";
         const values = [Password, ID];
 
         db.query(sql, values,(err, results) =>{
@@ -95,7 +95,7 @@ class Studenti{
         const sql = `SELECT s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
     ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
-    FROM Studenti s 
+    FROM studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
     INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
@@ -113,7 +113,7 @@ class Studenti{
 
     static patchStudenti (ID, fushat, values, callback){
 
-            const sql =`UPDATE Studenti SET ${fushat.join(', ')}  WHERE ID = ?`;
+            const sql =`UPDATE studenti SET ${fushat.join(', ')}  WHERE ID = ?`;
 
             values.push(ID);
 
@@ -131,7 +131,7 @@ class Studenti{
     const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
     f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
-    FROM Studenti s 
+    FROM studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = gj.FakultetiID
     WHERE s.ID = ?`;
@@ -152,7 +152,7 @@ static readStudentByName(Emri, callback){
     const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
     f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
-    FROM Studenti s 
+    FROM studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = gj.FakultetiID
     WHERE s.Emri LIKE CONCAT("%", ? , "%")`;
@@ -172,7 +172,7 @@ static readStudentByName(Emri, callback){
         const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
     ns.Emri_Nivelit Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
-    FROM Studenti s 
+    FROM studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
     INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
@@ -207,7 +207,7 @@ static readStudentByName(Emri, callback){
 
         const sql = `SELECT s.Semestri_ID, s.Afati_Semestrit, s.NrSemestrit, 
         vk.VitiAkademik Viti_Akademik, f.Emri Fakulteti , gj.Viti_Gjenerates, ns.Emri_Nivelit NiveliStudimit 
-        FROM Semestri s
+        FROM semestri s
         INNER JOIN viti_akademik vk on s.VitiAkademikID = vk.VitiAkademikID
         INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
         INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID

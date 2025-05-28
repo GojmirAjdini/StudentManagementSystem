@@ -6,8 +6,8 @@ class Lenda{
 
         const sql = `SELECT l.LendaID, f.Emri Fakulteti, l.Emri_Lendes, 
         l.ECTS, l.Kodi_Lendes, l.uKrijua, s.NrSemestrit Semestri, gj.Viti_Gjenerates
-        FROM Lenda l 
-        INNER JOIN Semestri s ON l.SemestriID = s.Semestri_ID
+        FROM lenda l 
+        INNER JOIN semestri s ON l.SemestriID = s.Semestri_ID
         INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
         INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
         `;
@@ -26,7 +26,7 @@ class Lenda{
 
     static regjistroLenden(Emri_Lendes, ECTS, Kodi_Lendes, SemestriID, callback){
 
-        const sql = "INSERT INTO Lenda(Emri_Lendes, ECTS, Kodi_Lendes, SemestriID) VALUES (?, ?, ?, ?)";
+        const sql = "INSERT INTO lenda(Emri_Lendes, ECTS, Kodi_Lendes, SemestriID) VALUES (?, ?, ?, ?)";
         const values = [Emri_Lendes, ECTS, Kodi_Lendes, SemestriID];
 
         db.query(sql,values, (err, results) =>{
@@ -41,7 +41,7 @@ class Lenda{
 
     static deleteLendenById(LendaID, callback){
 
-        const sql = "DELETE FROM Lenda WHERE LendaID = ?";
+        const sql = "DELETE FROM lenda WHERE LendaID = ?";
         const id = LendaID;
 
         db.query(sql, [id], (err, results) =>{
@@ -56,7 +56,7 @@ class Lenda{
 
     static readLendaById(LendaID, callback){
 
-        const sql = "SELECT * FROM Lenda WHERE LendaID = ?";
+        const sql = "SELECT * FROM lenda WHERE LendaID = ?";
         const id = LendaID;
 
         db.query(sql, [id], (err, results) =>{
@@ -71,7 +71,7 @@ class Lenda{
 
     static patchLenda(LendaID, fushat, values, callback){
 
-        const sql = `UPDATE Lenda SET ${fushat.join(', ')} WHERE LendaID = ?`;
+        const sql = `UPDATE lenda SET ${fushat.join(', ')} WHERE LendaID = ?`;
 
         values.push(LendaID);
         
@@ -89,7 +89,7 @@ class Lenda{
     static lexoLendenByName(Emri_Lendes, callback){
 
         const sql = `SELECT l.LendaID, f.Emri Fakulteti, l.Emri_Lendes, 
-        l.ECTS, l.Kodi_Lendes, l.uKrijua, s.NrSemestrit Semestri FROM Lenda l 
+        l.ECTS, l.Kodi_Lendes, l.uKrijua, s.NrSemestrit Semestri FROM lenda l 
         INNER JOIN Semestri s ON l.SemestriID = s.Semestri_ID  
         INNER JOIN Fakulteti f ON s.FakultetiID = f.FakultetiID
         WHERE Emri_Lendes LIKE CONCAT("%", ? , "%")`;
