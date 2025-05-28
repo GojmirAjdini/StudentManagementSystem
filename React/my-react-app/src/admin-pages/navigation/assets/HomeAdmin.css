@@ -1,0 +1,41 @@
+#homeAdminH1{
+
+    margin-top: 60px;
+    font-size: 36px;
+}
+
+.homePagecontainer{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+    height: 80vh;
+}
+
+#loginAdminData{
+
+    display: grid;
+    grid-template-columns: auto auto;
+    width: 60%;
+    margin: 40px;
+    border-radius: 10px; 
+    padding: 50px;
+    border: 1px solid rgb(222, 222, 222);
+    gap: 20px;
+
+}
+
+#loginAdminData input{
+
+    border: 1px solid rgb(192, 192, 192);
+    
+}
+
+#h3Info{
+
+    margin-top: 70px;
+    margin-bottom: -30px;
+    margin-left: -40%;
+    color: rgb(126, 126, 126);
+}

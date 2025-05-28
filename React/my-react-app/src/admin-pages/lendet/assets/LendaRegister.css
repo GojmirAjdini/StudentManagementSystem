@@ -1,0 +1,267 @@
+
+#lendaH1{
+
+    text-align: center;
+    font-size: 36px;
+    margin-top: 60px;
+}
+span{
+
+    color: red;
+}
+.container{
+
+    width: 80%;
+    justify-content: center;
+    margin-top: 120px;
+}
+#formLenda{
+
+    display: grid;
+    grid-template-columns: auto auto; ;
+    margin-top: 60px;
+}
+
+
+@keyframes fadeInPage {
+  from {
+      opacity: 0;
+      transform: translateY(10px); 
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+#fadeInPage{
+  opacity: 0;
+  animation: fadeInPage 0.5s ease-in-out forwards;
+
+}
+
+.form-control{
+  
+  border: 1px solid gray;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.input-labelLnt{
+
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+#primaryBtnLnt{
+
+  background-color: rgb(101, 64, 235);
+  width: 30%;
+  height: 40px;
+  border-radius: 10px;
+  margin: 15px;
+  margin-top: 37px;
+  border: none;
+}
+
+#resetBtnLnt{
+
+    background-color: rgb(227, 227, 227);
+    color: black;
+    border-radius: 10px;
+    height: 40px;
+    width: 30%;
+    width: 30%;
+    margin: 15px; 
+    margin-top: 37px;
+    border: none;
+}   
+
+.form-check{
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.leftArrow{
+
+  position: relative;
+  top: -2px;
+  margin-right: 5px;
+
+}
+
+.form-check input{
+
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.form-check label{
+
+  cursor: pointer;
+  font-weight: normal;
+}
+.form-check label:hover{
+
+  font-weight: bold;
+}
+
+.form-select{
+
+  border: 1px solid gray;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+#primaryBtnLnt:hover{
+  background-color: rgb(77, 51, 173);
+}
+
+.input-label{
+
+    display: flex;
+    flex-direction: column;
+    margin: 12px;
+}
+#successMsg{
+  position: absolute;
+  top: 40px;
+  width: fit-content;
+  text-align: center;
+  font-size: 15px;
+}
+
+.swal-confirmBtn{
+
+  font-size: 14px;
+  border-radius: 10px;
+
+}
+.popupDesign{
+
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+#updateBtn{
+
+  border-radius: 10px;
+  margin-top: 28px;
+  text-align: center;
+  margin-left: 60px;
+  width: 70%;
+  background-color: rgb(101, 64, 235);
+}
+
+.fade-in{
+
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+
+    from{
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to{
+      opacity: 1;
+      transform: translateY(0);
+    }
+}
+.textSwal{
+  font-size: 15px;
+  
+}
+.kthehuLink{
+  transition:0.2s ease-in-out;
+}
+.kthehuLink:hover{
+
+  background-color: rgb(77, 51, 173);
+  text-decoration: none;
+  color: white;
+  transition: 0.2s ease-in-out;
+}
+#updateBtn:hover{
+
+  background-color: rgb(77, 51, 173);
+ 
+}
+
+#resetBtnLnt:hover{
+  background-color: rgb(206, 206, 206);
+}
+input{
+
+  border: 1px solid gray;
+  border-radius: 10px;
+  
+}
+
+#successMsgLenda{
+    position: absolute;
+    top: 30px;
+    font-size: 15px;
+}
+
+.input{
+  display: flex;
+  justify-content: center;
+  width: 200%;
+}
+
+.inputLenda{
+  
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+}
+#updateBtnFkt{
+
+  justify-content: center;
+  margin-top: 10px;
+  width: 30%;
+  background-color: rgb(101, 64, 235);
+  border-radius: 10px;
+  height: 40px;
+  transition: 0.2s ease-in-out;
+  margin-top: 37px;
+}
+
+#updateBtnLenda{
+
+  justify-content: center;
+  margin-top: 10px;
+  width: 40%;
+  background-color: rgb(101, 64, 235);
+  border-radius: 10px;
+  height: 40px;
+  transition: 0.2s ease-in-out;
+  margin-top: 37px;
+}
+
+#updateBtnLenda:hover{
+  
+    background-color: rgb(77, 51, 173);
+    transition: 0.2s ease-in-out;
+}
+
+.kthehuLinkLenda{
+  
+  position: absolute;
+  left: 20px;
+  width: fit-content;
+  padding: 7px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  transition: 0.2s ease-in-out;
+}
+
+.kthehuLinkLenda:hover{
+
+  transition: 0.2s ease-in-out;
+}
