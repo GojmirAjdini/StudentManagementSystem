@@ -61,9 +61,9 @@ class StafiAdministrativ {
         const sqlProf = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
         p.Email, f.Emri Fakulteti, p.NrTel, 
         p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, p.Titulli_Akademik  
-        FROM Profesori p 
+        FROM profesori p 
         LEFT JOIN profesori_fakulteti pf on p.ProfesoriID = pf.ProfesoriID
-        LEFT JOIN Fakulteti f on pf.FakultetiID = f.FakultetiID
+        LEFT JOIN fakulteti f on pf.FakultetiID = f.FakultetiID
         WHERE p.Email = ?`;
 
         db.query(sqlAdmin, Email,(err, results) =>{
@@ -128,8 +128,8 @@ class StafiAdministrativ {
 
         const sql = `SELECT sa.AdminID, sa.Email, f.Emri AS Fakulteti, sa.Password, 
          sa.Emri_Adminit, sa.Mbiemri_Adminit, sa.role, sa.uKrijua  
-         FROM StafiAdministrativ sa
-         INNER JOIN Fakulteti f ON f.FakultetiID = sa.FakultetiID
+         FROM stafiadministrativ sa
+         INNER JOIN fakulteti f ON f.FakultetiID = sa.FakultetiID
         WHERE sa.Emri_Adminit LIKE CONCAT("%", ?, "%")`;
 
         db.query(sql, [Emri], (err, results) =>{
@@ -148,8 +148,8 @@ class StafiAdministrativ {
     static getAdminByEmail(Email, callback){
 
         const sql = `SELECT sa.Email, f.Emri Fakulteti, sa.Emri_Adminit, sa.Mbiemri_Adminit, sa.role, sa.uKrijua  
-        FROM StafiAdministrativ sa
-        INNER JOIN Fakulteti f on f.FakultetiID = sa.FakultetiID
+        FROM stafiadministrativ sa
+        INNER JOIN fakulteti f on f.FakultetiID = sa.FakultetiID
         WHERE Email = ?`;
 
         db.query(sql, [Email], (err, results) =>{
@@ -163,7 +163,7 @@ class StafiAdministrativ {
 
     static deleteAdminById(id, callback){
         
-        const sql = "DELETE FROM StafiAdministrativ WHERE AdminID = ?";
+        const sql = "DELETE FROM stafiadministrativ WHERE AdminID = ?";
 
         db.query(sql, [id], (err, results) =>{
 
@@ -176,7 +176,7 @@ class StafiAdministrativ {
     }
 
     static deleteAllAdminet(callback){
-        const sql = "DELETE FROM StafiAdministrativ";
+        const sql = "DELETE FROM stafiadministrativ";
 
         db.query(sql, (err, results) =>{
 
@@ -189,7 +189,7 @@ class StafiAdministrativ {
     }
 
     static patchAdminin(id, fushat, values, callback){
-        const sql = `UPDATE StafiAdministrativ SET ${fushat.join(', ')} WHERE AdminID = ?`;
+        const sql = `UPDATE stafiadministrativ SET ${fushat.join(', ')} WHERE AdminID = ?`;
 
         values.push(id);
 

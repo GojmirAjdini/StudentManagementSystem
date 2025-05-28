@@ -54,7 +54,7 @@ const regjistroStudent = async (req, res) =>{
         }
 
         const lastStudentIdCheck = `SELECT s.StudentiID 
-        FROM Studenti s 
+        FROM studenti s 
         ORDER BY s.StudentiID DESC LIMIT 0, 1`;
 
         const vitiAkademik = StudentCredentials.vitiAkademik();
@@ -177,7 +177,7 @@ const updatePassword = async (req, res) =>{
 
         }
             
-        const sql = "SELECT Password from Studenti WHERE ID = ?";
+        const sql = "SELECT Password from studenti WHERE ID = ?";
 
         const [oldPasswordCheck] = await db.promise().query(sql, [ID]);
 
@@ -233,7 +233,7 @@ const loginStudenti = async(req, res) =>{
             return res.json({message: "Te gjitha fushat duhet plotesuar!"});
         }
 
-        const sql = "SELECT Password FROM Studenti WHERE EmailStudentor = ?";
+        const sql = "SELECT Password FROM studenti WHERE EmailStudentor = ?";
 
         const [storedPassword] = await db.promise().query(sql, [EmailStudentor]);
 
