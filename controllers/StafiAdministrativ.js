@@ -96,7 +96,7 @@ const loginAdmin = async (req,res) =>{
         let [rows] = await db.promise().query(sql, [trimEmail]);
 
         if(rows.length === 0){
-            sql = "SELECT Password FROM Profesori WHERE Email = ?";
+            sql = "SELECT Password FROM profesori WHERE Email = ?";
             [rows] = await db.promise().query(sql, [trimEmail]);
 
         if(rows.length === 0){

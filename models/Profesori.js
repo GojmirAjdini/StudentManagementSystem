@@ -57,8 +57,8 @@ class Profesori {
 
         const sql = `SELECT Emri, Mbiemri, Gjinia, 
         Email, NrTel, Password, EmailPrivat, Data_Punesimit, Statusi, Titulli_Akademik
-        FROM profesori
-        WHERE Email = ?`;
+        FROM profesori p
+        WHERE p.Email = ?`;
 
         db.query(sql, Email, (err, results) =>{
             if(err){
@@ -159,7 +159,7 @@ class Profesori {
         p.Titulli_Akademik, l.Emri_Lendes, l.Kodi_Lendes, l.ECTS, s.NrSemestrit, vk.VitiAkademik 
                 FROM lenda_profesori lp
                 INNER JOIN profesori p on p.ProfesoriID = lp.ProfesoriID
-                INNER JOIN Lenda l on l.LendaID = lp.LendaID
+                INNER JOIN lenda l on l.LendaID = lp.LendaID
                 INNER JOIN semestri s on s.Semestri_ID = l.SemestriID
                 INNER JOIN viti_akademik vk on s.VitiAkademikID = vk.VitiAkademikID
                 INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
