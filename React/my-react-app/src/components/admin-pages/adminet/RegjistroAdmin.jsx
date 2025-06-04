@@ -163,8 +163,10 @@ return (
 
          <div className="input-labelAdmButtons">
           <Button id="primaryBtnAdmin" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+        sx={{textTransform:'none', fontFamily:'Montserrat',}} 
         loading={loading} variant="contained" type="submit">Regjistro</Button>
-          <Button id="resetBtnAdmin" variant="contained" type="button" onClick={handleReset} 
+          <Button id="resetBtnAdmin" sx={{textTransform:'none', 
+                fontFamily:'Montserrat',}} variant="contained" type="button" onClick={handleReset} 
           >Reset
           </Button>
           

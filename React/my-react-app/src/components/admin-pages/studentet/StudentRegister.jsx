@@ -310,8 +310,12 @@ return (
        </div>   
 
         <div className="input-labelBtnStd">
-        <Button id="primaryBtn" variant="contained" disabled={loading} type="submit">Regjistro</Button>
-        <Button id="resetBtn" variant="contained" disable={loading} type="button" onClick={handleReset}>Reset</Button>
+        <Button id="primaryBtn" sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+        variant="contained" disabled={loading} type="submit">Regjistro</Button>
+        
+        <Button id="resetBtn" sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+        variant="contained" disable={loading} type="button" onClick={handleReset}>Reset</Button>
+        
         </div>
         </form>
         {loading && <Loading/>}

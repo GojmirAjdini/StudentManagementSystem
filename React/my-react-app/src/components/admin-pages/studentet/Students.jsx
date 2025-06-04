@@ -129,9 +129,9 @@ function Students() {
          return(
           <Button id="editBtn" color="primary" 
           loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>}
-          loading={editLoading}
+          loading={editLoading} sx={{textTransform:'none', fontFamily:'Montserrat', }}
           variant="contained"
-          onClick={handleEditClick}
+          onClick={handleEditClick} 
           startIcon={<EditIcon sx={{color:"white"}}/>}>Edit</Button>
           
          )
@@ -144,8 +144,8 @@ function Students() {
         headerName:'Fshij',
         width:120,
         renderCell: (params) =>(
-          <Button color='error' sx={{width:'100%'}} 
-          variant='contained' loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+          <Button color='error' sx={{width:'100%', textTransform:'none', fontFamily:'Montserrat'}} 
+          variant='contained' loadingIndicator={<CircularProgress sx={{color:'white', marginLeft:'5px'}} size={25}/>} 
           loading={loading === params.row.ID} startIcon={<DeleteIcon sx={{color:"white"}}/>}
           onClick={ () => deleteStudent(params.row.ID)}>Delete</Button>
 

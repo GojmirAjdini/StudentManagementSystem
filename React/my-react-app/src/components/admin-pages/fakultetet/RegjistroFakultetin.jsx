@@ -131,10 +131,12 @@ function RegjistroFakultetin() {
                 <div className="input-labelBtn">
                 <Button variant="contained" id="primaryBtnFkt" type="submit" 
                 loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-                loading={loading} >
+                loading={loading} sx={{textTransform:'none', fontFamily:'Montserrat',}} >
                     Regjistro
                 </Button>
-                <Button variant="contained" id="resetBtnFkt" type='button'  onClick={handleReset}>Reset</Button>
+                <Button variant="contained" id="resetBtnFkt" type='button' 
+                sx={{textTransform:'none', fontFamily:'Montserrat',}}
+                  onClick={handleReset}>Reset</Button>
                 </div>
 
             </form>

@@ -124,10 +124,12 @@ function LoginStudent(){
     </div>
     <div className="input-labelButtons">
         <Button loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-        loading={loading} id="loginLoginAdm" variant="contained" type="submit" color="primary">
+        loading={loading} sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+        id="loginLoginAdm" variant="contained" type="submit" color="primary">
             Login</Button>
 
-        <Button id="loginResAdm"  variant="contained" onClick={handleReset} color="inherit">Reset</Button>
+        <Button id="loginResAdm" sx={{textTransform:'none', fontFamily:'Montserrat'}}  
+        variant="contained" onClick={handleReset} color="inherit">Reset</Button>
         </div>
         </form>
        

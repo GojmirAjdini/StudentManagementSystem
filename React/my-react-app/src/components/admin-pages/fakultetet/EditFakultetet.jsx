@@ -186,13 +186,14 @@ function EditFakultetet() {
 
                 <div className="input">
                 <Button  id="updateBtnFkt" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-                 loading={loading} variant="contained" type="submit">Ruaj Ndryshimet</Button>
+                 loading={loading} sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+                 variant="contained" type="submit">Ruaj Ndryshimet</Button>
     
                 </div>
                 <div className="input-label">
 
                 <Link className="kthehuLinkFkt" to={`/fakultetet`}>  
-                <Button variant='contained' 
+                <Button sx={{textTransform:'none', fontFamily:'Montserrat'}} variant='contained' 
                  color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>                    
                     </div>
             </form>

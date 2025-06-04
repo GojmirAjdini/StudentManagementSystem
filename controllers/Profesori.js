@@ -555,7 +555,6 @@ const deleteProfesoretFakultetetSipasID = async (req, res) =>{
         return res.status(500).json({message: err});
     }
 }
-
 export default {readProfesoret, registerProfesoret,deleteProfesorSipasId, 
     loginProfessor, updatePassword, patchProfesorin, 
     lexoProfesorinSipasId, caktoProfiLenda, lexoProfesorinSipasEmrit,

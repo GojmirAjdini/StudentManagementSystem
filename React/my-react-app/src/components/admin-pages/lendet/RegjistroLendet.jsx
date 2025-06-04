@@ -181,9 +181,13 @@ function RegjistroLendet() {
       />
       </div>
         <div className="input-labelLnt">
-        <Button variant="contained" loading={loading} loadingIndicator={<CircularProgress sx={{color:'white'}} size={25} />}
-        id="primaryBtnLnt" className="btn btn-primary" type="submit">Regjistro</Button>
-        <Button variant="contained" id="resetBtnLnt" className="btn btn-secondary" type="button" onClick={handleReset}>Reset</Button>
+        <Button variant="contained" loading={loading} 
+        loadingIndicator={<CircularProgress sx={{color:'white'}} size={25} />}
+        id="primaryBtnLnt" className="btn btn-primary" sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+        type="submit">Regjistro</Button>
+        
+        <Button variant="contained" sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+        id="resetBtnLnt" className="btn btn-secondary" type="button" onClick={handleReset}>Reset</Button>
         </div>
 
         </form>

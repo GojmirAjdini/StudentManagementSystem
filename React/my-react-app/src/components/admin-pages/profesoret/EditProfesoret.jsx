@@ -253,11 +253,13 @@ function EditProfesoret() {
     <div className="inputProf">
         
         <Link className="kthehuLinkProf" to={`/profesoret`}>  
-          <Button variant='contained' color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>
+          <Button variant='contained' sx={{textTransform:'none', fontFamily:'Montserrat',}} 
+          color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>
           
           <Button variant='contained' 
           loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>}
-          loading={loading} id="updateBtnProf" type="submit">Ruaj Ndryshimet</Button>         
+          loading={loading} id="updateBtnProf" sx={{textTransform:'none', fontFamily:'Montserrat',}}
+          type="submit">Ruaj Ndryshimet</Button>         
         </div>
         </form>
     </div>

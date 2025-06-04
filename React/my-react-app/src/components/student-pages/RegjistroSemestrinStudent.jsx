@@ -10,11 +10,13 @@ import Select from "@mui/material/Select";
 import InputLabel  from "@mui/material/InputLabel";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbar} from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/RemoveCircle";
 
 function RegjistroSemestrinStudent() {
     
     const [successMessage, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [submitLoading, setSubmitLoading] = useState(false);
     const [semestrat, setSemestrat] = useState([]);
     const [semestriID, setSemestriID] = useState('');
     const [semestratERegjistruar, setSemestratERegjistruar] = useState([]);
@@ -60,6 +62,68 @@ function RegjistroSemestrinStudent() {
       }
     }
 
+  
+    const deleteSemester = async (ID) => {
+
+         const result = await Swal.fire({
+                    
+              background:"#F5F5F5",
+              position: "center",
+              title: "Dëshironi të ç'regjistroni semesterin?",
+              text: "Ky veprim është i pakthyeshëm!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',  
+              cancelButtonColor: '#d33',      
+              confirmButtonText: 'Po, fshij!',
+              cancelButtonText: 'Jo, anulo',
+              timer:5000,
+              customClass: {
+                confirmButton:'swal-confirmBtn',
+                cancelButton: 'swal-confirmBtn',
+                popup:'popupDesign',
+                title:'titleSwal'
+              }
+            });
+
+        if(result.isConfirmed){
+
+          setLoading(ID);
+            try{
+
+                const response = await axiosInstance.delete(`student/semestrat/delete/${ID}`);
+                
+            setTimeout(() => {
+
+            
+          
+            Swal.fire({
+            title: "Semestri u ç'regjistrua!",
+            text: response.data.message,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor:'#3085d6',
+            timer:3000,
+            customClass: {
+                confirmButton: 'swal-confirmBtn',
+                popup: 'popupDesign',
+                htmlContainer: 'textSwal',
+                 }
+             });
+            
+           setSemestratERegjistruar(prev => prev.filter(sms => sms.ID !== ID));
+            },1000);
+                
+            }catch(err){
+                console.error("Error deleting semester:", err);
+            }finally{
+              setTimeout(() =>{
+                setLoading(null);
+              },1000);
+            }
+        }
+    }
+
     const handleSubmit = async(e) =>{
         e.preventDefault();
 
@@ -79,7 +143,7 @@ function RegjistroSemestrinStudent() {
             }
         })
     return;
-}     setLoading(true);
+}     setSubmitLoading(true);
         try{
             const response = await axiosInstance.post(`student/register/semester`,{
                 
@@ -122,7 +186,7 @@ function RegjistroSemestrinStudent() {
     }
     finally{
       setTimeout(() => {
-          setLoading(false);
+          setSubmitLoading(false);
       }, 1000);
     }
 }
@@ -134,6 +198,21 @@ function RegjistroSemestrinStudent() {
     {field:'NrSemestrit',headerName:'Semestri', width:120},
     {field:'VitiAkademik',headerName:'Viti akademik', width:150},
     {field:'uKrijua',headerName:'Data e regjistrimit', width:250},
+    {
+      field:'Delete',
+      headerName:"Ç'regjistro semestrin",
+      width:180,
+      renderCell : (params) => (
+          <Button 
+          color="error" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+          loading={loading === params.row.ID}
+          variant="contained" sx={{width:'100%', textTransform:'none', fontFamily:'Montserrat'}}
+          startIcon={<DeleteIcon sx={{color:'white'}}/>}
+          onClick={() => deleteSemester(params.row.ID)}>
+          Ç'regjistro
+          </Button>
+      )
+    }
   ]
 
   const rows = useMemo(() => semestratERegjistruar.map((sms, index) => ({
@@ -204,8 +283,12 @@ function RegjistroSemestrinStudent() {
     <div className="input-labelSemestriStd">
         <Button variant="contained" id="primaryBtnSemestriStd" 
         loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-        loading={loading} type="submit">Regjistro</Button>
-        <Button variant="contained" id="resetBtnSemestriStd"  type='button' onClick={handleReset}>Reset</Button>
+        loading={submitLoading} sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+        type="submit">Regjistro</Button>
+        
+        <Button variant="contained" sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+        id="resetBtnSemestriStd"  type='button' onClick={handleReset}>Reset</Button>
+        
         </div>
         </form>
 
@@ -220,8 +303,8 @@ function RegjistroSemestrinStudent() {
 
            <DataGrid
            disableColumnResize
-                
-                
+          showColumnVerticalBorder
+          showCellVerticalBorder
                 rows={rows}
                 columns={columns}
                 scrollbarSize={0}

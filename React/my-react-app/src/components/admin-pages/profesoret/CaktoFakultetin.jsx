@@ -256,8 +256,10 @@ function CaktoFakultetin() {
 
     <div className="input-labelProfLnd">
         <Button variant="contained" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-        loading={loading} id="primaryBtnProfLenda"  type="submit">Cakto</Button>
-        <Button variant="contained" id="resetBtnProfLenda"  type='button' onClick={handleReset}>Reset</Button>
+        loading={loading} id="primaryBtnProfLenda" sx={{textTransform:'none', fontFamily:'Montserrat',}} 
+        type="submit">Cakto</Button>
+        <Button variant="contained" sx={{textTransform:'none', fontFamily:'Montserrat',}}
+         id="resetBtnProfLenda"  type='button' onClick={handleReset}>Reset</Button>
         </div>
         </form>
 

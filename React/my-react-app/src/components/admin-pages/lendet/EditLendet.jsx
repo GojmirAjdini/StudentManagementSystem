@@ -200,12 +200,14 @@ function EditLendet() {
 
         <div className="inputLenda">
           <Button loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-           loading={loading} variant="contained" id="updateBtnLenda" type="submit">Ruaj Ndryshimet</Button>
+           loading={loading} sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+           variant="contained" id="updateBtnLenda" type="submit">Ruaj Ndryshimet</Button>
         </div>
 
         <div className="input-label">
           <Link className="kthehuLinkLenda" to={`/lendet`}>
-          <Button variant='contained' color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>           
+          <Button variant='contained' sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+          color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>           
 
           </Link>
         </div>

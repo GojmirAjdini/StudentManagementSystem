@@ -1,5 +1,6 @@
 import express from "express";
 import studentKontroller from "../controllers/Studenti.js";
+import provimet from "../controllers/Provimi.js";
 
 import auth from "../middlewares/Authentication.js";
 
@@ -11,31 +12,17 @@ router.get("/dashboard", auth.verifyToken, auth.eshteStudent, studentKontroller.
 router.post("/register/semester", auth.verifyToken, auth.eshteStudent, studentKontroller.regjistroSemestrinPerStudent )
 router.get("/semestrat", auth.verifyToken, auth.eshteStudent, studentKontroller.lexoSemestratSipasFakultetit);
 router.get("/lista-semestrave/registered",auth.verifyToken, auth.eshteStudent, studentKontroller.listaSemestraveTeRegjistruar);
+router.delete("/semestrat/delete/:ID", auth.verifyToken, auth.eshteStudent, studentKontroller.çregjistroSemestrin);
 
-router.post("/logout",(req, res) => {
-   try {
-  
-    res.clearCookie('refreshToken', {
-      httpOnly:true,
-      secure:process.env.NODE_ENV === 'production',
-      sameSite: 'Strict', 
-      path: '/'
-    });
-   
-    res.clearCookie('accessToken', {
-      httpOnly:true,
-      secure:process.env.NODE_ENV === 'production',
-      sameSite: 'Strict', 
-      path: '/'
-    });
-
-  
-    return res.status(200).json({ message: "Ç'kyçja e suksesshme!" });
-  } catch(err) {
-    console.error(err);
-    return res.status(500).json({ message: "Ç'kyçja dështoi!" });
-  }
-});
+router.post("/paraqit-provimin",auth.verifyToken, auth.eshteStudent, provimet.paraqitProviminStudent);
+router.get("/lista/provimeve", auth.verifyToken, auth.eshteStudent, provimet.lexoProvimetSipasStudentit);
+router.get("/provimet/paraqitura/student", auth.verifyToken, auth.eshteStudent, provimet.lexoProvimetEParaqituraTeStudentit);
+router.get("/transkripta/notat", auth.verifyToken, auth.eshteStudent, provimet.transkriptaENotave);
+router.get("/mesatarja/notat", auth.verifyToken, auth.eshteStudent, provimet.mesatarjaENotave);
+router.get("/profesoret/provimi/:ProvimiID", auth.verifyToken, auth.eshteStudent,provimet.lexoProfesoretSipasProvimit);
+router.delete("/anulo-paraqitjen/provimet-paraqitura/:RegjistrimiProvimitID", auth.verifyToken, auth.eshteStudent, provimet.anuloParaqitjenEProvimit);
+router.delete("/refuzo-noten/provimet-paraqitura/:RezultatiID", auth.verifyToken, auth.eshteStudent, provimet.refuzoNoten);
+router.post("/logout",studentKontroller.logout);
 
 
 export default router;

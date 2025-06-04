@@ -181,9 +181,10 @@ function EditAdminet() {
          <div className="input-labelAdmBtnUpd">
           
           <Link className="kthehuLinkAdmins" to={`/adminet`}>  
-          <Button variant='contained' sx={{color:'black'}} color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>                    
+          <Button variant='contained' sx={{color:'black', textTransform:'none', fontFamily:'Montserrat',}} color='inherit'><FaArrowLeft className="leftArrow"/>Kthehu</Button>  </Link>                    
            <Button loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-            loading={loading} id="updateBtnAdm" variant="contained" type="submit">Përditëso</Button>
+            loading={loading} sx={{textTransform:'none', fontFamily:'Montserrat',}}
+            id="updateBtnAdm" variant="contained" type="submit">Përditëso</Button>
            </div>
 
           <div className="input-label">

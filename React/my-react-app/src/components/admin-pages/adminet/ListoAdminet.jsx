@@ -91,7 +91,8 @@ function ListoAdminet() {
         width:120,
         renderCell: (params) =>(
           <Link to={`/edit/admin/${params.row.AdminID}`}>
-          <Button id="editBtn" color="primary" variant="contained"
+          <Button id="editBtn" color="primary" variant="contained" sx={{textTransform:'none', 
+                fontFamily:'Montserrat',}}
           startIcon={<EditIcon sx={{color:"white"}}/>}>Edit</Button>
           </Link>
         )
@@ -101,7 +102,8 @@ function ListoAdminet() {
             headerName:'Fshij',
             width:120,
             renderCell: (params) =>(
-                <Button id="deleteBtn" color="error" variant="contained"
+                <Button id="deleteBtn" color="error" variant="contained" sx={{textTransform:'none', 
+                fontFamily:'Montserrat',}}
                 startIcon={<DeleteIcon sx={{color:"white"}}/>}
                 onClick={() => handleDelete(params.row.AdminID)}>Fshij</Button>
             )

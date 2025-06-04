@@ -490,9 +490,52 @@ const listaSemestraveTeRegjistruar = async(req, res) =>{
     }
 }
 
+const çregjistroSemestrin = async(req, res) =>{
+
+    try{
+        const ID = req.params.ID;
+
+        Studenti.çregjistroSemestrin([ID],(err, results) =>{
+            if(err){
+                return res.status(500).json({error:err, message:'Server error'});
+            }
+        
+            return res.status(200).json({message:"Semestri u ç'regjistrua me sukses!"});
+        })
+    }catch(err){
+        return res.status(500).json({err:true, message:err});
+    }
+}
+
+const logout = async(req, res) =>{
+    
+    try {
+  
+    res.clearCookie('refreshToken', {
+      httpOnly:true,
+      secure:process.env.NODE_ENV === 'production',
+      sameSite: 'Strict', 
+      path: '/'
+    });
+   
+    res.clearCookie('accessToken', {
+      httpOnly:true,
+      secure:process.env.NODE_ENV === 'production',
+      sameSite: 'Strict', 
+      path: '/'
+    });
+
+  
+    return res.status(200).json({ message: "Ç'kyçja e suksesshme!" });
+  } catch(err) {
+    console.error(err);
+    return res.status(500).json({ message: "Ç'kyçja dështoi!" });
+  }
+}
+
         
 export default {lexoStudentet, regjistroStudent, fshijStudent, 
     fshijAllStudentet, updatePassword, loginStudenti, 
     patchStudentin, lexoStudentetByID, lexoStudentetByName,
     lexoStudentinByEmail, regjistroSemestrinPerStudent, lexoSemestratSipasFakultetit,
-    listaSemestraveTeRegjistruar};
+    listaSemestraveTeRegjistruar, çregjistroSemestrin, logout};

@@ -225,7 +225,7 @@ static readStudentByName(Emri, callback){
 
     static listaSemestraveTeRegjistruar(email, callback){
 
-        const sql = `SELECT sms.Afati_Semestrit, vk.VitiAkademik,  
+        const sql = `SELECT ss.ID, sms.Afati_Semestrit, vk.VitiAkademik,  
         sms.NrSemestrit, ss.Data_Regjistrimit uKrijua, ns.Emri_Nivelit Niveli
         FROM student_semestri ss 
         INNER JOIN studenti std on ss.StudentiID = std.ID
@@ -245,5 +245,20 @@ static readStudentByName(Emri, callback){
             callback(null, results);
         })
     }
+
+    static çregjistroSemestrin(ID, callback){
+
+        const sql = `DELETE FROM student_semestri WHERE ID = ?`;
+
+        db.query(sql, [ID], (err, results) =>{
+
+        if(err){
+                return callback(err);
+            }
+            
+            callback(null, results);
+        })
+    }
+
 }
 export default Studenti;

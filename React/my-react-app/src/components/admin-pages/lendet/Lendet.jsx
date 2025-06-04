@@ -75,7 +75,7 @@ function Lendet() {
             } catch(err){
                 console.error("Error deleting lenda", err); 
             }finally{
-                useTimeout(() =>{
+                setTimeout(() =>{
                     setLoading(null);
                 },1000);
             }
@@ -96,8 +96,8 @@ function Lendet() {
     const columns =  [
         
         {field: 'id', headerName:'#', width:20},
-        {field: 'Emri_Lendes', headerName:'Lënda', width:350},
-        {field: 'Fakulteti', headerName:'Fakulteti', width:210},
+        {field: 'Emri_Lendes', headerName:'Lënda', width:250},
+        {field: 'Fakulteti', headerName:'Fakulteti', width:200},
         {field: 'ECTS', headerName:'ECTS', width:80},
         {field: 'Kodi_Lendes', headerName:'Kodi i Lëndës', width:120},
         {field: 'Semestri', headerName:'Semestri', width:100},
@@ -126,6 +126,7 @@ function Lendet() {
                         color="primary"
                         loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>}
                         loading={editLoading}
+                        sx={{textTransform:'none', marginTop:'5px', marginBottom:'5px', fontFamily:'Montserrat'}}
                         variant="contained"
                         startIcon={<EditIcon sx={{color:"white"}}/>}
                         onClick={handleEditClick}
@@ -145,7 +146,9 @@ function Lendet() {
                 <Button 
                 color="error"
                 variant="contained" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-                loading={loading === params.row.LendaID} sx={{width:'100%'}}
+                loading={loading === params.row.LendaID} 
+                sx={{width:'100%', marginTop:'5px', marginBottom:'5px', 
+                textTransform:'none', fontFamily:'Montserrat'}}
                 startIcon={<DeleteIcon sx={{color:'white'}}/>}
                 onClick={() => deleteLenda(params.row.LendaID)}>
                 Delete
@@ -178,6 +181,7 @@ function Lendet() {
               <DataGrid
                 disableColumnResize
                 showCellVerticalBorder
+                getRowHeight={() => 'auto'}
                 showColumnVerticalBorder
                 rows={rows}
                 columns={columns}

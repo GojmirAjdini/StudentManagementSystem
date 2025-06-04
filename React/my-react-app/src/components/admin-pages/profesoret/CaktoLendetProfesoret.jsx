@@ -326,10 +326,11 @@ function CaktoLendetProf() {
 </div>
 
     <div className="input-labelProfLnd">
-        <Button variant="contained" id="primaryBtnProfLenda" 
+        <Button variant="contained" id="primaryBtnProfLenda" sx={{textTransform:'none', fontFamily:'Montserrat'}}
         loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
         loading={loading} type="submit">Cakto</Button>
-        <Button variant="contained" id="resetBtnProfLenda" type='button' onClick={handleReset}>Reset</Button>
+        <Button variant="contained" sx={{textTransform:'none', fontFamily:'Montserrat',}}
+        id="resetBtnProfLenda" type='button' onClick={handleReset}>Reset</Button>
         </div>
         </form>
   

@@ -123,10 +123,12 @@ function Login(){
     </div>
     <div className="input-labelButtons">
         <Button id="loginLoginAdm" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-                loading={loading} variant="contained" type="submit" color="primary">
+                loading={loading} sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+                variant="contained" type="submit" color="primary">
                     Login</Button>
 
-        <Button id="loginResAdm"  variant="contained" onClick={handleReset} color="inherit">Reset</Button>
+        <Button id="loginResAdm" sx={{textTransform:'none', fontFamily:'Montserrat'}}  
+        variant="contained" onClick={handleReset} color="inherit">Reset</Button>
         </div>
         </form>
         </div>  

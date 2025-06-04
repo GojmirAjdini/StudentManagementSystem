@@ -333,8 +333,10 @@ function CaktoSemestrin() {
     <div className="input-labelSemestri">
         <Button variant="contained" id="primaryBtnSemestri" 
         loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
-        loading={loading} type="submit">Cakto</Button>
-        <Button variant="contained" id="resetBtnSemestri"  type='button' onClick={handleReset}>Reset</Button>
+        loading={loading} sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+        type="submit">Cakto</Button>
+        <Button sx={{textTransform:'none', fontFamily:'Montserrat'}}
+        variant="contained" id="resetBtnSemestri"  type='button' onClick={handleReset}>Reset</Button>
         </div>
         </form>
 

@@ -59,6 +59,9 @@ const LendetSipasProfit = lazy (() => import ('./components/professor-pages/Lend
 
 const Dashboard = lazy(() => import ('./components/student-pages/Dashboard'));
 const RegjistrimiSemestrit = lazy(() => import ('./components/student-pages/RegjistroSemestrinStudent'));
+const ParaqitProvimin = lazy(() => import ('./components/student-pages/ParaqitProvimin'));
+const ProvimetEParaqitura = lazy(() => import ('./components/student-pages/ProvimetEParaqitura'));
+const Transkripta = lazy(() => import ('./components/student-pages/Transkripta'));
 
 function AppContent() {
 
@@ -290,6 +293,9 @@ useEffect(() => {
 
       <Route path='/dashboard' element={<RequireAuth allowedRoles={['student']}> <Dashboard/></RequireAuth>}/>
       <Route path='/semester/register' element={<RequireAuth allowedRoles={['student']}> <RegjistrimiSemestrit/> </RequireAuth>}/>
+      <Route path='/paraqit-provimin' element={<RequireAuth allowedRoles={['student']}> <ParaqitProvimin/> </RequireAuth>}/>
+      <Route path='/provimet/paraqitura' element={<RequireAuth allowedRoles={['student']}> <ProvimetEParaqitura/> </RequireAuth>}/>
+      <Route path='/transkripta-notave' element={<RequireAuth allowedRoles={['student']}> <Transkripta/> </RequireAuth>}/>
 
     
     

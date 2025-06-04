@@ -84,9 +84,9 @@ function LendetProfesoret(){
         { field: "Emri", headerName: "Emri", width: 120 },
         { field: "Mbiemri", headerName: "Mbiemri", width: 120 },
         { field: "Email", headerName: "Email", width: 210 },
-        { field: "Titulli_Akademik", headerName: "Titulli", width: 70 },
-        { field: "Fakulteti", headerName: "Fakulteti", width: 200},
-        { field: "Emri_Lendes", headerName: "Emri Lëndës", width:220 },
+        { field: "Titulli_Akademik", headerName: "Titulli", width: 100 },
+        { field: "Fakulteti", headerName: "Fakulteti", width: 150},
+        { field: "Emri_Lendes", headerName: "Emri Lëndës", width:180 },
         { field: "Kodi_Lendes", headerName: "Kodi Lëndës", width: 110 },
         { field: "NrSemestrit", headerName: "Semestri", width: 85 },
         { field: "VitiAkademik", headerName:"Viti Akademik", width:120},
@@ -94,12 +94,13 @@ function LendetProfesoret(){
         {
             field: "Delete",
             headerName: "Largo caktimin",
-            width: 125,
+            width: 130,
             renderCell: (params) => (
                 <Button variant="contained" color="error"
                     className="deleteBtn" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
                     loading={loading && loading.LendaID === params.row.LendaID && loading.ProfesoriID === params.row.ProfesoriID} 
-                    sx={{width:'100%'}}
+                    sx={{width:'100%', marginTop:'5px', 
+                      marginBottom:'5px', textTransform:'none', fontFamily:'Montserrat',}}
                     onClick={() => deleteLendetProfesoret(params.row.LendaID, params.row.ProfesoriID)}
                 >
                     Remove
@@ -131,6 +132,7 @@ function LendetProfesoret(){
              disableColumnResize
              showCellVerticalBorder
              showColumnVerticalBorder
+             getRowHeight={() => "auto"}
              rows={rows}
              columns={columns}
              scrollbarSize={0}

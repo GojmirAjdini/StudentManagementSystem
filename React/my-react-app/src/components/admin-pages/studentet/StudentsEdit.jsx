@@ -323,10 +323,12 @@ setLoading(true);
           
           <Button variant="contained"
            loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} loading={loading}
-           id="updateBtn" type="submit">Ruaj Ndryshimet</Button>
+           id="updateBtn" sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+           type="submit">Ruaj Ndryshimet</Button>
           
           <Link className="kthehuLinkStd" to={`/studentet`}>  
-          <Button variant="contained" color="inherit"> <FaArrowLeft className="leftArrow"/>Kthehu</Button> </Link>          
+          <Button variant="contained" sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+          color="inherit"> <FaArrowLeft className="leftArrow"/>Kthehu</Button> </Link>          
          
         </div>
 

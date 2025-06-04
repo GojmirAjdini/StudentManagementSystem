@@ -103,5 +103,6 @@ class Lenda{
             callback(null, results);
         })
     }
+
 }
 export default Lenda;

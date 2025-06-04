@@ -14,7 +14,6 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axiosInstance from "../../../services/axiosInstance";
 
 import CircularProgress from "@mui/material/CircularProgress";
-import { useTimeout } from "@mui/x-data-grid/internals";
 
 function ListaFakulteteve() {
 
@@ -77,7 +76,7 @@ function ListaFakulteteve() {
             }catch(err){
                 console.error("Error deleting fakultetin:", err);
             }finally{
-              useTimeout(() =>{
+              setTimeout(() =>{
                 setLoading(null);
               },1000);
             }
@@ -126,7 +125,7 @@ useEffect (() => {
               
                 <Button id="editBtn" color="primary" variant="contained"
                 startIcon={<EditIcon sx={{color:"white"}}/>} 
-                onClick={handleEditClick}
+                onClick={handleEditClick} sx={{textTransform:'none',fontFamily:'Montserrat'}}
                 loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
                 loading={editLoading}>Edit</Button>
                 
@@ -141,7 +140,8 @@ useEffect (() => {
                 <Button 
                 color="error" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
                 loading={loading === params.row.FakultetiID}
-                variant="contained" sx={{width:'100%'}}
+                variant="contained" sx={{width:'100%', textTransform:'none', 
+                fontFamily:'Montserrat'}}
                 startIcon={<DeleteIcon sx={{color:'white'}}/>}
                 onClick={() => deleteFakultet(params.row.FakultetiID)}>
                 Delete

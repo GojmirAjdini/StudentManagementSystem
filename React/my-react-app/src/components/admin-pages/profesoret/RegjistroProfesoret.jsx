@@ -194,8 +194,10 @@ function RegjistroProfesoret() {
     </div>
 
     <div className="input-labelProf">
-        <Button variant='contained' id="primaryBtnProf" type="submit" disabled={loading}>Regjistro</Button>
-        <Button variant='contained' id="resetBtnProf" type='button' disabled={loading} 
+        <Button sx={{textTransform:'none', fontFamily:'Montserrat'}} 
+        variant='contained' id="primaryBtnProf" type="submit" disabled={loading}>Regjistro</Button>
+        <Button sx={{textTransform:'none', fontFamily:'Montserrat'}}
+        variant='contained' id="resetBtnProf" type='button' disabled={loading} 
         onClick={handleReset}>
             Reset
             </Button>

@@ -129,7 +129,8 @@ function ListaProfesoreve() {
             },500);
         }
           return (
-          <Button id="editBtn" color="primary" variant="contained" 
+          <Button id="editBtn" color="primary" variant="contained"
+          sx={{textTransform:'none', fontFamily:'Montserrat'}}
           loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>}
           loading={editLoading}
           onClick={handleEditClick}
@@ -146,7 +147,7 @@ function ListaProfesoreve() {
         headerName:'Fshij',
         width:120,
         renderCell: (params) =>(
-          <Button color='error' sx={{width:'100%'}} 
+          <Button color='error' sx={{width:'100%', textTransform:'none', fontFamily:'Montserrat'}} 
           loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
           loading={loading === params.row.ProfesoriID}
           variant='contained' startIcon={<DeleteIcon sx={{color:"white"}}/>}

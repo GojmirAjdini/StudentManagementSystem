@@ -100,7 +100,7 @@ function FakultetetProfesoret(){
                 <Button variant="contained" color="error"
                 loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
                 loading={loading && loading.FakultetiID === params.row.FakultetiID && loading.ProfesoriID === params.row.ProfesoriID}
-                    className="deleteBtn" sx={{width:'100%'}}
+                    className="deleteBtn" sx={{width:'100%', textTransform:'none', fontFamily:'Montserrat',}}
                     onClick={() => deleteFakultetetProfesoret(params.row.FakultetiID, params.row.ProfesoriID)}
                 >
                     Remove
