@@ -4,6 +4,7 @@ import studentKontroller from "../controllers/Studenti.js";
 import controllersLenda from "../controllers/Lenda.js";
 import controllerFakulteti from "../controllers/Fakulteti.js";
 import kontrollerSemestri from '../controllers/Semestri.js';
+import provimet from "../controllers/Provimi.js";
 
 import express, { Router } from "express";
 
@@ -116,4 +117,10 @@ router.get("/gjeneratat", auth.verifyToken, auth.eshteAdmin, controllerFakulteti
 router.get('/semestri/all', auth.verifyToken, auth.eshteAdmin, kontrollerSemestri.readAllSemestrat);
 router.post("/semestri/register",auth.verifyToken, auth.eshteAdmin, kontrollerSemestri.regjistroSemestrin);
 router.get("/vitet/akademike/all",auth.verifyToken,auth.eshteAdmin,kontrollerSemestri.lexoVitetAkademike);
+
+
+// PROVIMET //
+router.get("/provimet/all", auth.verifyToken, auth.eshteAdmin, provimet.lexoAllProvimet);
+router.post("/provimet/register", auth.verifyToken, auth.eshteAdmin, provimet.caktoProviminByAdmin);
+router.get("/periudhat-provimeve", auth.verifyToken, auth.eshteAdmin, provimet.lexoPeriudhatEProvimeve);
 export default router;  

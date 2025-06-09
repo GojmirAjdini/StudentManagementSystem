@@ -83,13 +83,14 @@ function ParaqitProvimin() {
       }
     }
 
-    const handleSubmit = async(id) =>{
-        
+    const handleSubmit = async(selected) =>{
+
         setSubmitLoading(true);
         try{
             const response = await axiosInstance.post(`student/paraqit-provimin`,{
                 
-                ProvimiID: id
+                ProvimiID: selected.ProvimiID,
+                ProfesoriID: selected.ProfesoriID
 
                 });
      
@@ -106,6 +107,7 @@ function ParaqitProvimin() {
                  }
              });
      
+        setProvimetPerParaqitje(prev => prev.filter(provim => provim.ProvimiID !== selected.ProvimiID));
 
         setTimeout(() => {setSuccessMessage('')
         
@@ -213,7 +215,7 @@ function ParaqitProvimin() {
 
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            await handleSubmit(selected.ProvimiID);
+            await handleSubmit(selected);
             
             setLoading(null);   
           }}

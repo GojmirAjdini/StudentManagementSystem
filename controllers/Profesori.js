@@ -555,9 +555,41 @@ const deleteProfesoretFakultetetSipasID = async (req, res) =>{
         return res.status(500).json({message: err});
     }
 }
+
+const lexoStudentetProvimet = async(req, res) =>{
+
+    try{
+
+        const email = req.user.email;
+        
+        const sql = `SELECT ProfesoriID 
+        FROM profesori p 
+        WHERE p.Email = ?`;
+
+        const [profesor] = await db.promise().query(sql, [email]);
+
+        const ProfesoriID = profesor[0].ProfesoriID;
+
+        Profesori.lexoStudentetEProfit(ProfesoriID,(err, results) =>{
+
+            if(err){
+
+                return res.status(500).json({message:error});
+            }
+            return res.status(200).json(results);
+         })
+    }
+    catch(error){
+        return res.status(500).json({err:true,message:error});
+
+    }
+}
+
+
 export default {readProfesoret, registerProfesoret,deleteProfesorSipasId, 
     loginProfessor, updatePassword, patchProfesorin, 
     lexoProfesorinSipasId, caktoProfiLenda, lexoProfesorinSipasEmrit,
     lexoProfesoretLendet, deleteProfesoretLendetSipasID, lexoLendetSipasProfesoriID,
     lexoProfesorinSipasEmail, caktoFakultetinProfesori, lexoFakultetetSipasProfesoritID,
-    lexoProfesoretFakultetet, deleteProfesoretFakultetetSipasID, lexoLendetPerProfesorinSipasEmail};
+    lexoProfesoretFakultetet, deleteProfesoretFakultetetSipasID, lexoLendetPerProfesorinSipasEmail,
+    lexoStudentetProvimet};

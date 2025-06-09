@@ -29,11 +29,14 @@ function Login(){
             try{
         
             const res = await axiosInstance.get("admin/check-authentication");
-        
-            if(res.data.message === 'Authenticated'){
+            
+            if(res.data.message === 'Authenticated'){         
+            if(res.data.role === 'profesor' || res.data.role === 'admin' || res.data.role === 'superadmin') {
+
                  navigate('/');
                 }
             }
+        }
             catch(err){
                 console.log(err);
             }   
@@ -117,7 +120,7 @@ function Login(){
      
      />
      <Button className="passVisibility" variant="text" 
-     sx={{height:"fit-content" , width:"fit-content"}} 
+     sx={{height:"fit-content" , width:"fit-content",  marginLeft:'-5px'}} 
      onClick={togglePassword}> {(!showPassword ? <Visibility/> : <VisibilityOff/>)}</Button>
    
     </div>

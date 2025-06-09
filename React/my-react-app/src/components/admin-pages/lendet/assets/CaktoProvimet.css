@@ -1,0 +1,108 @@
+*{
+  font-family: 'Montserrat';
+}
+
+#profLndH1{
+
+    text-align: center;
+    margin-top: 140px;
+    font-size: 36px;
+}
+span{
+
+    color: red;
+}
+.containerProfLnd{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    
+}
+
+.formProfLnd{
+
+    display: flex;
+    flex-direction: column;
+    margin-top: 120px;
+    justify-content: center;
+    
+}
+
+.selectForPeriudhaLendet{
+
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center ;
+  width:500px;
+  gap:5px;  
+
+}
+
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+        transform: translateY(10px); 
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+  }
+
+  #fadeInPage{
+  opacity: 0;
+  animation: fadeInPage 0.5s ease-in-out forwards;
+
+}
+
+.input-labelProvimiPeriudha{
+
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  gap: 25px;
+  align-items: center;
+  margin-top: 40px;
+}
+
+
+#primaryBtnProvimi{
+  background-color: rgb(101, 64, 235);
+  width: 30%;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+}
+
+#resetBtnProvimi{
+
+  width: 30%;
+  height: 40px;
+  border-radius: 10px;
+  color: black;
+  border: none;
+  background-color: rgb(225, 225, 225);
+}
+
+#successMsgLndProf{
+  position: absolute;
+  top: 210px;
+  left: 220px;
+  width: fit-content;
+  text-align: center;
+  font-size: 15px;
+}
+
+#infoMessageLndProf{
+
+  position: absolute;
+  top: 210px;
+  width: fit-content;
+  text-align: center;
+  font-size: 15px;
+}

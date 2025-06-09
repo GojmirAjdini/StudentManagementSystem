@@ -311,6 +311,27 @@ class Profesori {
             callback(null, results);
         })
     }
+
+    static lexoStudentetEProfit(ProfesoriID, callback) {
+
+        const sql =`SELECT sp.RegjistrimiProvimitID ProvimiID , s.ID, s.Emri, s.Mbiemri, s.EmailStudentor, 
+        l.LendaID, l.Emri_Lendes, l.Kodi_Lendes, p.ProfesoriID 
+        FROM student_provimi sp 
+        INNER JOIN studenti s on sp.StudentiID = s.ID
+        INNER JOIN provimi prv on sp.ProvimiID = prv.ProvimiID
+        INNER JOIN lenda l on prv.LendaID = l.LendaID
+        INNER JOIN profesori p on sp.ProfesoriID = p.ProfesoriID
+        WHERE p.ProfesoriID = ?`;
+    
+        db.query(sql,ProfesoriID,(err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+        
+            return callback(null, results);
+        })
+    }
 }
 
 export default Profesori;

@@ -10,7 +10,7 @@ const lexoAllProvimet = async(req, res)=>{
                 return res.status(500).json({err:err});
             }
         
-            return res.status(200).json({results});
+            return res.status(200).json(results);
         })
     }catch(err){
         return res.status(500).json({err:true,message:err});
@@ -22,13 +22,18 @@ const caktoProviminByAdmin = async (req, res) => {
     
     try{
 
-        const {LendaID, ProfesoriID} = req.body;
+        const {LendaID, data_Provimit, PeriudhaID} = req.body;
 
-        Provimi.caktoProviminByAdmin(LendaID,ProfesoriID,(err, results) =>{
+        Provimi.caktoProviminByAdmin(LendaID,data_Provimit,PeriudhaID,(err, results) =>{
 
             if(err){
-                return res.status(500).json({err:err});
-            }
+
+            if(err.code === 'ER_DUP_ENTRY'){
+
+            return res.status(404).json({message:"Provimi është caktuar tashmë!"});
+        }
+            return res.status(500).json({message:err});
+        }
 
             return res.status(201).json({message:"Provimi u caktua me sukses!"});
         })
@@ -95,7 +100,8 @@ const paraqitProviminStudent = async(req, res) =>{
 
         const email = req.user.email;
         const ProvimiID = req.body.ProvimiID;
-
+        const ProfesoriID = req.body.ProfesoriID;
+        
         const sql = `SELECT ID 
         FROM studenti s 
         WHERE s.EmailStudentor = ?`;
@@ -104,7 +110,7 @@ const paraqitProviminStudent = async(req, res) =>{
 
         const StudentiID = student[0].ID;
 
-        Provimi.paraqitProviminStudent(StudentiID, ProvimiID,(err, results) =>{
+        Provimi.paraqitProviminStudent(StudentiID, ProvimiID, ProfesoriID,(err, results) =>{
 
             if(err){
 
@@ -112,14 +118,14 @@ const paraqitProviminStudent = async(req, res) =>{
 
             return res.status(404).json({message:"Provimi është regjistruar tashmë!"});
         }
-            return res.status(500).json({err:err});
+            return res.status(500).json({message:err});
         }
 
             return res.status(201).json({message:"Provimi u paraqit me sukses!"});
          })
     }
-    catch(err){
-        return res.status(500).json({err:true,message:err});
+    catch(error){
+        return res.status(500).json({err:true,message:error});
 
     }
 }
@@ -280,7 +286,55 @@ const refuzoNoten = async(req, res) =>{
 }
 
 
+const lexoPeriudhatEProvimeve = async (req, res) => {
+    
+    try{
+
+        Provimi.lexoPeriudhatEProvimeve((err, results) =>{
+
+            if(err){
+                return res.status(500).json({err:err});
+            }
+
+            return res.status(201).json(results);
+        })
+    }
+    catch(err){
+        return res.status(500).json({err:true,message:err});
+
+    }
+}
+
+const caktoNotenEProvimit = async(req, res) =>{
+
+    try{
+
+       const nota = req.body.Nota;
+       const provimiID = req.body.ProvimiID;
+        
+        Provimi.caktoNotenEProvimit(nota, provimiID,(err, results) =>{
+
+            if(err){
+
+            if(err.code === 'ER_DUP_ENTRY'){
+
+            return res.status(404).json({message:"Nota është vendosur tashmë!"});
+        }
+            return res.status(500).json({message:err});
+        }
+
+            return res.status(201).json({message:"Nota u vendos me sukses!"});
+         })
+    }
+    catch(error){
+        return res.status(500).json({err:true,message:error});
+
+    }
+}
+
+
+
 export default {lexoAllProvimet, caktoProviminByAdmin, paraqitProviminStudent, 
     lexoProvimetSipasStudentit, lexoProvimetEParaqituraTeStudentit, transkriptaENotave,
     lexoProfesoretSipasProvimit, caktoProfesorinPerProviminByAdmin, anuloParaqitjenEProvimit,
-    mesatarjaENotave, refuzoNoten};
+    mesatarjaENotave, refuzoNoten, lexoPeriudhatEProvimeve, caktoNotenEProvimit};

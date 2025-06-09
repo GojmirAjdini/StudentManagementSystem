@@ -37,6 +37,7 @@ const CaktoSemestrin = lazy (() => import ('./components/admin-pages/fakultetet/
 const RegjistroLendet = lazy(() => import ('./components/admin-pages/lendet/RegjistroLendet'));
 const ListaLendeve = lazy(() => import ('./components/admin-pages/lendet/Lendet'));
 const EditLendet = lazy(() => import ('./components/admin-pages/lendet/EditLendet'));
+const CaktoProvimet = lazy(() => import ('./components/admin-pages/lendet/CaktoProvimet'));
 
 const RegjistroProfesoret = lazy(() => import ('./components/admin-pages/profesoret/RegjistroProfesoret'));
 const CaktoFakultetinProfesorit = lazy(() => import ('./components/admin-pages/profesoret/CaktoFakultetin'));
@@ -54,6 +55,7 @@ const EditAdminet = lazy(() => import ('./components/admin-pages/adminet/EditAdm
 
 const Profile = lazy(() => import ('./components/professor-pages/Profile'));
 const LendetSipasProfit = lazy (() => import ('./components/professor-pages/LendetEMija'));
+const VendosNotatEProvimit = lazy (() => import ('./components/professor-pages/VendosNotatEProvimit'));
 
 // IMPORTET PER STUDENT //
 
@@ -67,8 +69,8 @@ function AppContent() {
 
   const navigate = useNavigate();
 
-  const [userRole, setUserRole] = useState([]);
-  const [userEmail, setUserEmail] = useState([]);
+  const [userRole, setUserRole] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
   const location = useLocation();
   const isLoginPage = location.pathname === '/staff/login';
   const isStudentLoginPage = location.pathname === '/student/login';
@@ -181,7 +183,9 @@ useEffect(() => {
            titulli={( <> <LibraryBooks sx={{marginRight: "7px", marginTop:"-4px"}}/>Lëndët </>)} 
            data={[
             { label: 'Regjistro Lëndë', path: '/register/lendet' },
+            { label: 'Cakto Provimet', path:'/cakto-provimet'}, 
             { label: 'Lista e Lëndëve', path: '/lendet' },
+            { label: 'Lista e Provimeve', path:'/provimet/all'}
            ]}
         />
           )}
@@ -271,6 +275,7 @@ useEffect(() => {
       <Route path="/register/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroLendet /></RequireAuth>} />
       <Route path="/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaLendeve /></RequireAuth>} />
       <Route path="/edit/lenda/:LendaID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditLendet /></RequireAuth>} />
+      <Route path="/cakto-provimet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoProvimet /></RequireAuth>} />
 
       <Route path="/register/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroProfesoret /></RequireAuth>} />
       <Route path ="/assign/profesoret-fakultetin" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <CaktoFakultetinProfesorit/>  </RequireAuth>} />
@@ -288,8 +293,9 @@ useEffect(() => {
 
       <Route path='/profile' element={<RequireAuth allowedRoles={['profesor']}> <Profile/></RequireAuth>}/>
       <Route path='/MY/lendet' element={<RequireAuth allowedRoles={['profesor']}> <LendetSipasProfit/></RequireAuth>}/>
-
-    { /* ROUTES PER STUDENT */}
+      <Route path='/register/nota' element={<RequireAuth allowedRoles={['profesor']}> <VendosNotatEProvimit/></RequireAuth>}/>
+   
+      { /* ROUTES PER STUDENT */}
 
       <Route path='/dashboard' element={<RequireAuth allowedRoles={['student']}> <Dashboard/></RequireAuth>}/>
       <Route path='/semester/register' element={<RequireAuth allowedRoles={['student']}> <RegjistrimiSemestrit/> </RequireAuth>}/>

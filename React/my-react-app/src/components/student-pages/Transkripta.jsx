@@ -67,7 +67,7 @@ function Transkripta() {
 
         <div className="containerStdProvimetEParaqitura" id="fadeInPage">
 
-        <h1 id="paraqituraH1">TRANSKRIPTA</h1>
+        <h1 id="paraqituraH1">TRANSKRIPTA E NOTAVE</h1>
 
       <div className="assignedExams" >
 

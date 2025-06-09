@@ -16,12 +16,12 @@ class Provimi{
         })
     }
 
-    static caktoProviminByAdmin (LendaID, ProfesoriID, callback){
+    static caktoProviminByAdmin (LendaID, data_Provimit,PeriudhaID, callback){
 
-        const sql = `INSERT INTO provimi(LendaID, data_mbajtjes_provimit) 
-        VALUES (?, ?)`;
+        const sql = `INSERT INTO provimi(LendaID, data_mbajtjes_provimit, PeriudhaID) 
+        VALUES (?, ?, ?)`;
 
-        db.query(sql,[LendaID,ProfesoriID],(err, results) =>{
+        db.query(sql,[LendaID, data_Provimit, PeriudhaID],(err, results) =>{
 
           if(err){
             return callback(err);
@@ -51,14 +51,20 @@ class Provimi{
         const sql = `
         SELECT DISTINCT l.LendaID, l.Kodi_Lendes, l.Emri_Lendes, l.ECTS , 
         s.Afati_Semestrit, s.NrSemestrit, p.ProvimiID
-        FROM provimi_profesori prpr 
-        INNER JOIN provimi p on prpr.ProvimiID = p.ProvimiID
+        FROM provimi p 
         INNER JOIN lenda l on p.LendaID = l.LendaID
-        INNER JOIN profesori prof on prpr.ProfesoriID = prof.ProfesoriID
+        INNER JOIN lenda_profesori lp on p.LendaID = lp.LendaID
+        INNER JOIN profesori prof on lp.ProfesoriID = prof.ProfesoriID
         INNER JOIN semestri s on s.Semestri_ID = l.SemestriID
         INNER JOIN student_semestri ss on s.Semestri_ID = ss.Semestri_ID
         WHERE ss.StudentiID = ?
-        ORDER BY s.NrSemestrit `;
+        AND NOT EXISTS (
+            SELECT *
+			FROM student_provimi stdprv
+            WHERE stdprv.ProvimiID = p.ProvimiID
+            AND stdprv.StudentiID = ss.StudentiID
+            )
+        ORDER BY s.NrSemestrit`;
 
         db.query(sql, [StudentiID], (err, results) =>{
 
@@ -70,11 +76,11 @@ class Provimi{
         })
     }
 
-    static paraqitProviminStudent(StudentiID, ProvimiID, callback){
+    static paraqitProviminStudent(StudentiID, ProvimiID, ProfesoriID, callback){
 
-        const sql = `INSERT INTO student_provimi(StudentiID, ProvimiID) VALUES (?, ?)`;
+        const sql = `INSERT INTO student_provimi(StudentiID, ProvimiID, ProfesoriID) VALUES (?, ?, ?)`;
 
-        const values = [StudentiID, ProvimiID];
+        const values = [StudentiID, ProvimiID, ProfesoriID];
 
         db.query(sql,values,(err, results) =>{
             
@@ -168,12 +174,11 @@ WHERE sp.StudentiID = ?
 
     static lexoProfesoretSipasProvimit(ProvimiID, callback){
     
-    const sql = `SELECT pr.ProfesoriID, pr.Emri, pr.Mbiemri, pr.Email, p.ProvimiID 
-    FROM provimi_profesori prof
-    INNER JOIN provimi p on prof.ProvimiID = p.ProvimiID
-    INNER JOIN lenda l on p.LendaID = l.LendaID
-    INNER JOIN profesori pr on prof.ProfesoriID = pr.ProfesoriID
-    WHERE p.ProvimiID = ?`;  
+    const sql = `SELECT * 
+        FROM provimi p 
+        INNER JOIN lenda_profesori lp on p.LendaID = lp.LendaID
+        INNER JOIN profesori prof on lp.ProfesoriID = prof.ProfesoriID
+        WHERE p.ProvimiID = ?`;  
     
     db.query(sql, [ProvimiID],(err, results) =>{
         
@@ -212,6 +217,36 @@ WHERE sp.StudentiID = ?
         callback(null, results);
     })
     }
+
+    static lexoPeriudhatEProvimeve(callback){
+
+        const sql = `SELECT * 
+FROM periudha_regjistrimit_te_provimeve prp
+INNER JOIN viti_akademik vk on prp.VitiAkademikID = vk.VitiAkademikID`;
+
+    db.query(sql, (err, results) =>{
+
+        if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
 }
 
+static caktoNotenEProvimit(Nota, ProvimiID, callback){
+
+    const sql = `INSERT INTO rezultateteprovimit(NOTA, ProvimiRegjistruar)
+    VALUES (?, ?)`;
+
+    db.query(sql, [Nota, ProvimiID], (err, results) =>{
+
+    if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
+}
+}
 export default Provimi;

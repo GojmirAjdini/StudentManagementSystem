@@ -90,6 +90,34 @@ function ProvimetEParaqitura() {
             }
     }
 
+  const refuzoDheAnulo = async (RezultatiID, RegjistrimiProvimitID) => {
+  
+  setLoadingRefuzoID(RezultatiID);
+  
+  try {
+    const refuzoResponse = await axiosInstance.delete(`student/refuzo-noten/provimet-paraqitura/${RezultatiID}`);
+    const anuloResponse = await axiosInstance.delete(`student/anulo-paraqitjen/provimet-paraqitura/${RegjistrimiProvimitID}`);
+
+    setTimeout(() =>{
+    setSuccessMessage(refuzoResponse.data.message);
+    setProvimetEParaqitura(prev =>
+      prev.filter(pep => pep.RezultatiID !== RezultatiID && pep.RegjistrimiProvimitID !== RegjistrimiProvimitID)
+    );
+
+    setTimeout(() => setSuccessMessage(''), 3000);
+  },1000);
+
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setTimeout(() => {
+      setLoadingRefuzoID(null);
+      setLoadingAnuloID(null);
+    }, 1000);
+  }
+};
+
+
   const columns = [
     
     {field:'id',headerName:'#', width:20,},
@@ -129,7 +157,8 @@ function ProvimetEParaqitura() {
                 fontFamily:'Montserrat',  marginTop:'5px', marginBottom:'5px',}}
 
                 disabled={!params.row.NOTA}
-                onClick={() => refuzoProvimin(params.row.RezultatiID) && anuloParaqitjen(params.row.RegjistrimiProvimitID)}>
+                onClick={ () => refuzoDheAnulo(params.row.RezultatiID, params.row.RegjistrimiProvimitID)}
+                > 
                 Refuzo
                 </Button>
             )
