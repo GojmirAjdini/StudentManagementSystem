@@ -319,9 +319,16 @@ class Profesori {
         FROM student_provimi sp 
         INNER JOIN studenti s on sp.StudentiID = s.ID
         INNER JOIN provimi prv on sp.ProvimiID = prv.ProvimiID
+        INNER JOIN periudha_regjistrimit_te_provimeve prtp on prv.PeriudhaID = prtp.PeriudhaID
         INNER JOIN lenda l on prv.LendaID = l.LendaID
         INNER JOIN profesori p on sp.ProfesoriID = p.ProfesoriID
-        WHERE p.ProfesoriID = ?`;
+        WHERE p.ProfesoriID = 41
+        AND NOT EXISTS (
+            SELECT *
+			FROM rezultateteprovimit rp
+            WHERE rp.ProvimiRegjistruar = sp.RegjistrimiProvimitID
+            )
+       	AND CURDATE() <= prtp.Data_Perfundimit_Notave`;
     
         db.query(sql,ProfesoriID,(err, results) =>{
 

@@ -14,27 +14,89 @@ function ProvimetEParaqitura() {
 
     const [provimetEParaqitura, setProvimetEParaqitura] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
+    const [ekziston, setEkziston] = useState([]);
+    const [afatiNotimit, setAfatiNotimit] = useState([]);
+    const [refuzimiLejuar, setRefuzimiLejuar] = useState({});
 
     useEffect (() =>{
         
       fetchProvimetEParaqitura();
-      
+      afatiProvimeve();
+      afatiFunditNotave();
+  
 }, []);
 
-    const fetchProvimetEParaqitura = async() =>{
+    const afatiProvimeve = async() =>{
+    
+          try{
+    
+            const response = await axiosInstance.get("student/ekziston/afati-provimeve");
+    
+          
+            setEkziston(response.data);
+    
+        }
+          catch(err){
+            console.error(err.response.data);
+          }
+        }
 
-      try{
+        
+    const afatiFunditNotave = async() =>{
+    
+          try{
+    
+            const response = await axiosInstance.get("student/ekziston/afati-perfundimit-notave");
+    
+          
+            setAfatiNotimit(response.data);
+    
+        }
+          catch(err){
+            console.error(err.response.data);
+          }
+        }
 
-        const response = await axiosInstance.get("student/provimet/paraqitura/student");
+     const kontrolloRefuzimin = async (RegjistrimiProvimitID) => {
+  
+      try {
+    const response = await axiosInstance.get(
+      `student/kontrollo-noten/provimit/${RegjistrimiProvimitID}`
+    );
 
-        console.log(response.data);
-        setProvimetEParaqitura(response.data);
+    const lejohetRefuzimi = response?.data[0]?.RefuzimiLejuar;
+    
+    setRefuzimiLejuar((prev) => ({
+      ...prev,
+      [RegjistrimiProvimitID]: lejohetRefuzimi,
+    }));
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-    }
-      catch(err){
-        console.error(err.response.data);
+   const fetchProvimetEParaqitura = async () => {
+  try {
+    const { data } = await axiosInstance.get("student/provimet/paraqitura/student");
+
+    const tempRefuzimiLejuar = {};
+    
+   
+    await Promise.all(data.map(async (row) => {
+      if (row.RegjistrimiProvimitID) {
+        const response = await axiosInstance.get(`student/kontrollo-noten/provimit/${row.RegjistrimiProvimitID}`);
+        const lejohetRefuzimi = response?.data[0]?.RefuzimiLejuar;
+        tempRefuzimiLejuar[row.RegjistrimiProvimitID] = lejohetRefuzimi;
       }
-    }
+    }));
+
+    setRefuzimiLejuar(tempRefuzimiLejuar);
+    setProvimetEParaqitura(data);
+    
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+  }
+};
 
     const anuloParaqitjen = async(RegjistrimiProvimitID) =>{
 
@@ -117,62 +179,70 @@ function ProvimetEParaqitura() {
   }
 };
 
-
   const columns = [
     
     {field:'id',headerName:'#', width:20,},
     {field:'Kodi_Lendes',headerName:'Kodi', width:120},
     {field:'Emri_Lendes',headerName:'Lënda', width:220},
-    {field:'Date_Paraqitjes',headerName:'Data e paraqitjes së provimit', width:240},
+    {field:'Profesori',headerName:'Profesori', width:160},
     {field:'NOTA',headerName:'Nota', width:110},
     {field:'Data_Vendosjes_Notes',headerName:'Data e vendosjes së notës', width:220},
 
     {
          field:'Anulo',
-            headerName:'Anulo paraqitjen',
-            width:140,
+            headerName:'Anulo paraqitjen e provimit',
+            width:220,
             renderCell : (params) => (
                 <Button 
                 color="primary" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
                 loading={loadingAnuloID === params.row.RegjistrimiProvimitID}
                 variant="contained" sx={{width:'100%', textTransform:'none', 
                 fontFamily:'Montserrat', marginTop:'5px', marginBottom:'5px',}}
-                disabled={!!params.row.NOTA} 
+                disabled={ekziston.length === 0}
+                
                 onClick={() => anuloParaqitjen(params.row.RegjistrimiProvimitID)}>
                     
-                Anulo
+                Anulo paraqitjen
                 </Button>
             )
     }, {
     
         field:'Refuzo',
             headerName:'Refuzo notën',
-            width:120,
+            width:160,
             renderCell : (params) => (
-               
+      
                 <Button 
                 color="primary" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
                 loading={loadingRefuzoID === params.row.RezultatiID}
                 variant="contained" sx={{width:'100%', textTransform:'none', 
                 fontFamily:'Montserrat',  marginTop:'5px', marginBottom:'5px',}}
 
-                disabled={!params.row.NOTA}
+                disabled={!params.row.NOTA || refuzimiLejuar[params.row.RegjistrimiProvimitID] === 0}
                 onClick={ () => refuzoDheAnulo(params.row.RezultatiID, params.row.RegjistrimiProvimitID)}
                 > 
-                Refuzo
+                Refuzo notën
                 </Button>
+                
             )
         
         }
   ]
 
-  const rows = useMemo(() => provimetEParaqitura.map((pep, index) => ({
-    id:index + 1,  
+  const rows = useMemo(() => { 
+  
+    return provimetEParaqitura
+    .filter(pep => refuzimiLejuar[pep.RegjistrimiProvimitID] !== 0)
+    .map((pep, index) => ({
+    id:index + 1 || '',  
      ...pep,
     Date_Paraqitjes: new Date(pep.Date_Paraqitjes).toLocaleString(),
     Data_Vendosjes_Notes: pep.Data_Vendosjes_Notes ? new Date(pep.Data_Vendosjes_Notes).toLocaleString() : '', 
-  
-  })), [provimetEParaqitura]);
+    Profesori: pep.Emri + " " + pep.Mbiemri
+  }));
+},
+[provimetEParaqitura, refuzimiLejuar]);
+
     return (
 
         <div className="containerStdProvimetEParaqitura" id="fadeInPage">

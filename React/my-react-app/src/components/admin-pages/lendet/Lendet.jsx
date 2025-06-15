@@ -97,11 +97,10 @@ function Lendet() {
         
         {field: 'id', headerName:'#', width:20},
         {field: 'Emri_Lendes', headerName:'Lënda', width:250},
-        {field: 'Fakulteti', headerName:'Fakulteti', width:200},
-        {field: 'ECTS', headerName:'ECTS', width:80},
-        {field: 'Kodi_Lendes', headerName:'Kodi i Lëndës', width:120},
+        {field: 'Fakulteti', headerName:'Fakulteti', width:220},
+        {field: 'ECTS', headerName:'ECTS', width:100},
+        {field: 'Kodi_Lendes', headerName:'Kodi i Lëndës', width:140},
         {field: 'Semestri', headerName:'Semestri', width:100},
-        {field: 'uKrijua',headerName:'Data e Regjistrimit', width:180},
         {
 
             field:'Edit',
@@ -161,7 +160,6 @@ function Lendet() {
 
         id:index + 1,
         ...lenda,   
-        uKrijua: new Date(lenda.uKrijua).toLocaleString()
         
     }))
     , [lendet]); 

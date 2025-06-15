@@ -1,25 +1,46 @@
-import React, {useState, useEffect, useMemo} from "react";
-import './assets/ProvimetEParaqitura.css';
-import axiosInstance from "../../services/axiosInstance";
+import React, {useState, useEffect, useMemo, usePara} from "react";
+import { useParams, Link } from "react-router-dom";
+import './assets/LexoNotat.css';
+import axiosInstance from "../../../services/axiosInstance";
 import { DataGrid, GridToolbar} from "@mui/x-data-grid";
+import { FaArrowLeft } from "react-icons/fa";
+import Button from '@mui/material/Button';
 
-function Transkripta() {
+function LexoNotatEStudentit() {
 
+    const {ID} = useParams();
     const [transkriptaNotave, setTranskriptaNotave] = useState([]);
     const [mesatarjaENotave, setMesatarjaENotave] = useState([]);
+    const [studenti, setStudenti] = useState([]);
 
     useEffect (() =>{
         
       fetchNotat();
       fetchMesatarenENotave();
+      fetchStudenti();
       
 }, []);
+
+    const fetchStudenti = async() =>{
+
+      try{
+
+        const response = await axiosInstance.get(`admin/studentet/${ID}`);
+
+        console.log(response.data);
+        setStudenti(response.data);
+
+    }
+      catch(err){
+        console.error(err.response.data);
+      }
+    }
 
     const fetchNotat = async() =>{
 
       try{
 
-        const response = await axiosInstance.get("student/transkripta/notat");
+        const response = await axiosInstance.get(`admin/studenti/notat/${ID}`);
 
         console.log(response.data);
         setTranskriptaNotave(response.data);
@@ -34,7 +55,7 @@ function Transkripta() {
 
       try{
 
-        const response = await axiosInstance.get("student/mesatarja/notat");
+        const response = await axiosInstance.get(`admin/studenti/mesatarja-notave/${ID}`);
 
         console.log(response.data);
         setMesatarjaENotave(response.data);
@@ -68,11 +89,26 @@ function Transkripta() {
     return (
 
         <div className="containerStdProvimetEParaqitura" id="fadeInPage">
+     <h1 id="paraqituraH1">TRANSKRIPTA E NOTAVE</h1>
+    
+     <div className="assignedExams" >
 
-        <h1 id="paraqituraH1">TRANSKRIPTA E NOTAVE</h1>
+<div className="stdData" style={{display:'flex', flexDirection:'column', 
+  width:'100%', marginTop:'-30px',marginBottom:'20px', textAlign:'start'}}>    
+        <h6>Studenti - {studenti[0]?.Emri} {studenti[0]?.Mbiemri}</h6>
+        <h6>Drejtimi - {studenti[0]?.Drejtimi}</h6>
+        <h6>Niveli - {studenti[0]?.Emri_Nivelit}</h6>
+        <h6>Statusi - {studenti[0]?.Statusi} </h6>
+     </div> 
 
-      <div className="assignedExams" >
-
+<div style={{width:'100%', display:'flex'}} className="input-labelBtnStdEdit">
+        
+        <Link className="kthehuLinkStd" to={`/studentet`}>  
+        <Button variant="contained" sx={{textTransform:'none', marginBottom:'20px', 
+        justifyContent:'start', fontFamily:'Montserrat', color:"black"}} 
+        color="inherit"> <FaArrowLeft className="leftArrow"/>Kthehu</Button> </Link>          
+       
+      </div>
            <DataGrid
            disableColumnResize
           showColumnVerticalBorder
@@ -127,10 +163,12 @@ function Transkripta() {
               </div>
             )}
         </div>
+
+        
         
         
 </div>
     )
 }
 
-export default Transkripta; 
+export default LexoNotatEStudentit; 

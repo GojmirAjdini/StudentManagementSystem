@@ -45,6 +45,52 @@ class Semestri {
             callback(null, results);
         });
     }
+
+    static regjistroVitinAkademik(VitiAkademik, Viti_Fillimit, Viti_Mbarimit, callback){
+
+        const sql = `INSERT INTO viti_akademik (VitiAkademik, Viti_Fillimit, Viti_Mbarimit)
+        VALUES (?, ?, ?)`;
+
+        db.query(sql, [VitiAkademik, Viti_Fillimit, Viti_Mbarimit], (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+            
+            callback(null, results);
+        })
+
+    }
+
+    static regjistroGjeneraten(FakultetiID, Viti_Gjenerates, VitiAkademikID, callback){
+
+        const sql = `INSERT INTO gjenerata(FakultetiID, Viti_Gjenerates, VitiAkademikID)
+        VALUES (?, ?, ?)`;
+
+        db.query(sql,[FakultetiID, Viti_Gjenerates, VitiAkademikID], (err, results) =>{
+
+             if(err){
+                return callback(err);
+            }
+            
+            callback(null, results);
+        })
+    }
+
+    static fshijVitinAkademik(VitiAkademikID, callback){
+
+        const sql = `DELETE FROM viti_akademik WHERE VitiAkademikID = ?`;
+
+        db.query(sql, [VitiAkademikID], (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+            
+            callback(null, results);
+        })
+
+    }
 }
 
 export default Semestri;

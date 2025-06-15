@@ -28,9 +28,9 @@ function ParaqitProvimin() {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [provimiID, setProvimiID] = useState('');
     const [provimetPerParaqitje, setProvimetPerParaqitje] = useState([]);
-    const [uRegjistra, setURegjistrua] = useState(false);
     const [selectedProfessors, setSelectedProfessors] = useState({});
     const [profesoretMap, setProfesoretMap] = useState({});
+    const [numriProvimeve, setNumriProvimeve] = useState([]);
 
     const handleClose = () => {
         setInfoMessage('');
@@ -47,6 +47,7 @@ function ParaqitProvimin() {
     useEffect (() =>{
         
       fetchProvimetPerParaqitje();
+      numriIProvimevePerNjePeriudhe();
       
 }, []);
 
@@ -66,7 +67,6 @@ function ParaqitProvimin() {
         setProfesoretMap(map);
       };
 
-
     const fetchProvimetPerParaqitje = async() =>{
 
       try{
@@ -83,9 +83,52 @@ function ParaqitProvimin() {
       }
     }
 
+    
+    const numriIProvimevePerNjePeriudhe = async() =>{
+        
+          try{
+        
+          const response = await axiosInstance.get("student/numri-provimeve/afati");
+        
+          console.log(response.data);
+          setNumriProvimeve(response.data);
+        
+          }
+          
+          catch(err){
+            
+            console.error(err.response.data);
+          }
+      }   
+
     const handleSubmit = async(selected) =>{
 
+      if(numriProvimeve.length > 0){
+
+        const {afatiPeriudhes, total} = numriProvimeve[0];
+       
+      if((afatiPeriudhes === 'rregullt' && total >= 10) || 
+        (afatiPeriudhes === 'plotesues' && total >= 2)) {
+
+        return Swal.fire({
+            title: 'Gabim!',
+            text: "Keni kaluar numrin e paraqitjes së provimeve për këtë afat.",
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            confirmButtonColor:'#3085d6',
+            timer:'5000',
+            customClass: {
+                confirmButton: 'swal-confirmBtn',
+                popup: 'popupDesign',
+                htmlContainer: 'textSwal',
+                 }
+             });
+
+          }
+        }
+        
         setSubmitLoading(true);
+        
         try{
             const response = await axiosInstance.post(`student/paraqit-provimin`,{
                 
@@ -106,7 +149,8 @@ function ParaqitProvimin() {
                 htmlContainer: 'textSwal',
                  }
              });
-     
+        await numriIProvimevePerNjePeriudhe();
+
         setProvimetPerParaqitje(prev => prev.filter(provim => provim.ProvimiID !== selected.ProvimiID));
 
         setTimeout(() => {setSuccessMessage('')
@@ -132,8 +176,11 @@ function ParaqitProvimin() {
                  }
              });
           }
-    }
-}
+      }finally{
+        setSubmitLoading(false);
+      }
+  }
+
 
   const columns = [
     

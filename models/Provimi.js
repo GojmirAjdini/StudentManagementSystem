@@ -49,9 +49,10 @@ class Provimi{
     static lexoProvimetSipasStudentit(StudentiID, callback){
 
         const sql = `
-        SELECT DISTINCT l.LendaID, l.Kodi_Lendes, l.Emri_Lendes, l.ECTS , 
+        SELECT l.LendaID, l.Kodi_Lendes, l.Emri_Lendes, l.ECTS , 
         s.Afati_Semestrit, s.NrSemestrit, p.ProvimiID
         FROM provimi p 
+        INNER JOIN periudha_regjistrimit_te_provimeve prtp on p.PeriudhaID = prtp.PeriudhaID
         INNER JOIN lenda l on p.LendaID = l.LendaID
         INNER JOIN lenda_profesori lp on p.LendaID = lp.LendaID
         INNER JOIN profesori prof on lp.ProfesoriID = prof.ProfesoriID
@@ -59,11 +60,24 @@ class Provimi{
         INNER JOIN student_semestri ss on s.Semestri_ID = ss.Semestri_ID
         WHERE ss.StudentiID = ?
         AND NOT EXISTS (
-            SELECT *
+            SELECT 1
 			FROM student_provimi stdprv
-            WHERE stdprv.ProvimiID = p.ProvimiID
+            INNER JOIN provimi prov on stdprv.ProvimiID = prov.ProvimiID
+            WHERE prov.LendaID = l.LendaID
             AND stdprv.StudentiID = ss.StudentiID
+           
             )
+        AND NOT EXISTS (
+            SELECT 1
+            FROM student_provimi sp
+            INNER JOIN provimi p2 on sp.ProvimiID = p2.ProvimiID
+            INNER JOIN rezultateteprovimit rp on sp.RegjistrimiProvimitID = rp.ProvimiRegjistruar
+            WHERE p2.LendaID = l.LendaID
+            AND sp.StudentiID = ss.StudentiID
+            )
+    AND CURDATE() BETWEEN prtp.Data_Fillimit AND prtp.Data_Perfundimit
+        
+        GROUP BY l.LendaID
         ORDER BY s.NrSemestrit`;
 
         db.query(sql, [StudentiID], (err, results) =>{
@@ -94,13 +108,16 @@ class Provimi{
     static lexoProvimetEParaqituraTeStudentit(StudentiID, callback){
 
         const sql = `SELECT sp.RegjistrimiProvimitID, l.LendaID, l.Emri_Lendes, l.Kodi_Lendes, 
-        s.ID, rp.NOTA, sp.Date_Paraqitjes, rp.Data_Vendosjes_Notes, rp.RezultatiID
+        s.ID, rp.NOTA, sp.Date_Paraqitjes, rp.Data_Vendosjes_Notes, rp.RezultatiID, prof.Emri, prof.Mbiemri
         FROM student_provimi sp 
         INNER JOIN studenti s on sp.StudentiID = s.ID
         INNER JOIN provimi prv on sp.ProvimiID = prv.ProvimiID
         INNER JOIN lenda l on prv.LendaID = l.LendaID
+        INNER JOIN profesori prof on sp.ProfesoriID = prof.ProfesoriID
         LEFT JOIN rezultateteprovimit rp on sp.RegjistrimiProvimitID = rp.ProvimiRegjistruar
-        WHERE sp.StudentiID = ?`;
+        INNER JOIN periudha_regjistrimit_te_provimeve prtp ON prv.PeriudhaID = prtp.PeriudhaID
+        WHERE sp.StudentiID = ?
+        AND CURDATE() BETWEEN prtp.Data_Fillimit AND prtp.Data_Perfundimit`;
         
         db.query(sql,[StudentiID],(err, results) =>{
             
@@ -122,7 +139,29 @@ class Provimi{
     INNER JOIN semestri sems on l.SemestriID = sems.Semestri_ID
     WHERE s.ID = ?
        AND rp.NOTA != 'jo prezent' 
-       AND rp.NOTA IN ('5', '6', '7', '8', '9', '10')`;
+       AND rp.NOTA IN ('6', '7', '8', '9', '10')`;
+
+        db.query(sql, [StudentiID],(err, results) =>{
+        
+        if(err){
+            return callback(err);
+        }   
+            callback(null, results);
+        })
+    }
+
+     static notatSipasID(StudentiID, callback){
+
+        const sql = `SELECT l.*, rp.*, sems.*
+    FROM rezultateteprovimit rp
+    INNER JOIN student_provimi sp on rp.ProvimiRegjistruar = sp.RegjistrimiProvimitID
+    INNER JOIN provimi p on sp.ProvimiID = p.ProvimiID
+    INNER JOIN lenda l on p.LendaID = l.LendaID
+    INNER JOIN studenti s on sp.StudentiID = s.ID
+    INNER JOIN semestri sems on l.SemestriID = sems.Semestri_ID
+    WHERE s.ID = ?
+       AND rp.NOTA != 'jo prezent' 
+       AND rp.NOTA IN ('6', '7', '8', '9', '10')`;
 
         db.query(sql, [StudentiID],(err, results) =>{
         
@@ -222,7 +261,8 @@ WHERE sp.StudentiID = ?
 
         const sql = `SELECT * 
 FROM periudha_regjistrimit_te_provimeve prp
-INNER JOIN viti_akademik vk on prp.VitiAkademikID = vk.VitiAkademikID`;
+INNER JOIN viti_akademik vk on prp.VitiAkademikID = vk.VitiAkademikID
+ORDER BY prp.PeriudhaID DESC`;
 
     db.query(sql, (err, results) =>{
 
@@ -247,6 +287,130 @@ static caktoNotenEProvimit(Nota, ProvimiID, callback){
         console.log(results);
         callback(null, results);
     })
+}
+
+static notatERegjistruara(ProfesoriID, callback){
+
+    const sql = `SELECT rp.RezultatiID, s.Emri, s.Mbiemri, s.EmailStudentor, l.Emri_Lendes, l.Kodi_Lendes, rp.NOTA
+    FROM rezultateteprovimit rp
+    INNER JOIN student_provimi sp on rp.ProvimiRegjistruar = sp.RegjistrimiProvimitID
+    INNER JOIN provimi p on sp.ProvimiID = p.ProvimiID
+    INNER JOIN lenda l on p.LendaID = l.LendaID
+    INNER JOIN profesori prof on sp.ProfesoriID = prof.ProfesoriID
+    INNER JOIN studenti s on sp.StudentiID = s.ID
+    WHERE prof.ProfesoriID = ?`;
+
+    db.query(sql, [ProfesoriID], (err, results) =>{
+
+    if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
+}
+
+static fshijNotenERegjistruar(RezultatiID, callback){
+
+    const sql = `DELETE FROM rezultateteprovimit WHERE RezultatiID = ?`;
+
+    db.query(sql, [RezultatiID], (err, results) =>{
+
+    if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
+}
+
+static caktoPeriudhenEProvimeve(VitiAkademikID, Data_Fillimit, Data_Perfundimit, 
+    Data_Perfundimit_Notave, EmriPeriudhes, afatiPeriudhes, callback) {
+
+    const sql = `INSERT INTO periudha_regjistrimit_te_provimeve(VitiAkademikID, Data_Fillimit, 
+    Data_Perfundimit, Data_Perfundimit_Notave, EmriPeriudhes, afatiPeriudhes) 
+    VALUES (?, ?, ?, ?, ?, ?)`;
+
+    db.query(sql, [VitiAkademikID, Data_Fillimit, Data_Perfundimit, 
+    Data_Perfundimit_Notave, EmriPeriudhes, afatiPeriudhes], (err, results) =>{
+
+        if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
+}
+
+static kontrolloRefuziminENotes(RegjistrimiProvimitID, callback){
+
+    const sql = `SELECT r.*, 
+       (NOW() <= r.Data_Vendosjes_Notes + INTERVAL 1 DAY) AS RefuzimiLejuar
+    FROM rezultateteprovimit r
+    WHERE r.ProvimiRegjistruar = ?`;
+
+    db.query(sql, [RegjistrimiProvimitID], (err, results) =>{
+
+        if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
+}
+
+static numriIProvimevePerNjePeriudhe(StudentiID, callback){
+
+    const sql = `SELECT COUNT(*) AS total, prtp.afatiPeriudhes
+    FROM student_provimi sp
+    INNER JOIN provimi p on sp.ProvimiID = p.ProvimiID
+    INNER JOIN periudha_regjistrimit_te_provimeve prtp on p.PeriudhaID = prtp.PeriudhaID
+    WHERE sp.StudentiID = ?
+    AND CURDATE() BETWEEN prtp.Data_Fillimit AND prtp.Data_Perfundimit`;
+
+    db.query(sql, [StudentiID], (err, results) =>{
+
+        if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
+
+}
+
+static ekzistonAfatiProvimit(StudentiID, callback){
+
+    const sql = `SELECT * FROM 
+periudha_regjistrimit_te_provimeve prtp 
+WHERE CURDATE() BETWEEN prtp.Data_Fillimit AND prtp.Data_Perfundimit`;
+
+    db.query(sql, [StudentiID], (err, results) =>{
+
+        if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
+
+}
+
+static ekzistonAfatiIPerfundimitTeNotave(StudentiID, callback){
+
+    const sql = `SELECT * FROM 
+periudha_regjistrimit_te_provimeve prtp 
+WHERE CURDATE() <= prtp.Data_Perfundimit_Notave`;
+
+    db.query(sql, [StudentiID], (err, results) =>{
+
+        if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
+
 }
 }
 export default Provimi;

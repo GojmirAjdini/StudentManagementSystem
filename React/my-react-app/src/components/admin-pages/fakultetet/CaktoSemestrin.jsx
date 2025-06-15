@@ -202,6 +202,18 @@ function CaktoSemestrin() {
              <MenuItem  value={8} sx={{fontFamily:'Montserrat'}} >
              Semestri 8 
              </MenuItem>
+              <MenuItem  value={9} sx={{fontFamily:'Montserrat'}} >
+             Semestri 9 
+             </MenuItem>
+              <MenuItem  value={10} sx={{fontFamily:'Montserrat'}} >
+             Semestri 10
+             </MenuItem>
+              <MenuItem  value={11} sx={{fontFamily:'Montserrat'}} >
+             Semestri 11 
+             </MenuItem>
+              <MenuItem  value={12} sx={{fontFamily:'Montserrat'}} >
+             Semestri 12 
+             </MenuItem>
              
          </Select>
        </FormControl>

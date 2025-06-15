@@ -55,6 +55,88 @@ const lexoVitetAkademike = (req, res) =>{
     }
 }
 
+const regjistroVitinAkademik = (req, res) =>{
+
+    try{
+
+        const {Viti_Fillimit, Viti_Mbarimit} = req.body; 
+
+        const VitiAkademik = `${Viti_Fillimit}/${Viti_Mbarimit}`;
+
+        console.log(VitiAkademik);
+        Semestri.regjistroVitinAkademik(VitiAkademik, Viti_Fillimit, Viti_Mbarimit,(err, results) =>{
+
+            if(err){
+
+                if(err.code === 'ER_DUP_ENTRY'){
+                     return res.status(404).json({message: "Viti akademik ekziston tashmë!"});
+                }
+                console.log(err);
+                return res.status(500).json({message: err});
+                
+            }
+            
+            return res.status(201).json({message:'Viti akademik u regjistrua me sukses!'});
+        })
+    }
+    catch(err){
+        
+        return res.status(500).json({ err: true, message: err });
+
+    }
+}
+
+
+const regjistroGjeneraten = (req, res) =>{
+
+    try{
+
+        const {FakultetiID, Viti_Gjenerates, VitiAkademikID}= req.body; 
+
+        Semestri.regjistroGjeneraten(FakultetiID, Viti_Gjenerates, VitiAkademikID,(err, results) =>{
+
+            if(err){
+                console.log(err);
+                return res.status(500).json({message: err});
+                
+            }
+            
+            return res.status(201).json({message:'Gjenerata u regjistrua me sukses!'});
+        })
+    }
+    catch(err){
+        
+        return res.status(500).json({ err: true, message: err });
+
+    }
+}
+
+const fshijVitinAkademik = (req, res) =>{
+
+    try{
+
+        const VitiAkademikID = req.params.VitiAkademikID;
+
+        Semestri.fshijVitinAkademik(VitiAkademikID, (err, results) =>{
+
+            if(err){
+
+                console.log(err);
+                return res.status(500).json({message: err});
+                
+            }
+            
+            return res.status(201).json({message:'Viti akademik u fshi me sukses!'});
+        })
+    }
+    catch(err){
+        
+        return res.status(500).json({ err: true, message: err });
+
+    }
+}
+
 export default {
-    readAllSemestrat,regjistroSemestrin,lexoVitetAkademike
+    readAllSemestrat,regjistroSemestrin,lexoVitetAkademike,
+    regjistroVitinAkademik, regjistroGjeneraten, fshijVitinAkademik
 }

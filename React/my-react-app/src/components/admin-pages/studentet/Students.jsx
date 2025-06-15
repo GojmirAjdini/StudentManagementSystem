@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import GradingIcon from '@mui/icons-material/Grading';
 
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axiosInstance from "../../../services/axiosInstance";
@@ -102,11 +103,40 @@ function Students() {
         {field: 'Mbiemri', headerName:'Mbiemri', width:100},
         {field: 'EmailStudentor', headerName:'Email Studentor', width:190},
         {field: 'Gjinia', headerName:'Gjinia', width:70},
-        {field: 'Vendlindja', headerName:'Vendlindja', width:120},
         {field: 'Drejtimi', headerName:'Fakulteti', width:200},
         {field: 'Niveli', headerName:'Niveli', width:100},
         {field: 'Gjenerata', headerName:'Gjenerata', width:100},
      
+        {
+
+        field: 'Notat',
+        headerName:'Lexo notat',
+        width:120,
+        renderCell: (params) => {
+
+          const [editLoading, setEditLoading] = useState(false);
+          
+          const handleEditClick = (e) => {
+              e.preventDefault();
+              setEditLoading(true);
+             
+              setTimeout(() => {
+              setEditLoading(false);
+              window.location.href = `/notat/studenti/${params.row.ID}`;
+              }, 500);
+          };
+
+         return(
+          <Button id="editBtn" color="success"
+          loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>}
+          loading={editLoading} sx={{textTransform:'none', fontFamily:'Montserrat', }}
+          variant="contained"
+          onClick={handleEditClick} 
+          startIcon={<GradingIcon sx={{color:"white"}}/>}>Notat</Button>
+          
+         )
+      }
+    },
       {
 
         field: 'Edit',

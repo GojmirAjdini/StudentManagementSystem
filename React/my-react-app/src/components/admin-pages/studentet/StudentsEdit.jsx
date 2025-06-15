@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import "./assets/Register.css";
 import Swal from "sweetalert2";
 import { FaArrowLeft } from "react-icons/fa";

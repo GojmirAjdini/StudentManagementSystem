@@ -15,7 +15,7 @@ function CaktoProvimet() {
   
   const text =<p style={{marginLeft:'5px'
   }}>
-    <strong>Vërejtje!</strong>  Së pari duhet të zgjedhni Lëndën.</p>
+    <strong>Vërejtje!</strong>  Së pari duhet të zgjedhni periudhën e provimeve.</p>
 
     const [successMessage, setSuccessMessage] = useState('');
     const [infoMessage, setInfoMessage] = useState(text);
@@ -34,7 +34,6 @@ function CaktoProvimet() {
       setSelectedLenda(null);
       setLendaID('');
       setSuccessMessage('');
-      setInfoMessage(text);
       setPeriudhaProvimeveID('');
   
     };
@@ -57,7 +56,14 @@ function CaktoProvimet() {
 
         const response = await axiosInstance.get("admin/provimet/all");
 
-        setAssignedExams(response.data.map(e => e.LendaID));
+        const exams = response.data.map (e => ({
+
+          LendaID: e.LendaID,
+          PeriudhaID: e.PeriudhaID
+
+        }));
+
+        setAssignedExams(exams);
         console.log(assignedExams);
       }
       catch(err){
@@ -155,19 +161,27 @@ function CaktoProvimet() {
 
     return (
 
-        <div className="containerProfLnd" id="fadeInPage">
+        <div className="containerProvimet" id="fadeInPage">
 
-        <h1 id="profLndH1">CAKTO PROVIMET</h1>
+        <h1 id="caktoProvimetPeriudha">CAKTO PROVIMET</h1>
 
-        <form className="formProfLnd" onSubmit={handleSubmit}>
+        <form className="formaPerProvimet" onSubmit={handleSubmit}>
 
-<div className="selectForProfesoretLendet">
+<div className="selectForProvimetPeriudha">
 
 <FormControl fullWidth required >
      <Autocomplete
       options={lendet}
-      getOptionDisabled={(option) => assignedExams.includes(option.LendaID)}
-    sx={{
+      
+      disabled={!periudhaProvimeveID}
+      getOptionDisabled={(option) => 
+         
+        assignedExams.some (
+         (exam) => exam.LendaID === option.LendaID && exam.PeriudhaID === Number(periudhaProvimeveID)
+        )
+      }
+  
+      sx={{
       fontFamily: "Montserrat",
       ".MuiInputBase-root": {
         borderRadius: "10px",
@@ -207,7 +221,7 @@ function CaktoProvimet() {
 
 </div>
 
-<div className="selectForPeriudhaLendet">
+<div className="selectForProvimetPeriudha">
 <label htmlFor="">Zgjedh datën e provimit <span>*</span></label>
 
    <input type="date" value={dataProvimit} onChange={(e) => setDataProvimit(e.target.value)} 
@@ -215,23 +229,47 @@ function CaktoProvimet() {
 
 </div>
 
-<div className="selectForPeriudhaLendet">
-  <label htmlFor="periudha">Zgjedh periudhën <span>*</span></label>
-  <select
-    id="periudha" 
-    value={periudhaProvimeveID}
-    onChange={(e) => setPeriudhaProvimeveID(Number(e.target.value))}
-    style={{ height: '50px', padding: '10px', borderRadius:'10px', border:'1px solid rgb(202, 202, 202)'}}
-    required
-  >
-    <option disabled value="">Zgjedh një periudhë</option>
-    {periudhat.map((p) => (
-      <option key={p.PeriudhaID} value={p.PeriudhaID}>
-        {p.EmriPeriudhes} ({p.VitiAkademik})
-      </option>
-    ))}
-  </select>
-</div>
+      <div className="selectForProvimetPeriudha">
+  
+        <Autocomplete
+        style={{fontFamily:"Montserrat"}}
+        fullWidth
+        options={periudhat}
+        getOptionLabel={(prd) =>
+          `${prd.EmriPeriudhes} - ${prd.VitiAkademik}`
+        }
+        sx={{
+          fontFamily: "Montserrat",
+          ".MuiInputBase-root": {
+            borderRadius: "10px",
+            height:"50px",
+            fontFamily: "Montserrat",
+          },
+        }}
+  
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Zgjedh periudhën"
+            required
+            sx={{ 
+              fontFamily: "Montserrat",
+              '& .MuiInputBase-input::placeholder': {
+              fontFamily: 'Montserrat',
+            },
+            '& .MuiInputLabel-root': {
+              fontFamily: 'Montserrat',
+            },
+             }}
+          />
+        )}
+        value={periudhat.find((s) => s.PeriudhaID === periudhaProvimeveID) || null}
+        onChange={(e, newValue) => {
+          setPeriudhaProvimeveID(newValue ? newValue.PeriudhaID : '');
+        }}
+        isOptionEqualToValue={(option, value) => option.PeriudhaID === value.periudhaProvimeveID}
+      />
+      </div>
 
 
     <div className="input-labelProvimiPeriudha">

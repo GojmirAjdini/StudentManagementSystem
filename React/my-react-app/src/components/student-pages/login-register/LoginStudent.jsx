@@ -121,7 +121,7 @@ function LoginStudent(){
      />
      <Button className="passVisibility" variant="text" 
      sx={{height:"fit-content", width:'fit-content', marginLeft:'-5px'}} 
-     onClick={togglePassword}> {(!showPassword ? <Visibility/> : <VisibilityOff/>)}</Button>
+     onClick={togglePassword}> {(!showPassword ? <VisibilityOff/> : <Visibility/>)}</Button>
    
     </div>
     <div className="input-labelButtons">

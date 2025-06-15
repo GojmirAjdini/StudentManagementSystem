@@ -130,10 +130,11 @@ class Studenti{
 
     const sql = `SELECT s.ID, s.Emri, s.Mbiemri, s.Gjinia, s.EmailStudentor, s.EmailPrivat,
     s.Vendlindja, s.Data_Lindjes, s.Adresa, s.Nr_Tel, f.Emri Drejtimi, 
-    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua
+    f.Niveli, s.Statusi, s.StudentiID, s.Gjenerata, s.GjenerataID, gj.Viti_Gjenerates, s.uKrijua, ns.Emri_Nivelit
     FROM studenti s 
     INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
-    INNER JOIN fakulteti f on gj.FakultetiID = gj.FakultetiID
+    INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+    INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
     WHERE s.ID = ?`;
 
     db.query(sql, [ID], (err, results) =>{

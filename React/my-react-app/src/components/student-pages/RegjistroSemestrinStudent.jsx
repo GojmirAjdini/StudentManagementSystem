@@ -206,6 +206,7 @@ function RegjistroSemestrinStudent() {
           <Button 
           color="error" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
           loading={loading === params.row.ID}
+          disabled={params.row.ID !== semestratERegjistruar[semestratERegjistruar.length - 1].ID}
           variant="contained" sx={{width:'100%', textTransform:'none', fontFamily:'Montserrat'}}
           startIcon={<DeleteIcon sx={{color:'white'}}/>}
           onClick={() => deleteSemester(params.row.ID)}>

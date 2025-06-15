@@ -31,10 +31,9 @@ function LendetSipasProfit(){
         
         { field: "id", headerName: "#", width: 20 },
         { field: "Emri_Lendes", headerName: "Emri Lëndës", width:330 },
-        { field: "Fakulteti", headerName: "Fakulteti", width: 200},
-        { field: "Kodi_Lendes", headerName: "Kodi Lëndës", width: 110 },
-        { field: "NrSemestrit", headerName: "Semestri", width: 85 },
-        { field: "VitiAkademik", headerName:"Viti Akademik", width:120},
+        { field: "Fakulteti", headerName: "Fakulteti", width: 220},
+        { field: "Kodi_Lendes", headerName: "Kodi", width: 120 },
+        { field: "NrSemestrit", headerName: "Semestri", width: 100 },
 
     ]
 

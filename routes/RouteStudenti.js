@@ -22,6 +22,12 @@ router.get("/mesatarja/notat", auth.verifyToken, auth.eshteStudent, provimet.mes
 router.get("/profesoret/provimi/:ProvimiID", auth.verifyToken, auth.eshteStudent,provimet.lexoProfesoretSipasProvimit);
 router.delete("/anulo-paraqitjen/provimet-paraqitura/:RegjistrimiProvimitID", auth.verifyToken, auth.eshteStudent, provimet.anuloParaqitjenEProvimit);
 router.delete("/refuzo-noten/provimet-paraqitura/:RezultatiID", auth.verifyToken, auth.eshteStudent, provimet.refuzoNoten);
+router.get("/kontrollo-noten/provimit/:RegjistrimiProvimitID", auth.verifyToken, auth.eshteStudent, provimet.kontrolloRefuziminENotes);
+router.get("/numri-provimeve/afati", auth.verifyToken, auth.eshteStudent, provimet.numriIProvimevePerNjePeriudhe);
+router.get("/ekziston/afati-provimeve", auth.verifyToken, auth.eshteStudent, provimet.ekzistonAfatiProvimit);
+router.get("/ekziston/afati-perfundimit-notave", auth.verifyToken, auth.eshteStudent, provimet.ekzistonAfatiIPerfundimitTeNotave);
+
+
 router.post("/logout",studentKontroller.logout);
 
 

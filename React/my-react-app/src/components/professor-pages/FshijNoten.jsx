@@ -1,21 +1,16 @@
 import React, {useState, useEffect, useMemo} from "react";
-import './assets/VendosNoten.css';
+import './assets/FshijNoten.css';
 import Swal from "sweetalert2";
 import Button from "@mui/material/Button";
 import axiosInstance from "../../services/axiosInstance";
-import FormControl from '@mui/material/FormControl';
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbar} from "@mui/x-data-grid";
 
 
-function VendosNotatEProvimit() {
-    
-    const [successMessage, setSuccessMessage] = useState('');
+function FshijNoten() {
+   
     const [loading, setLoading] = useState(null);
     const [provimetStudentet, setProvimetStudentet] = useState([]);
-    const [notaMap, setNotaMap] = useState({});
 
 
     useEffect (() =>{
@@ -24,19 +19,11 @@ function VendosNotatEProvimit() {
       
 }, []);
 
-
-const handleNotaChange = (provimiID, notaValue) => {
-    setNotaMap((prev) => ({
-      ...prev,
-      [provimiID]: notaValue
-    }));
-  };
-
     const fetchProvimetEMija = async() =>{
 
       try{
 
-        const response = await axiosInstance.get("profesor/MY/provimet");
+        const response = await axiosInstance.get("profesor/notat/regjistruara");
 
         console.log(response.data);
         setProvimetStudentet(response.data);
@@ -48,16 +35,11 @@ const handleNotaChange = (provimiID, notaValue) => {
       }
     }
 
-    const handleSubmit = async(provimiID, notaValue) =>{
+    const handleDelete = async(rezultatiID) =>{
 
-        setLoading(provimiID);
+        setLoading(rezultatiID);
         try{
-            const response = await axiosInstance.post(`profesor/provimet/cakto-noten`,{
-                
-                Nota: notaValue,
-                ProvimiID: provimiID
-
-                });
+            const response = await axiosInstance.delete(`profesor/notat-regjistruara/delete/${rezultatiID}`)
         
         setTimeout(() =>{
         
@@ -73,8 +55,7 @@ const handleNotaChange = (provimiID, notaValue) => {
                 htmlContainer: 'textSwal',
                  }
              });
-            
-        setProvimetStudentet(prev => prev.filter(provim => provim.ProvimiID !== provimiID));
+        setProvimetStudentet(prev => prev.filter(pep => pep.RezultatiID !== rezultatiID))
         setTimeout(() => {setSuccessMessage('')
         
         },3000);
@@ -113,104 +94,38 @@ const handleNotaChange = (provimiID, notaValue) => {
     {field:'EmailStudentor',headerName:'Email', width:200},
     {field:'Emri_Lendes',headerName:'Emri lëndës', width:200},
     {field:'Kodi_Lendes',headerName:'Kodi', width:120},
+    {field:'NOTA',headerName:'Nota e regjistruar', width:150},
 
-    {
-    field:'VendosNoten',
-    headerName:'Vendos notën',
-    width:180,
-    renderCell: (params) => {
-     
-      const notaValue = notaMap[params.row.ProvimiID] || '';
-
-      return (
-        <FormControl fullWidth>
-          <Select
-            value={notaValue}
-            onChange={(e) => handleNotaChange(params.row.ProvimiID, e.target.value)}
-            size="small"
-            color="primary"
-            sx={{fontFamily:"Montserrat", 
-              border:'none',
-              height:'35px',
-              marginTop:'5px', 
-              marginBottom:'5px',
-              fontSize:'14px'}}
-          >
-            <MenuItem value="" sx={{fontFamily:"Montserrat", border:'none'}} disabled>
-              Vendos notën
-            </MenuItem >
-              <MenuItem value="jo prezent" sx={{fontFamily:"Montserrat"}} type="text">
-                jo prezent
-              </MenuItem>
-              <MenuItem value="5" type="text" sx={{fontFamily:"Montserrat"}} >
-               5
-              </MenuItem>
-              <MenuItem value="6" type="text" sx={{fontFamily:"Montserrat"}} >
-                6
-              </MenuItem>
-              <MenuItem value="7" type="text" sx={{fontFamily:"Montserrat"}} >
-                7
-              </MenuItem>
-              <MenuItem value="8" type="text" sx={{fontFamily:"Montserrat"}} >
-                8
-              </MenuItem>
-              <MenuItem value="9" type="text" sx={{fontFamily:"Montserrat"}} >
-                9
-              </MenuItem>
-
-              <MenuItem value="10" type="text" sx={{fontFamily:"Montserrat"}} >
-                10
-              </MenuItem>
-          </Select>
-        </FormControl>
-      );
-    }
-  },
-    {
-       field: 'CaktoNoten',
-      headerName: "Regjistro notën",
-      width: 170,
-      renderCell: (params) => {
-        const notaValue = notaMap[params.row.ProvimiID];
-        return (
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            disabled={!notaValue}
-            loadingIndicator={ <CircularProgress sx={{ color: 'white' }} size={25}/>}
-            loading={loading === params.row.ProvimiID}
-            onClick={() => handleSubmit(params.row.ProvimiID, notaValue)}
-            sx={{
-              height: '35px',
-              textTransform: 'none',
-              fontFamily: 'Montserrat',
-              marginTop:'5px',
-              marginBottom:'5px'
-            }}
-          >
-            Regjistro notën
-          </Button>
-        );
-      }
-    }
+     {
+    field:'Fshij',
+       headerName:'Fshij notën',
+       width:180,
+       renderCell : (params) => (
+           <Button 
+           color="error" loadingIndicator={<CircularProgress sx={{color:'white'}} size={25}/>} 
+           loading={loading === params.row.RezultatiID}
+           variant="contained" sx={{width:'100%', textTransform:'none', 
+           fontFamily:'Montserrat', marginTop:'5px', marginBottom:'5px',}}
+           onClick={ () => handleDelete(params.row.RezultatiID)}
+            >  
+           Ç'regjistro notën
+           </Button>
+       )
+        },
   ]
 
   const rows = useMemo(() => provimetStudentet.map((prv, index) => ({
     id:index + 1,
      ...prv,
-   
-
-    
   
   })), [provimetStudentet]);
     return (
 
-        <div className="containerVendosNoten" id="fadeInPage">
+        <div className="containerParaqitProvimin" id="fadeInPage">
 
-        <h1 id="vendosNoten">LISTA E PROVIMEVE/STUDENTËVE</h1>
+        <h1 id="notatERegjistruar">LISTA E NOTAVE TË REGJISTRUAR</h1>
 
-      <div className="assignGrade" >
+      <div className="registeredGrades" >
 
            <DataGrid
            disableColumnResize
@@ -288,4 +203,4 @@ const handleNotaChange = (provimiID, notaValue) => {
     )
 }
 
-export default VendosNotatEProvimit; 
+export default FshijNoten; 
