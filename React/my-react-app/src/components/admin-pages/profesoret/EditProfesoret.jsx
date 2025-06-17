@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react';
-import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import FaArrowLeft  from "@mui/icons-material/ArrowBack";
 import Swal from 'sweetalert2';
@@ -249,6 +248,12 @@ function EditProfesoret() {
       <option value="PhD">PhD</option>
     </select>
     </div>
+
+    <div className="input-label">
+        <label htmlFor="">Data e Regjistrimit <span>*</span></label>
+        <input className="form-control" disabled type="text" name="uKrijua"
+        placeholder="Regjistruar" value={profesori.uKrijua ? new Date(profesori.uKrijua).toLocaleString() : ''}  />
+        </div>
 
     <div className="inputProf">
         

@@ -5,7 +5,7 @@ class Profesori {
     static lexoProfesoret(callback){
 
         const sql = `SELECT p.ProfesoriID, p.Emri, p.Mbiemri, p.Gjinia, 
-        p.Email, p.NrTel, GROUP_CONCAT(f.Emri) Fakulteti, p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, 					p.Titulli_Akademik
+        p.Email, p.NrTel, GROUP_CONCAT(DISTINCT f.Emri SEPARATOR ', ') Fakulteti, p.EmailPrivat, p.Data_Punesimit, p.uKrijua, p.Statusi, 					p.Titulli_Akademik
         FROM profesori p 
         LEFT JOIN profesori_fakulteti pf on p.ProfesoriID = pf.ProfesoriID
         LEFT JOIN fakulteti f on pf.FakultetiID = f.FakultetiID
@@ -322,7 +322,7 @@ class Profesori {
         INNER JOIN periudha_regjistrimit_te_provimeve prtp on prv.PeriudhaID = prtp.PeriudhaID
         INNER JOIN lenda l on prv.LendaID = l.LendaID
         INNER JOIN profesori p on sp.ProfesoriID = p.ProfesoriID
-        WHERE p.ProfesoriID = 41
+        WHERE p.ProfesoriID = ?
         AND NOT EXISTS (
             SELECT *
 			FROM rezultateteprovimit rp

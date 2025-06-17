@@ -73,6 +73,15 @@ function Transkripta() {
 
       <div className="assignedExams" >
 
+        
+        <div className="stdData" style={{display:'flex', flexDirection:'column', 
+          width:'100%', marginTop:'-30px',marginBottom:'20px', textAlign:'start'}}>    
+                <h6>Studenti - {transkriptaNotave[0]?.Emri} {transkriptaNotave[0]?.Mbiemri}</h6>
+                <h6>Drejtimi - {transkriptaNotave[0]?.Drejtimi}</h6>
+                <h6>Niveli - {transkriptaNotave[0]?.Emri_Nivelit}</h6>
+                <h6>Statusi - {transkriptaNotave[0]?.statusi} </h6>
+             </div> 
+
            <DataGrid
            disableColumnResize
           showColumnVerticalBorder

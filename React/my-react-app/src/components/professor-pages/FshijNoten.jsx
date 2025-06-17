@@ -12,10 +12,10 @@ function FshijNoten() {
     const [loading, setLoading] = useState(null);
     const [provimetStudentet, setProvimetStudentet] = useState([]);
 
-
     useEffect (() =>{
         
       fetchProvimetEMija();
+      
       
 }, []);
 

@@ -117,7 +117,7 @@ class Provimi{
         LEFT JOIN rezultateteprovimit rp on sp.RegjistrimiProvimitID = rp.ProvimiRegjistruar
         INNER JOIN periudha_regjistrimit_te_provimeve prtp ON prv.PeriudhaID = prtp.PeriudhaID
         WHERE sp.StudentiID = ?
-        AND CURDATE() BETWEEN prtp.Data_Fillimit AND prtp.Data_Perfundimit`;
+        AND CURDATE() <= prtp.Data_Perfundimit_Notave`;
         
         db.query(sql,[StudentiID],(err, results) =>{
             
@@ -130,13 +130,16 @@ class Provimi{
 
     static transkriptaENotave(StudentiID, callback){
 
-        const sql = `SELECT l.*, rp.*, sems.*
+        const sql = `SELECT l.*, rp.*, sems.*, s.Emri,s.Mbiemri, f.Emri Drejtimi, ns.Emri_Nivelit, s.statusi
     FROM rezultateteprovimit rp
     INNER JOIN student_provimi sp on rp.ProvimiRegjistruar = sp.RegjistrimiProvimitID
     INNER JOIN provimi p on sp.ProvimiID = p.ProvimiID
     INNER JOIN lenda l on p.LendaID = l.LendaID
     INNER JOIN studenti s on sp.StudentiID = s.ID
     INNER JOIN semestri sems on l.SemestriID = sems.Semestri_ID
+    INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+    INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+    INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
     WHERE s.ID = ?
        AND rp.NOTA != 'jo prezent' 
        AND rp.NOTA IN ('6', '7', '8', '9', '10')`;
@@ -152,13 +155,16 @@ class Provimi{
 
      static notatSipasID(StudentiID, callback){
 
-        const sql = `SELECT l.*, rp.*, sems.*
+        const sql = `SELECT l.*, rp.*, sems.*, s.Emri,s.Mbiemri, f.Emri Drejtimi, ns.Emri_Nivelit, s.statusi
     FROM rezultateteprovimit rp
     INNER JOIN student_provimi sp on rp.ProvimiRegjistruar = sp.RegjistrimiProvimitID
     INNER JOIN provimi p on sp.ProvimiID = p.ProvimiID
     INNER JOIN lenda l on p.LendaID = l.LendaID
     INNER JOIN studenti s on sp.StudentiID = s.ID
     INNER JOIN semestri sems on l.SemestriID = sems.Semestri_ID
+    INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
+    INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+    INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
     WHERE s.ID = ?
        AND rp.NOTA != 'jo prezent' 
        AND rp.NOTA IN ('6', '7', '8', '9', '10')`;
@@ -295,10 +301,12 @@ static notatERegjistruara(ProfesoriID, callback){
     FROM rezultateteprovimit rp
     INNER JOIN student_provimi sp on rp.ProvimiRegjistruar = sp.RegjistrimiProvimitID
     INNER JOIN provimi p on sp.ProvimiID = p.ProvimiID
+    INNER JOIN periudha_regjistrimit_te_provimeve pr on p.PeriudhaID = pr.PeriudhaID
     INNER JOIN lenda l on p.LendaID = l.LendaID
     INNER JOIN profesori prof on sp.ProfesoriID = prof.ProfesoriID
     INNER JOIN studenti s on sp.StudentiID = s.ID
-    WHERE prof.ProfesoriID = ?`;
+    WHERE prof.ProfesoriID = ? 
+    AND CURRENT_DATE() <= pr.Data_Perfundimit_Notave`;
 
     db.query(sql, [ProfesoriID], (err, results) =>{
 

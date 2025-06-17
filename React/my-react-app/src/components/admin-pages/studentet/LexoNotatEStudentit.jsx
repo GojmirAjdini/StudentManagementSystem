@@ -17,24 +17,8 @@ function LexoNotatEStudentit() {
         
       fetchNotat();
       fetchMesatarenENotave();
-      fetchStudenti();
       
 }, []);
-
-    const fetchStudenti = async() =>{
-
-      try{
-
-        const response = await axiosInstance.get(`admin/studentet/${ID}`);
-
-        console.log(response.data);
-        setStudenti(response.data);
-
-    }
-      catch(err){
-        console.error(err.response.data);
-      }
-    }
 
     const fetchNotat = async() =>{
 
@@ -94,12 +78,12 @@ function LexoNotatEStudentit() {
      <div className="assignedExams" >
 
 <div className="stdData" style={{display:'flex', flexDirection:'column', 
-  width:'100%', marginTop:'-30px',marginBottom:'20px', textAlign:'start'}}>    
-        <h6>Studenti - {studenti[0]?.Emri} {studenti[0]?.Mbiemri}</h6>
-        <h6>Drejtimi - {studenti[0]?.Drejtimi}</h6>
-        <h6>Niveli - {studenti[0]?.Emri_Nivelit}</h6>
-        <h6>Statusi - {studenti[0]?.Statusi} </h6>
-     </div> 
+          width:'100%', marginTop:'-30px',marginBottom:'20px', textAlign:'start'}}>    
+                <h6>Studenti - {transkriptaNotave[0]?.Emri} {transkriptaNotave[0]?.Mbiemri}</h6>
+                <h6>Drejtimi - {transkriptaNotave[0]?.Drejtimi}</h6>
+                <h6>Niveli - {transkriptaNotave[0]?.Emri_Nivelit}</h6>
+                <h6>Statusi - {transkriptaNotave[0]?.statusi} </h6>
+             </div> 
 
 <div style={{width:'100%', display:'flex'}} className="input-labelBtnStdEdit">
         

@@ -13,13 +13,31 @@ function Procesverbali() {
    
     const [loading, setLoading] = useState(null);
     const [provimetStudentet, setProvimetStudentet] = useState([]);
-
+    const [profesori, setProfesori] = useState([]);
 
     useEffect (() =>{
         
       fetchProvimetEMija();
+      fetchProfesoriData();
       
 }, []);
+
+
+    const fetchProfesoriData = async() =>{
+
+      try{
+
+        const response = await axiosInstance.get("profesor/profile");
+
+        console.log(response.data);
+        setProfesori(response.data);
+        
+
+    }
+      catch(err){
+        console.error(err.response.data);       
+      }
+    }
 
 const handleExportPDF = () => {
   const doc = new jsPDF();
@@ -27,13 +45,11 @@ const handleExportPDF = () => {
   doc.setFontSize(16);
   doc.text("Procesverbali i Provimit", 14, 15);
 
-  // Metadata example
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.text(`Profesori: Dr. Emri Mbiemri`, 14, 25);
+  doc.text(`Profesori: ${profesori[0].Titulli_Akademik === 'PhD' ? 'Dr. Sc.' : 'Msc'} ${profesori[0].Emri} ${profesori[0].Mbiemri}`, 14, 25);
   doc.text(`Data: ${new Date().toLocaleDateString()}`, 14, 46);
 
-  // Prepare table data
   const tableColumn = ["#", "Emri", "Mbiemri", "Email", "Lenda", "Kodi", "Nota"];
   const tableRows = provimetStudentet.map((row, index) => [
     index + 1,

@@ -113,27 +113,28 @@ useEffect(() => {
         <nav>
          
         <li> <Link id='homeLink' className='customLink' to={userRole === 'student' ? '/dashboard' : '/'}><Home></Home></Link></li>
-      {userRole === 'student' && ( 
+     {userRole === 'student' && ( 
         <li> <Link id='homeLink' className='customLink' 
-        to={'/transkripta-notave'}>Transkripta</Link></li>)}
-        
+        to={'/semester/register'}>Regjistro semestrin</Link></li> )}  
+     
       {userRole === 'student' && ( <li> 
         <Link id='homeLink' className='customLink' 
-        to={'/paraqit-provimin'}>Paraqit provimet</Link></li>)}
-
+        to={'/paraqit-provimin'}>Paraqit provimet</Link></li>)}  
+     
       {userRole === 'student' && (  
         <li> <Link id='homeLink' className='customLink' 
         to={'/provimet/paraqitura'}>Provimet e paraqitura</Link></li>)}
-
-        {userRole === 'student' && ( 
+ 
+      {userRole === 'student' && ( 
         <li> <Link id='homeLink' className='customLink' 
-        to={'/semester/register'}>Regjistro semestrin</Link></li> )}
+        to={'/transkripta-notave'}>Transkripta</Link></li>)}
+  
       
         {/* PROFESOR */}  
 
         {userRole === 'profesor' && ( 
         <li> <Link id='homeLink' className='customLink' 
-        to={'/MY/lendet'}> Lëndët</Link></li> )}
+        to={'/MY/lendet'}>Lëndët</Link></li> )}
 
         {userRole === 'profesor' && ( 
         <li> <Link id='homeLink' className='customLink' 

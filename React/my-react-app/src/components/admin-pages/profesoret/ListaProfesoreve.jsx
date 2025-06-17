@@ -13,7 +13,6 @@ import Loading from '../login-register/utils/Loading';
 import { DataGrid, GridToolbar} from '@mui/x-data-grid';
 import axiosInstance from '../../../services/axiosInstance';
 import CircularProgress  from '@mui/material/CircularProgress';
-import { write } from '@popperjs/core';
 
 function ListaProfesoreve() {
 
@@ -89,13 +88,6 @@ function ListaProfesoreve() {
 
         fetchProfesoret();
 
-        const interval = setInterval(() => {
-
-            fetchProfesoret()
-        }, 60000);
-
-        return () => clearInterval(interval);
-
     },[])
 
      const columns = [
@@ -104,15 +96,19 @@ function ListaProfesoreve() {
         {field: 'Emri', headerName:'Emri', width:100},
         {field: 'Mbiemri', headerName:'Mbiemri', width:100},
         {field: 'Gjinia', headerName:'Gjinia', width:70},
-        {field: 'Fakulteti', headerName:'Fakulteti', width:200},
+        {field: 'Fakulteti', headerName:'Fakulteti', width:200, renderCell: (params) => (
+    <div style={{ whiteSpace: 'normal', wordBreak: 'break-word', lineHeight: 1.3, fontFamily: 'Montserrat', }}>
+      {params.value}
+    </div>
+  )},
+        
         {field: 'NrTel', headerName:'Kontakt', width:100},
         {field: 'Email', headerName:'Email Akademik', width:220},
         {field: 'Titulli_Akademik', headerName:'Titulli Akademik', width:140},
-        {field: 'uKrijua', headerName:'Data e Regjistrimit', width:170},
      
       {
 
-        field: 'Edit',
+        field: 'Edit',  
         headerName:'Përditëso',
         width:120,
         renderCell: (params) =>{
@@ -163,7 +159,6 @@ function ListaProfesoreve() {
       ...prof,
       Fakulteti: prof.Fakulteti ? prof.Fakulteti : 'null',
       Data_Punesimit: new Date(prof.Data_Punesimit).toLocaleDateString(),
-      uKrijua: new Date(prof.uKrijua).toLocaleString()
 
     }))
     , [profesoret]);
@@ -186,7 +181,9 @@ function ListaProfesoreve() {
          autoPageSize
          disableColumnResize
          showCellVerticalBorder
+         getRowId={(row) => row.ProfesoriID}
          showColumnVerticalBorder
+       
          rows={rows}
          columns={columns}
          scrollbarSize={0}
