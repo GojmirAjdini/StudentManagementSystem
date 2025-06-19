@@ -274,14 +274,14 @@ const loginStudenti = async(req, res) =>{
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 maxAge: 60 * 60 * 1000,
-                sameSite: 'Strict'
+                sameSite: 'none'
             })
             
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 maxAge: 7 * 24 * 60 * 60 * 1000,
-                sameSite: 'Strict'
+                sameSite: 'none'
             })
             
             
