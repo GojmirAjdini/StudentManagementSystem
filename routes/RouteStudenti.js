@@ -26,7 +26,7 @@ router.get("/kontrollo-noten/provimit/:RegjistrimiProvimitID", auth.verifyToken,
 router.get("/numri-provimeve/afati", auth.verifyToken, auth.eshteStudent, provimet.numriIProvimevePerNjePeriudhe);
 router.get("/ekziston/afati-provimeve", auth.verifyToken, auth.eshteStudent, provimet.ekzistonAfatiProvimit);
 router.get("/ekziston/afati-perfundimit-notave", auth.verifyToken, auth.eshteStudent, provimet.ekzistonAfatiIPerfundimitTeNotave);
-
+router.delete("/delete/provimet-e-pakaluara", auth.verifyToken, auth.eshteStudent, provimet.fshijProvimetEPaKaluara);
 
 router.post("/logout",studentKontroller.logout);
 

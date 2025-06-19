@@ -113,6 +113,7 @@ router.patch("/fakultetet/edit/:FakultetiID", auth.verifyToken, auth.eshteAdmin,
 router.get("/fakultetet/fakulteti/search",auth.verifyToken, auth.eshteAdmin,controllerFakulteti.lexoFakultetinByName);
 router.get("/nivelet-studimit", auth.verifyToken, auth.eshteAdmin, controllerFakulteti.lexoNiveletEStudimit);
 router.get("/gjeneratat", auth.verifyToken, auth.eshteAdmin, controllerFakulteti.lexoGjeneratat);
+router.post("/register/gjeneratat", auth.verifyToken, auth.eshteAdmin, controllerFakulteti.regjistroGjeneratat);
 
 //SEMESTRI //
 
@@ -128,5 +129,7 @@ router.get("/provimet/all", auth.verifyToken, auth.eshteAdmin, provimet.lexoAllP
 router.post("/provimet/register", auth.verifyToken, auth.eshteAdmin, provimet.caktoProviminByAdmin);
 router.get("/periudhat-provimeve", auth.verifyToken, auth.eshteAdmin, provimet.lexoPeriudhatEProvimeve);
 router.post("/periudhat-provimeve/regjistro", auth.verifyToken, auth.eshteAdmin, provimet.caktoPeriudhenEProvimeve);
+router.get("/provimet/sipas-afatit", auth.verifyToken, auth.eshteAdmin, provimet.lexoProvimetSipasAfatit);
+router.delete("/provimet/delete/:ProvimiID", auth.verifyToken, auth.eshteAdmin, provimet.fshijProvimin);
 
 export default router;  

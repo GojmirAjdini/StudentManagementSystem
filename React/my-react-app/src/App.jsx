@@ -36,12 +36,14 @@ const ListaFakulteteve = lazy(() => import ('./components/admin-pages/fakultetet
 const EditFakultetet = lazy(() => import ('./components/admin-pages/fakultetet/EditFakultetet'));
 const CaktoSemestrin = lazy (() => import ('./components/admin-pages/fakultetet/CaktoSemestrin'));
 const CaktoVitinAkademik = lazy (() => import ('./components/admin-pages/fakultetet/CaktoVitinAkademik'));
+const RegjistroGjeneraten = lazy (() => import ('./components/admin-pages/fakultetet/RegjistroGjeneraten'));
 
 const RegjistroLendet = lazy(() => import ('./components/admin-pages/lendet/RegjistroLendet'));
 const ListaLendeve = lazy(() => import ('./components/admin-pages/lendet/Lendet'));
 const EditLendet = lazy(() => import ('./components/admin-pages/lendet/EditLendet'));
 const CaktoProvimet = lazy(() => import ('./components/admin-pages/lendet/CaktoProvimet'));
 const RegjistroPeriudhenEProvimeve = lazy(() => import ('./components/admin-pages/lendet/RegjistroPeriudhenEProvimeve'));
+const ListaProvimeve = lazy(() => import ('./components/admin-pages/lendet/ListaProvimeve'));
 
 
 const RegjistroProfesoret = lazy(() => import ('./components/admin-pages/profesoret/RegjistroProfesoret'));
@@ -194,7 +196,8 @@ useEffect(() => {
             { label: 'Cakto Periudhën e provimeve', path:'/cakto/periudha-provimeve'}, 
             { label: 'Cakto Provimet', path:'/cakto-provimet'}, 
             { label: 'Lista e Lëndëve', path: '/lendet' },
-            { label: 'Lista e Provimeve', path:'/provimet/all'}
+            { label: 'Lista e Provimeve', path:'/provimet/all'},
+            { label: 'Lista e Periudhave të provimeve', path:'/periudhat-e-provimeve'}
            ]}
         />
           )}
@@ -283,12 +286,15 @@ useEffect(() => {
       <Route path="/edit/fakulteti/:FakultetiID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditFakultetet /></RequireAuth>} />
       <Route path="/register/semester" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoSemestrin /></RequireAuth>} />
       <Route path="/register/academic-year" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoVitinAkademik /></RequireAuth>} />
-    
+      <Route path="/register/academic-generation" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroGjeneraten /></RequireAuth>} />
+  
       <Route path="/register/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroLendet /></RequireAuth>} />
       <Route path="/lendet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaLendeve /></RequireAuth>} />
       <Route path="/edit/lenda/:LendaID" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><EditLendet /></RequireAuth>} />
       <Route path="/cakto-provimet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoProvimet /></RequireAuth>} />
       <Route path="/cakto/periudha-provimeve" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroPeriudhenEProvimeve /></RequireAuth>} />
+      <Route path="/provimet/all" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaProvimeve /></RequireAuth>} />
+
 
       <Route path="/register/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroProfesoret /></RequireAuth>} />
       <Route path ="/assign/profesoret-fakultetin" element={<RequireAuth allowedRoles={['admin', 'superadmin']}> <CaktoFakultetinProfesorit/>  </RequireAuth>} />

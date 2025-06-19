@@ -233,6 +233,7 @@ return (
               borderRadius: "10px",
               height:"40px",
               fontFamily: "Montserrat",
+              width:'500px',
             },
           }}
            ListboxProps={{

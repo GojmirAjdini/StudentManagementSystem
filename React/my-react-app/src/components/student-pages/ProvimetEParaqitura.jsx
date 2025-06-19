@@ -23,8 +23,19 @@ function ProvimetEParaqitura() {
       fetchProvimetEParaqitura();
       afatiProvimeve();
       afatiFunditNotave();
+      fshijProvimetEPaKaluara();
   
 }, []);
+
+  const fshijProvimetEPaKaluara = async () => {
+
+    try {
+    await axiosInstance.delete("student/delete/provimet-e-pakaluara");
+    }
+    catch(err){
+      console.error(err);
+    }
+  }
 
     const afatiProvimeve = async() =>{
     
@@ -218,7 +229,8 @@ function ProvimetEParaqitura() {
                 variant="contained" sx={{width:'100%', textTransform:'none', 
                 fontFamily:'Montserrat',  marginTop:'5px', marginBottom:'5px',}}
 
-                disabled={!params.row.NOTA || refuzimiLejuar[params.row.RegjistrimiProvimitID] === 0}
+                disabled={!params.row.NOTA || (params.row.NOTA === 'jo prezent' || params.row.NOTA === '5') 
+                  || refuzimiLejuar[params.row.RegjistrimiProvimitID] === 0}
                 onClick={ () => refuzoDheAnulo(params.row.RezultatiID, params.row.RegjistrimiProvimitID)}
                 > 
                 Refuzo notën

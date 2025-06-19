@@ -223,6 +223,7 @@ setLoading(true);
         <Autocomplete
           style={{fontFamily:"Montserrat"}}
           fullWidth
+          
           options={gjeneratatAkademike}
           getOptionLabel={(gjen) =>
             `${gjen.Fakulteti} - ${gjen.NiveliStudimit} - ${gjen.Viti_Gjenerates}`
@@ -233,6 +234,7 @@ setLoading(true);
               borderRadius: "10px",
               height:"40px",
               fontFamily: "Montserrat",
+              width:'500px',
             },
           }}
            ListboxProps={{

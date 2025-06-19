@@ -16,6 +16,47 @@ class Provimi{
         })
     }
 
+    static lexoProvimetSipasAfatit(callback){
+
+        const sql = `SELECT p.ProvimiID, l.Emri_Lendes, l.ECTS, l.Kodi_Lendes, p.data_mbajtjes_provimit, 
+        f.Emri, ns.Emri_Nivelit Niveli, s.NrSemestrit Semestri
+    FROM provimi p
+    INNER JOIN lenda l on p.LendaID = l.LendaID
+    INNER JOIN semestri s on l.SemestriID = s.Semestri_ID
+    INNER JOIN gjenerata gj on s.GjenerataID = s.GjenerataID
+    INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
+    INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
+    INNER JOIN periudha_regjistrimit_te_provimeve pr on p.PeriudhaID = pr.PeriudhaID
+    WHERE pr.PeriudhaID = (
+        SELECT pr.PeriudhaID
+        ORDER BY pr.PeriudhaID DESC
+        LIMIT 1
+        );`;
+
+        db.query(sql, (err, results) =>{
+
+        if(err){
+            return callback(err);
+        }
+            
+            callback(null, results);
+        })
+    }
+
+     static fshijProvimin(ProvimiID, callback){
+
+        const sql = `DELETE FROM provimi WHERE ProvimiID = ?`;
+
+        db.query(sql, [ProvimiID], (err, results) =>{
+
+        if(err){
+            return callback(err);
+        }
+            
+            callback(null, results);
+        })
+    }
+
     static caktoProviminByAdmin (LendaID, data_Provimit,PeriudhaID, callback){
 
         const sql = `INSERT INTO provimi(LendaID, data_mbajtjes_provimit, PeriudhaID) 
@@ -353,7 +394,7 @@ static caktoPeriudhenEProvimeve(VitiAkademikID, Data_Fillimit, Data_Perfundimit,
 static kontrolloRefuziminENotes(RegjistrimiProvimitID, callback){
 
     const sql = `SELECT r.*, 
-       (NOW() <= r.Data_Vendosjes_Notes + INTERVAL 1 DAY) AS RefuzimiLejuar
+       (NOW() <= r.Data_Vendosjes_Notes + INTERVAL 7 DAY) AS RefuzimiLejuar
     FROM rezultateteprovimit r
     WHERE r.ProvimiRegjistruar = ?`;
 
@@ -418,7 +459,23 @@ WHERE CURDATE() <= prtp.Data_Perfundimit_Notave`;
         console.log(results);
         callback(null, results);
     })
+}
 
+static fshijProvimetEPaKaluara(callback){
+
+    const sql = `DELETE FROM rezultateteprovimit
+WHERE (NOTA = '5' OR NOTA = 'jo prezent')
+  AND NOW() > Data_Vendosjes_Notes + INTERVAL 7 DAY;
+`;
+
+    db.query(sql, (err, results) =>{
+
+        if(err){
+        return callback(err);
+    }
+        console.log(results);
+        callback(null, results);
+    })
 }
 }
 export default Provimi;

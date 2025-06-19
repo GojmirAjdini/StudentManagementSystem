@@ -199,6 +199,27 @@ const lexoGjeneratat = async(req, res) =>{
     }
 }
 
+const regjistroGjeneratat = async(req, res) =>{
+
+    try{
+
+        const {FakultetiID, Viti_Gjenerates, VitiAkademikID} = req.body;
+
+        Fakulteti.regjistroGjeneratat(FakultetiID, Viti_Gjenerates, VitiAkademikID, (err, results) =>{
+               
+            if(err){
+                return res.status(500).json({error:err})
+            }
+            return res.status(200).json({ message: "Gjenerata u regjistrua me sukses!"});
+
+        })
+    }catch(error){
+        console.error(error);
+        res.json(500).send({message:'Server error', error: error});
+    }
+}
+
 export default {lexojFakultetet, shtoFakultet, fshijFakultetin, 
     updateFakultetin, lexoFakultetinId, patchFakulteti,
-    lexoFakultetinByName, lexoNiveletEStudimit, lexoGjeneratat};
+    lexoFakultetinByName, lexoNiveletEStudimit, lexoGjeneratat,
+    regjistroGjeneratat};

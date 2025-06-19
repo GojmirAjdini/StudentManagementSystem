@@ -167,5 +167,19 @@ class Fakulteti{
         callback(null, results);
         })
     }
+
+    static regjistroGjeneratat(FakultetiID, Viti_Gjenerates, VitiAkademikID, callback){
+
+        const sql = `INSERT INTO gjenerata(FakultetiID, Viti_Gjenerates, VitiAkademikID) VALUES (?, ?, ?)`;
+        
+        db.query(sql, [FakultetiID, Viti_Gjenerates, VitiAkademikID], (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+        
+        callback(null, results);
+        })
+    }
 }
 export default Fakulteti;

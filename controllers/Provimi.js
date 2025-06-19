@@ -18,6 +18,23 @@ const lexoAllProvimet = async(req, res)=>{
     }
 }
 
+const lexoProvimetSipasAfatit = async(req, res)=>{
+
+    try{
+
+        Provimi.lexoProvimetSipasAfatit((err, results) =>{
+            if(err){
+                return res.status(500).json({err:err});
+            }
+        
+            return res.status(200).json(results);
+        })
+    }catch(err){
+        return res.status(500).json({err:true,message:err});
+
+    }
+}
+
 const caktoProviminByAdmin = async (req, res) => {
     
     try{
@@ -44,6 +61,24 @@ const caktoProviminByAdmin = async (req, res) => {
         })
     }
     catch(err){
+        return res.status(500).json({err:true,message:err});
+
+    }
+}
+
+const fshijProvimin = async(req, res)=>{
+
+    try{
+        const ProvimiID = req.params.ProvimiID;
+
+        Provimi.fshijProvimin(ProvimiID, (err, results) =>{
+            if(err){
+                return res.status(500).json({err:err});
+            }
+        
+            return res.status(200).json({message:"Provimi u fshi me sukses!"});
+        })
+    }catch(err){
         return res.status(500).json({err:true,message:err});
 
     }
@@ -575,10 +610,30 @@ const ekzistonAfatiIPerfundimitTeNotave = async (req, res) => {
     }
 }
 
-export default {lexoAllProvimet, caktoProviminByAdmin, paraqitProviminStudent, 
+const fshijProvimetEPaKaluara = async (req, res) => {
+    
+    try{
+
+        Provimi.fshijProvimetEPaKaluara((err, results) =>{
+
+            if(err){
+                return res.status(500).json({err:err});
+            }
+
+            return res.status(201).json(results);
+        })
+    }
+    catch(err){
+        return res.status(500).json({err:true,message:err});
+
+    }
+}
+
+export default {lexoAllProvimet, lexoProvimetSipasAfatit, caktoProviminByAdmin,  
+    paraqitProviminStudent, fshijProvimin,
     lexoProvimetSipasStudentit, lexoProvimetEParaqituraTeStudentit, transkriptaENotave,
     lexoProfesoretSipasProvimit, caktoProfesorinPerProviminByAdmin, anuloParaqitjenEProvimit,
     mesatarjaENotave, refuzoNoten, lexoPeriudhatEProvimeve, caktoNotenEProvimit,
     lexoNotatERegjistruara, fshijNotenERegjistruar, notatSipasID, mesatarjaENotaveSipasID,
     caktoPeriudhenEProvimeve, kontrolloRefuziminENotes, numriIProvimevePerNjePeriudhe,
-    ekzistonAfatiProvimit, ekzistonAfatiIPerfundimitTeNotave};
+    ekzistonAfatiProvimit, ekzistonAfatiIPerfundimitTeNotave, fshijProvimetEPaKaluara};
