@@ -11,7 +11,7 @@ env.config();
 const corsOptions = {
 
     origin: ["http://localhost:5173",
-        "https://studentmanagementsystem-9aqi.onrender.com",
+        "https://sms-project-f9oi.onrender.com",
 
     ],
     credentials: true
