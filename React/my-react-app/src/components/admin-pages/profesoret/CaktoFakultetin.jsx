@@ -235,7 +235,7 @@ function CaktoFakultetin() {
             label="Zgjedh Fakultetin"
             variant="outlined"
             required
-            sx={{ fontFamily: "Montserrat",
+            sx={{ fontFamily: "Montserrat", width:'700px',
               '& .MuiInputBase-input::placeholder': {
                 fontFamily: 'Montserrat',
               },

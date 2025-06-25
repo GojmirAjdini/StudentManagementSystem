@@ -44,7 +44,7 @@ const EditLendet = lazy(() => import ('./components/admin-pages/lendet/EditLende
 const CaktoProvimet = lazy(() => import ('./components/admin-pages/lendet/CaktoProvimet'));
 const RegjistroPeriudhenEProvimeve = lazy(() => import ('./components/admin-pages/lendet/RegjistroPeriudhenEProvimeve'));
 const ListaProvimeve = lazy(() => import ('./components/admin-pages/lendet/ListaProvimeve'));
-
+const PeriudhatEProvimeve = lazy(() => import ('./components/admin-pages/lendet/ListaPeriudhave'));
 
 const RegjistroProfesoret = lazy(() => import ('./components/admin-pages/profesoret/RegjistroProfesoret'));
 const CaktoFakultetinProfesorit = lazy(() => import ('./components/admin-pages/profesoret/CaktoFakultetin'));
@@ -294,6 +294,7 @@ useEffect(() => {
       <Route path="/cakto-provimet" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><CaktoProvimet /></RequireAuth>} />
       <Route path="/cakto/periudha-provimeve" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroPeriudhenEProvimeve /></RequireAuth>} />
       <Route path="/provimet/all" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><ListaProvimeve /></RequireAuth>} />
+      <Route path="/periudhat-e-provimeve" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><PeriudhatEProvimeve /></RequireAuth>} />
 
 
       <Route path="/register/profesoret" element={<RequireAuth allowedRoles={['admin', 'superadmin']}><RegjistroProfesoret /></RequireAuth>} />

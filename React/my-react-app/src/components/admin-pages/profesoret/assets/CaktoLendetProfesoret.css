@@ -28,6 +28,8 @@ span{
     flex-direction: column;
     margin-top: 80px;
     justify-content: center;
+    width: 100%;
+    align-items: center;
     
 }
 
@@ -37,7 +39,6 @@ span{
   display: flex;
   flex-direction: column;
   justify-content: center ;
-  width:500px;
   gap: 30px;
 
 }
@@ -73,7 +74,7 @@ span{
 
 #primaryBtnProfLenda{
   background-color: rgb(101, 64, 235);
-  width: 30%;
+  width: 15%;
   height: 40px;
   border-radius: 10px;
   border: none;
@@ -81,7 +82,7 @@ span{
 
 #resetBtnProfLenda{
 
-  width: 30%;
+  width: 15%;
   height: 40px;
   border-radius: 10px;
   color: black;

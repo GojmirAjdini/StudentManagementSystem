@@ -10,10 +10,7 @@ import cookieParser from "cookie-parser";
 env.config();
 const corsOptions = {
 
-    origin: ["http://localhost:5173",
-        "https://sms-project-f9oi.onrender.com",
-
-    ],
+    origin: ["http://localhost:5173"],
     credentials: true
 };
 

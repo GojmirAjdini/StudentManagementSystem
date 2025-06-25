@@ -11,7 +11,7 @@ import axiosInstance from "../../../services/axiosInstance";
 
 function Login(){
 
-    const API_URL = 'https://studentmanagementsystem-9aqi.onrender.com/';
+    const API_URL = 'http://localhost:3000/';
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

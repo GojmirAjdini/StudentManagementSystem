@@ -23,7 +23,7 @@ class Provimi{
     FROM provimi p
     INNER JOIN lenda l on p.LendaID = l.LendaID
     INNER JOIN semestri s on l.SemestriID = s.Semestri_ID
-    INNER JOIN gjenerata gj on s.GjenerataID = s.GjenerataID
+    INNER JOIN gjenerata gj on s.GjenerataID = gj.GjenerataID
     INNER JOIN fakulteti f on gj.FakultetiID = f.FakultetiID
     INNER JOIN niveli_studimit ns on f.Niveli = ns.NiveliID
     INNER JOIN periudha_regjistrimit_te_provimeve pr on p.PeriudhaID = pr.PeriudhaID

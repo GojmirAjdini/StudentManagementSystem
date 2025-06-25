@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://studentmanagementsystem-9aqi.onrender.com/',
+  baseURL: 'http://localhost:3000/', 
   withCredentials: true,
 });
 
@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
 
       try {
         const refreshResponse = await axios.post(
-          'https://studentmanagementsystem-9aqi.onrender.com/admin/refresh-token',
+          'http://localhost:3000/admin/refresh-token',
           {},
           { withCredentials: true }
         );

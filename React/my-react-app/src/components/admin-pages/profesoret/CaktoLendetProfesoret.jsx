@@ -12,6 +12,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import { start } from "@popperjs/core";
 
 function CaktoLendetProf() {
     
@@ -205,7 +206,7 @@ function CaktoLendetProf() {
           label="Zgjedh Profesorin"
           variant="outlined"
           required
-          sx={{ fontFamily: "Montserrat",
+          sx={{ fontFamily: "Montserrat",width: '700px',
             '& .MuiInputBase-input::placeholder': {
                 fontFamily: 'Montserrat',
               },
@@ -242,11 +243,13 @@ function CaktoLendetProf() {
                   {...params}
                   label="Zgjedh Fakultetin"
                   variant="outlined"
+                  
                   required
                   error={skaFakultet ? "Profesori duhet të jetë të paktën në një fakultet!" : ''}
                   helperText={skaFakultet ? "Profesori duhet të jetë të paktën në një fakultet!" : ''}
+                  
                   sx={{
-                    fontFamily: "Montserrat",
+                    fontFamily: "Montserrat",width: '700px', helperText:'Montserrat',
                     '& .MuiInputBase-input::placeholder': { fontFamily: 'Montserrat' },
                     '& .MuiInputLabel-root': { fontFamily: 'Montserrat' },
                   }}
@@ -305,9 +308,10 @@ function CaktoLendetProf() {
             label="Zgjedh Lëndën"
             variant="outlined"
             required
-            sx={{ fontFamily: "Montserrat",
+            sx={{ fontFamily: "Montserrat",width: '700px',
               '& .MuiInputBase-input::placeholder': {
                 fontFamily: 'Montserrat',
+              
               },
               '& .MuiInputLabel-root': {
                 fontFamily: 'Montserrat',
@@ -316,6 +320,7 @@ function CaktoLendetProf() {
             }}
           />
         )}
+        noOptionsText="Nuk ka lëndë.."
         disabled={!selectedFakulteti}
         disableClearable={false}
         isOptionEqualToValue={(option, value) => option.LendaID === value.LendaID}
