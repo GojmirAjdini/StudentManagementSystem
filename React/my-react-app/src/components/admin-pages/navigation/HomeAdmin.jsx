@@ -5,6 +5,7 @@ import "./assets/HomeAdmin.css";
 import CircularProgress from "@mui/material/CircularProgress"
 import Edit from "@mui/icons-material/Edit";
 import WavingHand from "@mui/icons-material/WavingHand";
+import { Container } from "@mui/material";
 
 function Home(){    
 
@@ -48,7 +49,7 @@ function Home(){
     },[])
 
     return(
-           
+           <Container maxWidth="xl">
         <div id="fadeInPage" className="homePagecontainer">
             
             <h1 id="homeAdminH1">PËRSHËNDETJE <WavingHand sx={{marginLeft:'0px', height:'30px', marginBottom:'2px'}}/>  {admin ? admin.role : ''} -  
@@ -101,6 +102,7 @@ function Home(){
         <CircularProgress></CircularProgress>
     )}
         </div>
+        </Container>
     )
 }
 export default Home;

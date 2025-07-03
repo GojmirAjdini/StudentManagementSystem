@@ -477,5 +477,23 @@ WHERE (NOTA = '5' OR NOTA = 'jo prezent')
         callback(null, results);
     })
 }
+
+static patchPeriudhatEProvimeve(PeriudhaID, fushat, values, callback){
+
+        const sql = `UPDATE periudha_regjistrimit_te_provimeve SET ${fushat.join(', ')} WHERE PeriudhaID = ?`;
+
+        values.push(PeriudhaID);
+
+        db.query(sql, values, (err, results) =>{
+
+            if(err){
+                return callback(err);
+            }
+            console.log(results.affectedRows);
+            
+            callback(null, results);
+
+        })
+    }
 }
 export default Provimi;

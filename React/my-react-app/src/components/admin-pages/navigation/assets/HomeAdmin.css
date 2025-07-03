@@ -1,41 +1,72 @@
-#homeAdminH1{
-
-    margin-top: 60px;
-    font-size: 36px;
+#homeAdminH1 {
+  margin-top: 60px;
+  font-size: 36px;
+  text-align: center;
 }
 
-.homePagecontainer{
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 60px;
-    height: 80vh;
+.homePagecontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 60px;
+  min-height: 100vh;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
-#loginAdminData{
-
-    display: grid;
-    grid-template-columns: auto auto;
-    width: 60%;
-    margin: 40px;
-    border-radius: 10px; 
-    padding: 50px;
-    border: 1px solid rgb(222, 222, 222);
-    gap: 20px;
-
+#loginAdminData {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 columns */
+  gap: 20px;
+  padding: 40px;
+  margin: 40px auto;
+  max-width: 800px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgb(222, 222, 222);
+  box-sizing: border-box;
 }
 
-#loginAdminData input{
-
-    border: 1px solid rgb(192, 192, 192);
-    
+#loginAdminData input,
+#loginAdminData select {
+  border: 1px solid rgb(192, 192, 192);
+  font-family: 'Montserrat';
+  font-size: 16px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-#h3Info{
+#h3Info {
+  margin-top: 70px;
+  margin-bottom: -10px;
+  align-self: flex-start;
+  color: rgb(126, 126, 126);
+  font-size: 20px;
+  font-weight: 500;
+  width: 100%;
+  max-width: 800px;
+  padding-left: 16px;
+  box-sizing: border-box;
+}
 
-    margin-top: 70px;
-    margin-bottom: -30px;
-    margin-left: -40%;
-    color: rgb(126, 126, 126);
+/* 📱 Responsive fix for small screens */
+@media (max-width: 768px) {
+  #loginAdminData {
+    grid-template-columns: 1fr; /* Stack inputs vertically */
+    padding: 20px;
+    margin: 20px auto;
+  }
+
+  #homeAdminH1 {
+    font-size: 28px;
+  }
+
+  #h3Info {
+    font-size: 18px;
+    padding-left: 0;
+    text-align: center;
+    margin-left: 0;
+  }
 }

@@ -418,7 +418,6 @@ const caktoNotenEProvimit = async(req, res) =>{
     }
 }
 
-
 const lexoNotatERegjistruara = async (req, res) => {
     
     try{
@@ -629,8 +628,41 @@ const fshijProvimetEPaKaluara = async (req, res) => {
     }
 }
 
+
+const patchPeriudhatEProvimeve = async (req, res) => {
+
+    try{
+
+        const {Data_Fillimit, Data_Perfundimit, Data_Perfundimit_Notave} = req.body;
+        const id = req.params.PeriudhaID;
+
+        const fushat = [];
+        const values = [];
+
+        if(Data_Fillimit){ fushat.push("Data_Fillimit = ?"); values.push(Data_Fillimit);}
+        if(Data_Perfundimit){ fushat.push("Data_Perfundimit = ?"); values.push(Data_Perfundimit);}
+        if(Data_Perfundimit_Notave){ fushat.push("Data_Perfundimit_Notave = ?"); values.push(Data_Perfundimit_Notave);}
+    
+        Provimi.patchPeriudhatEProvimeve(id, fushat, values,  (err, results) =>{
+
+            if(err){
+                return res.status(500).json({message: "Server error", error: err});
+            }
+            if(results.affectedRows === 0){
+                return res.status(404).json({message: "Te dhënat nuk u përditësuan!"});
+            }
+
+            return res.status(200).json({message: "Te dhënat u përditësuan me sukses!"});
+        })
+
+    } catch(err){
+        console.error(err);
+        return res.status(500).json({message: err});
+}
+}
+
 export default {lexoAllProvimet, lexoProvimetSipasAfatit, caktoProviminByAdmin,  
-    paraqitProviminStudent, fshijProvimin,
+    paraqitProviminStudent, fshijProvimin, patchPeriudhatEProvimeve,
     lexoProvimetSipasStudentit, lexoProvimetEParaqituraTeStudentit, transkriptaENotave,
     lexoProfesoretSipasProvimit, caktoProfesorinPerProviminByAdmin, anuloParaqitjenEProvimit,
     mesatarjaENotave, refuzoNoten, lexoPeriudhatEProvimeve, caktoNotenEProvimit,

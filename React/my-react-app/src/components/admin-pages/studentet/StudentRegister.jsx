@@ -10,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Autocomplete  from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Loading from "../login-register/utils/Loading";
+import { Container } from "@mui/material";
 
 
 import axiosInstance from "../../../services/axiosInstance";
@@ -143,7 +144,7 @@ useEffect(() =>{
 },[]);
 
 return (
-
+  <Container maxWidth="xl">
     <div className="container fade-in">
 
         <h1 id="studentH1">REGJISTRO STUDENTË</h1>
@@ -333,6 +334,7 @@ return (
       )}  
 
 </div>
+</Container>
 );
 }
 

@@ -131,5 +131,6 @@ router.get("/periudhat-provimeve", auth.verifyToken, auth.eshteAdmin, provimet.l
 router.post("/periudhat-provimeve/regjistro", auth.verifyToken, auth.eshteAdmin, provimet.caktoPeriudhenEProvimeve);
 router.get("/provimet/sipas-afatit", auth.verifyToken, auth.eshteAdmin, provimet.lexoProvimetSipasAfatit);
 router.delete("/provimet/delete/:ProvimiID", auth.verifyToken, auth.eshteAdmin, provimet.fshijProvimin);
+router.patch("/periudhat-provimeve/patch/:PeriudhaID", auth.verifyToken, auth.eshteAdmin, provimet.patchPeriudhatEProvimeve);
 
 export default router;  

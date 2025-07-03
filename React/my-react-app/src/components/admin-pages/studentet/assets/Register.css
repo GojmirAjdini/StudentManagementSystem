@@ -80,6 +80,11 @@ form{
     margin-right: 5px;
 }
 
+.form-control {
+
+  width: 400px;
+}
+
 .form-check label{
 
   cursor: pointer;

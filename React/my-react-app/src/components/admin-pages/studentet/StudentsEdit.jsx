@@ -22,7 +22,7 @@ function StudentsEdit() {
   const [loading, setLoading] = useState(false);
   const [gjeneratatAkademike, setGjeneratatAkademike] = useState([]);
   const [studenti, setStudenti] = useState({
-    Emri: '',
+    Emri: '', 
     Mbiemri: '',
     Gjinia: '',
     EmailPrivat: '',
