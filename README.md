@@ -18,6 +18,7 @@ Projekti SMS (Student Management System) mundëson lehtësim në administrimin e
    ```
 2. Install Backend Dependencies:
    ```bash
+   cd backend
    npm install
    ```
 3. Install Frontend Dependencies:
@@ -30,7 +31,7 @@ Projekti SMS (Student Management System) mundëson lehtësim në administrimin e
 To start app, you will need two terminals:  
 Terminal 1 - Backend (Server):
   ```bash
-  cd StudentManagementSystem
+  cd StudentManagementSystem/backend
   npm start
   # or
   npm run dev  
